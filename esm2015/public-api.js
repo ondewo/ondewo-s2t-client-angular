@@ -1,0 +1,5 @@
+export * from './api/ondewo/s2t/speech-to-text.pbconf';
+export * from './api/ondewo/s2t/speech-to-text.pb';
+export * from './api/ondewo/s2t/speech-to-text.pbsc';
+export * from './api/google/protobuf/empty.pb';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3B1YmxpYy1hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsY0FBYyx3Q0FBd0MsQ0FBQztBQUN2RCxjQUFjLG9DQUFvQyxDQUFDO0FBQ25ELGNBQWMsc0NBQXNDLENBQUM7QUFDckQsY0FBYyxnQ0FBZ0MsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCAqIGZyb20gJy4vYXBpL29uZGV3by9zMnQvc3BlZWNoLXRvLXRleHQucGJjb25mJztcbmV4cG9ydCAqIGZyb20gJy4vYXBpL29uZGV3by9zMnQvc3BlZWNoLXRvLXRleHQucGInO1xuZXhwb3J0ICogZnJvbSAnLi9hcGkvb25kZXdvL3MydC9zcGVlY2gtdG8tdGV4dC5wYnNjJztcbmV4cG9ydCAqIGZyb20gJy4vYXBpL2dvb2dsZS9wcm90b2J1Zi9lbXB0eS5wYic7XG4iXX0=
