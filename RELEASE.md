@@ -1,7 +1,7 @@
 # Release History
 *****************
 
-## Release ONDEWO NLU Angular Client 1.0.0
+## Release ONDEWO-S2T Angular Client 1.4.0
 
 ### New Features
- * Update to NLU client version tag 1.0.0
+ * Compatible with ONDEWO-S2T 1.4.* GRPC server

@@ -1,13 +1,13 @@
-# Ondewo NLU Client Angular #
+# Ondewo S2T Client Angular #
 
-This package contains a grpc client used to access and communicate the ondewo nlu api.
+This package contains a grpc client used to access and communicate the ONDEWO-S2T API.
 It was also configured as an Angular npm package so it can be easily added to any Angular project.
 
 ## How to install?
 
 **Run:**
 ```bash
-git+https://github.com/ondewo/ondewo-nlu-client-angular.git
+git+https://github.com/ondewo/ondewo-s2t-client-angular.git
 ```
 inside of your project to install the npm package of this github repository in you angular project.
 
