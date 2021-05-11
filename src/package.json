@@ -1,23 +1,25 @@
 {
   "name": "@ondewo/s2t-client-angular",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Ondewo natural language understanding client library for angular",
+  "keywords": ["ondewo", "s2t", "api", "client", "ngx-grpc", "grpc"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "docker run -it -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler ondewo-s2t-api ondewo",
-    "debug": "docker run -it --entrypoint /bin/bash -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler"
+    "build": "git submodule update --init --recursive --remote && docker run -it -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler ondewo-s2t-api ondewo",
+    "debug": "docker run -it --entrypoint /bin/bash -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler",
+    "publish-npm": "npm publish ../npm --access public"
   },
-  "author": "Markus Peitl  @ Ondewo",
+  "author": "ONDEWO GmbH",
+  "homepage": "https://ondewo.com/",
   "license": "Apache-2.0",
   "peerDependencies": {
     "@angular/common": ">=8.0.0",
-    "@angular/core": ">=8.0.0"
+    "@angular/core": ">=8.0.0",
+    "@ngx-grpc/common": "^2.1.0",
+    "@ngx-grpc/core": "^2.1.0"
   },
-  "dependencies": {
-    "@ngx-grpc/common": "^0.3.1",
-    "@ngx-grpc/core": "^0.3.1",
-    "google-protobuf": "^3.11.4",
-    "grpc-web": "^1.0.7",
-    "tslib": "^1.10.0"
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/ondewo/ondewo-s2t-client-angular.git"
   }
 }
