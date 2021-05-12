@@ -1,137 +1,164 @@
-import { GrpcClientFactory, GrpcClientSettings, GrpcEvent } from '@ngx-grpc/common';
+import { GrpcClientFactory, GrpcEvent, GrpcMetadata } from '@ngx-grpc/common';
 import { GrpcHandler } from '@ngx-grpc/core';
-import { Metadata } from 'grpc-web';
 import { Observable } from 'rxjs';
 import * as thisProto from './speech-to-text.pb';
-import * as googleProtobuf000 from '../../google/protobuf/empty.pb';
+import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
+/**
+ * Service client implementation for ondewo.s2t.Speech2Text
+ */
 export declare class Speech2TextClient {
     private handler;
     private client;
-    constructor(settings: GrpcClientSettings, clientFactory: GrpcClientFactory, handler: GrpcHandler);
     /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.TranscribeFileRequest request
-     * @param Metadata metadata
-     * @return Observable<thisProto.TranscribeFileResponse>
+     * Raw RPC implementation for each service client method.
+     * The raw methods provide more control on the incoming data and events. E.g. they can be useful to read status `OK` metadata.
+     * Attention: these methods do not throw errors when non-zero status codes are received.
      */
-    transcribeFile(requestData: thisProto.TranscribeFileRequest, requestMetadata?: Metadata): Observable<thisProto.TranscribeFileResponse>;
+    $raw: {
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/TranscribeFile
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.TranscribeFileResponse>>
+         */
+        transcribeFile: (requestData: thisProto.TranscribeFileRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.TranscribeFileResponse>>;
+        /**
+         * Server streaming RPC for /ondewo.s2t.Speech2Text/TranscribeStream
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>
+         */
+        transcribeStream: (requestData: thisProto.TranscribeStreamRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/GetS2tPipeline
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.Speech2TextConfig>>
+         */
+        getS2tPipeline: (requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.Speech2TextConfig>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/CreateS2tPipeline
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.S2tPipelineId>>
+         */
+        createS2tPipeline: (requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.S2tPipelineId>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/DeleteS2tPipeline
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+         */
+        deleteS2tPipeline: (requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/UpdateS2tPipeline
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+         */
+        updateS2tPipeline: (requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tPipelines
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.ListS2tPipelinesResponse>>
+         */
+        listS2tPipelines: (requestData: thisProto.ListS2tPipelinesRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tPipelinesResponse>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguages
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.ListS2tLanguagesResponse>>
+         */
+        listS2tLanguages: (requestData: thisProto.ListS2tLanguagesRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tLanguagesResponse>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tDomains
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>
+         */
+        listS2tDomains: (requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>;
+    };
+    constructor(settings: any, clientFactory: GrpcClientFactory<any>, handler: GrpcHandler);
     /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.TranscribeFileRequest request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.TranscribeFileResponse>>
+     * Unary RPC for /ondewo.s2t.Speech2Text/TranscribeFile
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.TranscribeFileResponse>
      */
-    transcribeFile$eventStream(requestData: thisProto.TranscribeFileRequest, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.TranscribeFileResponse>>;
+    transcribeFile(requestData: thisProto.TranscribeFileRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.TranscribeFileResponse>;
     /**
-     * Server streaming RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.TranscribeStreamRequest request
-     * @param Metadata metadata
-     * @return Observable<thisProto.TranscribeStreamResponse>
+     * Server streaming RPC for /ondewo.s2t.Speech2Text/TranscribeStream
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.TranscribeStreamResponse>
      */
-    transcribeStream(requestData: thisProto.TranscribeStreamRequest, requestMetadata?: Metadata): Observable<thisProto.TranscribeStreamResponse>;
+    transcribeStream(requestData: thisProto.TranscribeStreamRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.TranscribeStreamResponse>;
     /**
-     * Server streaming RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.TranscribeStreamRequest request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>
+     * Unary RPC for /ondewo.s2t.Speech2Text/GetS2tPipeline
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.Speech2TextConfig>
      */
-    transcribeStream$eventStream(requestData: thisProto.TranscribeStreamRequest, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>;
+    getS2tPipeline(requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata): Observable<thisProto.Speech2TextConfig>;
     /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.S2tPipelineId request
-     * @param Metadata metadata
-     * @return Observable<thisProto.Speech2TextConfig>
+     * Unary RPC for /ondewo.s2t.Speech2Text/CreateS2tPipeline
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.S2tPipelineId>
      */
-    getS2tPipeline(requestData: thisProto.S2tPipelineId, requestMetadata?: Metadata): Observable<thisProto.Speech2TextConfig>;
+    createS2tPipeline(requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata): Observable<thisProto.S2tPipelineId>;
     /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.S2tPipelineId request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.Speech2TextConfig>>
+     * Unary RPC for /ondewo.s2t.Speech2Text/DeleteS2tPipeline
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
      */
-    getS2tPipeline$eventStream(requestData: thisProto.S2tPipelineId, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.Speech2TextConfig>>;
+    deleteS2tPipeline(requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
     /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.Speech2TextConfig request
-     * @param Metadata metadata
-     * @return Observable<thisProto.S2tPipelineId>
+     * Unary RPC for /ondewo.s2t.Speech2Text/UpdateS2tPipeline
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
      */
-    createS2tPipeline(requestData: thisProto.Speech2TextConfig, requestMetadata?: Metadata): Observable<thisProto.S2tPipelineId>;
+    updateS2tPipeline(requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
     /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.Speech2TextConfig request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.S2tPipelineId>>
+     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tPipelines
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.ListS2tPipelinesResponse>
      */
-    createS2tPipeline$eventStream(requestData: thisProto.Speech2TextConfig, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.S2tPipelineId>>;
+    listS2tPipelines(requestData: thisProto.ListS2tPipelinesRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tPipelinesResponse>;
     /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.S2tPipelineId request
-     * @param Metadata metadata
-     * @return Observable<googleProtobuf000.Empty>
+     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguages
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.ListS2tLanguagesResponse>
      */
-    deleteS2tPipeline(requestData: thisProto.S2tPipelineId, requestMetadata?: Metadata): Observable<googleProtobuf000.Empty>;
+    listS2tLanguages(requestData: thisProto.ListS2tLanguagesRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tLanguagesResponse>;
     /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.S2tPipelineId request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<googleProtobuf000.Empty>>
+     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tDomains
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.ListS2tDomainsResponse>
      */
-    deleteS2tPipeline$eventStream(requestData: thisProto.S2tPipelineId, requestMetadata?: Metadata): Observable<GrpcEvent<googleProtobuf000.Empty>>;
-    /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.Speech2TextConfig request
-     * @param Metadata metadata
-     * @return Observable<googleProtobuf000.Empty>
-     */
-    updateS2tPipeline(requestData: thisProto.Speech2TextConfig, requestMetadata?: Metadata): Observable<googleProtobuf000.Empty>;
-    /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.Speech2TextConfig request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<googleProtobuf000.Empty>>
-     */
-    updateS2tPipeline$eventStream(requestData: thisProto.Speech2TextConfig, requestMetadata?: Metadata): Observable<GrpcEvent<googleProtobuf000.Empty>>;
-    /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.ListS2tPipelinesRequest request
-     * @param Metadata metadata
-     * @return Observable<thisProto.ListS2tPipelinesResponse>
-     */
-    listS2tPipelines(requestData: thisProto.ListS2tPipelinesRequest, requestMetadata?: Metadata): Observable<thisProto.ListS2tPipelinesResponse>;
-    /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.ListS2tPipelinesRequest request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.ListS2tPipelinesResponse>>
-     */
-    listS2tPipelines$eventStream(requestData: thisProto.ListS2tPipelinesRequest, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.ListS2tPipelinesResponse>>;
-    /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.ListS2tLanguagesRequest request
-     * @param Metadata metadata
-     * @return Observable<thisProto.ListS2tLanguagesResponse>
-     */
-    listS2tLanguages(requestData: thisProto.ListS2tLanguagesRequest, requestMetadata?: Metadata): Observable<thisProto.ListS2tLanguagesResponse>;
-    /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.ListS2tLanguagesRequest request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.ListS2tLanguagesResponse>>
-     */
-    listS2tLanguages$eventStream(requestData: thisProto.ListS2tLanguagesRequest, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.ListS2tLanguagesResponse>>;
-    /**
-     * Unary RPC. Emits messages and throws errors on non-zero status codes
-     * @param thisProto.ListS2tDomainsRequest request
-     * @param Metadata metadata
-     * @return Observable<thisProto.ListS2tDomainsResponse>
-     */
-    listS2tDomains(requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: Metadata): Observable<thisProto.ListS2tDomainsResponse>;
-    /**
-     * Unary RPC. Emits data and status events; does not throw errors by design
-     * @param thisProto.ListS2tDomainsRequest request
-     * @param Metadata metadata
-     * @return Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>
-     */
-    listS2tDomains$eventStream(requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: Metadata): Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>;
+    listS2tDomains(requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tDomainsResponse>;
 }
