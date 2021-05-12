@@ -1,7 +1,7 @@
 {
   "name": "@ondewo/s2t-client-angular",
   "version": "1.4.1",
-  "description": "Ondewo natural language understanding client library for angular",
+  "description": "Ondewo speech to text client library for angular",
   "keywords": ["ondewo", "s2t", "api", "client", "ngx-grpc", "grpc"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
