@@ -1,6 +1,6 @@
 {
   "name": "@ondewo/s2t-client-angular",
-  "version": "1.4.1",
+  "version": "1.6.0",
   "description": "Ondewo speech to text client library for angular",
   "keywords": [
     "ondewo",
@@ -13,7 +13,7 @@
   "author": "ONDEWO GmbH",
   "homepage": "https://ondewo.com/",
   "license": "Apache-2.0",
-  "peerDependencies": {
+  "peerDependecies": {
     "@angular/common": ">=8.0.0",
     "@angular/core": ">=8.0.0",
     "@ngx-grpc/common": "^2.1.0",

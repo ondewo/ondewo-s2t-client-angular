@@ -14,8 +14,9 @@ const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_
 /* tslint:disable */
 var CTCDecoding;
 (function (CTCDecoding) {
-    CTCDecoding[CTCDecoding["GREEDY"] = 0] = "GREEDY";
-    CTCDecoding[CTCDecoding["BEAM_SEARCH_WITH_LM"] = 1] = "BEAM_SEARCH_WITH_LM";
+    CTCDecoding[CTCDecoding["DEFAULT"] = 0] = "DEFAULT";
+    CTCDecoding[CTCDecoding["GREEDY"] = 1] = "GREEDY";
+    CTCDecoding[CTCDecoding["BEAM_SEARCH_WITH_LM"] = 2] = "BEAM_SEARCH_WITH_LM";
 })(CTCDecoding || (CTCDecoding = {}));
 /**
  * Message implementation for ondewo.s2t.TranscribeStreamRequest
@@ -30,9 +31,12 @@ class TranscribeStreamRequest {
         this.s2tPipelineId = _value.s2tPipelineId;
         this.audioChunk = _value.audioChunk;
         this.ctcDecoding = _value.ctcDecoding;
+        this.languageModelName = _value.languageModelName;
         this.spellingCorrection = _value.spellingCorrection;
         this.disableNormalization = _value.disableNormalization;
         this.endOfStream = _value.endOfStream;
+        this.returnStartOfSpeech = _value.returnStartOfSpeech;
+        this.returnAudio = _value.returnAudio;
         TranscribeStreamRequest.refineValues(this);
     }
     /**
@@ -52,9 +56,12 @@ class TranscribeStreamRequest {
         _instance.s2tPipelineId = _instance.s2tPipelineId || '';
         _instance.audioChunk = _instance.audioChunk || new Uint8Array();
         _instance.ctcDecoding = _instance.ctcDecoding || 0;
+        _instance.languageModelName = _instance.languageModelName || '';
         _instance.spellingCorrection = _instance.spellingCorrection || false;
         _instance.disableNormalization = _instance.disableNormalization || false;
         _instance.endOfStream = _instance.endOfStream || false;
+        _instance.returnStartOfSpeech = _instance.returnStartOfSpeech || false;
+        _instance.returnAudio = _instance.returnAudio || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -76,13 +83,22 @@ class TranscribeStreamRequest {
                     _instance.ctcDecoding = _reader.readEnum();
                     break;
                 case 4:
-                    _instance.spellingCorrection = _reader.readBool();
+                    _instance.languageModelName = _reader.readString();
                     break;
                 case 5:
-                    _instance.disableNormalization = _reader.readBool();
+                    _instance.spellingCorrection = _reader.readBool();
                     break;
                 case 6:
+                    _instance.disableNormalization = _reader.readBool();
+                    break;
+                case 7:
                     _instance.endOfStream = _reader.readBool();
+                    break;
+                case 8:
+                    _instance.returnStartOfSpeech = _reader.readBool();
+                    break;
+                case 9:
+                    _instance.returnAudio = _reader.readBool();
                     break;
                 default:
                     _reader.skipField();
@@ -105,14 +121,23 @@ class TranscribeStreamRequest {
         if (_instance.ctcDecoding) {
             _writer.writeEnum(3, _instance.ctcDecoding);
         }
+        if (_instance.languageModelName) {
+            _writer.writeString(4, _instance.languageModelName);
+        }
         if (_instance.spellingCorrection) {
-            _writer.writeBool(4, _instance.spellingCorrection);
+            _writer.writeBool(5, _instance.spellingCorrection);
         }
         if (_instance.disableNormalization) {
-            _writer.writeBool(5, _instance.disableNormalization);
+            _writer.writeBool(6, _instance.disableNormalization);
         }
         if (_instance.endOfStream) {
-            _writer.writeBool(6, _instance.endOfStream);
+            _writer.writeBool(7, _instance.endOfStream);
+        }
+        if (_instance.returnStartOfSpeech) {
+            _writer.writeBool(8, _instance.returnStartOfSpeech);
+        }
+        if (_instance.returnAudio) {
+            _writer.writeBool(9, _instance.returnAudio);
         }
     }
     get s2tPipelineId() {
@@ -133,6 +158,12 @@ class TranscribeStreamRequest {
     set ctcDecoding(value) {
         this._ctcDecoding = value;
     }
+    get languageModelName() {
+        return this._languageModelName;
+    }
+    set languageModelName(value) {
+        this._languageModelName = value;
+    }
     get spellingCorrection() {
         return this._spellingCorrection;
     }
@@ -150,6 +181,18 @@ class TranscribeStreamRequest {
     }
     set endOfStream(value) {
         this._endOfStream = value;
+    }
+    get returnStartOfSpeech() {
+        return this._returnStartOfSpeech;
+    }
+    set returnStartOfSpeech(value) {
+        this._returnStartOfSpeech = value;
+    }
+    get returnAudio() {
+        return this._returnAudio;
+    }
+    set returnAudio(value) {
+        this._returnAudio = value;
     }
     /**
      * Serialize message to binary data
@@ -170,9 +213,12 @@ class TranscribeStreamRequest {
                 ? this.audioChunk.subarray(0)
                 : new Uint8Array(),
             ctcDecoding: this.ctcDecoding,
+            languageModelName: this.languageModelName,
             spellingCorrection: this.spellingCorrection,
             disableNormalization: this.disableNormalization,
-            endOfStream: this.endOfStream
+            endOfStream: this.endOfStream,
+            returnStartOfSpeech: this.returnStartOfSpeech,
+            returnAudio: this.returnAudio
         };
     }
     /**
@@ -194,9 +240,12 @@ class TranscribeStreamRequest {
             s2tPipelineId: this.s2tPipelineId,
             audioChunk: this.audioChunk ? uint8ArrayToBase64(this.audioChunk) : '',
             ctcDecoding: CTCDecoding[(_a = this.ctcDecoding) !== null && _a !== void 0 ? _a : 0],
+            languageModelName: this.languageModelName,
             spellingCorrection: this.spellingCorrection,
             disableNormalization: this.disableNormalization,
-            endOfStream: this.endOfStream
+            endOfStream: this.endOfStream,
+            returnStartOfSpeech: this.returnStartOfSpeech,
+            returnAudio: this.returnAudio
         };
     }
 }
@@ -214,6 +263,9 @@ class TranscribeStreamResponse {
         this.transcription = _value.transcription;
         this.time = _value.time;
         this.final = _value.final;
+        this.returnAudio = _value.returnAudio;
+        this.audio = _value.audio;
+        this.utteranceStart = _value.utteranceStart;
         TranscribeStreamResponse.refineValues(this);
     }
     /**
@@ -233,6 +285,9 @@ class TranscribeStreamResponse {
         _instance.transcription = _instance.transcription || '';
         _instance.time = _instance.time || 0;
         _instance.final = _instance.final || false;
+        _instance.returnAudio = _instance.returnAudio || false;
+        _instance.audio = _instance.audio || new Uint8Array();
+        _instance.utteranceStart = _instance.utteranceStart || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -252,6 +307,15 @@ class TranscribeStreamResponse {
                     break;
                 case 3:
                     _instance.final = _reader.readBool();
+                    break;
+                case 4:
+                    _instance.returnAudio = _reader.readBool();
+                    break;
+                case 5:
+                    _instance.audio = _reader.readBytes();
+                    break;
+                case 6:
+                    _instance.utteranceStart = _reader.readBool();
                     break;
                 default:
                     _reader.skipField();
@@ -274,6 +338,15 @@ class TranscribeStreamResponse {
         if (_instance.final) {
             _writer.writeBool(3, _instance.final);
         }
+        if (_instance.returnAudio) {
+            _writer.writeBool(4, _instance.returnAudio);
+        }
+        if (_instance.audio && _instance.audio.length) {
+            _writer.writeBytes(5, _instance.audio);
+        }
+        if (_instance.utteranceStart) {
+            _writer.writeBool(6, _instance.utteranceStart);
+        }
     }
     get transcription() {
         return this._transcription;
@@ -293,6 +366,24 @@ class TranscribeStreamResponse {
     set final(value) {
         this._final = value;
     }
+    get returnAudio() {
+        return this._returnAudio;
+    }
+    set returnAudio(value) {
+        this._returnAudio = value;
+    }
+    get audio() {
+        return this._audio;
+    }
+    set audio(value) {
+        this._audio = value;
+    }
+    get utteranceStart() {
+        return this._utteranceStart;
+    }
+    set utteranceStart(value) {
+        this._utteranceStart = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -309,7 +400,10 @@ class TranscribeStreamResponse {
         return {
             transcription: this.transcription,
             time: this.time,
-            final: this.final
+            final: this.final,
+            returnAudio: this.returnAudio,
+            audio: this.audio ? this.audio.subarray(0) : new Uint8Array(),
+            utteranceStart: this.utteranceStart
         };
     }
     /**
@@ -329,7 +423,10 @@ class TranscribeStreamResponse {
         return {
             transcription: this.transcription,
             time: this.time,
-            final: this.final
+            final: this.final,
+            returnAudio: this.returnAudio,
+            audio: this.audio ? uint8ArrayToBase64(this.audio) : '',
+            utteranceStart: this.utteranceStart
         };
     }
 }
@@ -347,6 +444,7 @@ class TranscribeFileRequest {
         this.s2tPipelineId = _value.s2tPipelineId;
         this.audioFile = _value.audioFile;
         this.ctcDecoding = _value.ctcDecoding;
+        this.languageModelName = _value.languageModelName;
         this.spellingCorrection = _value.spellingCorrection;
         this.disableNormalization = _value.disableNormalization;
         this.includeTiming = _value.includeTiming;
@@ -369,6 +467,7 @@ class TranscribeFileRequest {
         _instance.s2tPipelineId = _instance.s2tPipelineId || '';
         _instance.audioFile = _instance.audioFile || new Uint8Array();
         _instance.ctcDecoding = _instance.ctcDecoding || 0;
+        _instance.languageModelName = _instance.languageModelName || '';
         _instance.spellingCorrection = _instance.spellingCorrection || false;
         _instance.disableNormalization = _instance.disableNormalization || false;
         _instance.includeTiming = _instance.includeTiming || false;
@@ -393,12 +492,15 @@ class TranscribeFileRequest {
                     _instance.ctcDecoding = _reader.readEnum();
                     break;
                 case 4:
-                    _instance.spellingCorrection = _reader.readBool();
+                    _instance.languageModelName = _reader.readString();
                     break;
                 case 5:
-                    _instance.disableNormalization = _reader.readBool();
+                    _instance.spellingCorrection = _reader.readBool();
                     break;
                 case 6:
+                    _instance.disableNormalization = _reader.readBool();
+                    break;
+                case 7:
                     _instance.includeTiming = _reader.readBool();
                     break;
                 default:
@@ -422,14 +524,17 @@ class TranscribeFileRequest {
         if (_instance.ctcDecoding) {
             _writer.writeEnum(3, _instance.ctcDecoding);
         }
+        if (_instance.languageModelName) {
+            _writer.writeString(4, _instance.languageModelName);
+        }
         if (_instance.spellingCorrection) {
-            _writer.writeBool(4, _instance.spellingCorrection);
+            _writer.writeBool(5, _instance.spellingCorrection);
         }
         if (_instance.disableNormalization) {
-            _writer.writeBool(5, _instance.disableNormalization);
+            _writer.writeBool(6, _instance.disableNormalization);
         }
         if (_instance.includeTiming) {
-            _writer.writeBool(6, _instance.includeTiming);
+            _writer.writeBool(7, _instance.includeTiming);
         }
     }
     get s2tPipelineId() {
@@ -449,6 +554,12 @@ class TranscribeFileRequest {
     }
     set ctcDecoding(value) {
         this._ctcDecoding = value;
+    }
+    get languageModelName() {
+        return this._languageModelName;
+    }
+    set languageModelName(value) {
+        this._languageModelName = value;
     }
     get spellingCorrection() {
         return this._spellingCorrection;
@@ -485,6 +596,7 @@ class TranscribeFileRequest {
             s2tPipelineId: this.s2tPipelineId,
             audioFile: this.audioFile ? this.audioFile.subarray(0) : new Uint8Array(),
             ctcDecoding: this.ctcDecoding,
+            languageModelName: this.languageModelName,
             spellingCorrection: this.spellingCorrection,
             disableNormalization: this.disableNormalization,
             includeTiming: this.includeTiming
@@ -509,6 +621,7 @@ class TranscribeFileRequest {
             s2tPipelineId: this.s2tPipelineId,
             audioFile: this.audioFile ? uint8ArrayToBase64(this.audioFile) : '',
             ctcDecoding: CTCDecoding[(_a = this.ctcDecoding) !== null && _a !== void 0 ? _a : 0],
+            languageModelName: this.languageModelName,
             spellingCorrection: this.spellingCorrection,
             disableNormalization: this.disableNormalization,
             includeTiming: this.includeTiming
@@ -1558,6 +1671,107 @@ class ListS2tDomainsResponse {
 }
 ListS2tDomainsResponse.id = 'ondewo.s2t.ListS2tDomainsResponse';
 /**
+ * Message implementation for ondewo.s2t.GetServiceInfoResponse
+ */
+class GetServiceInfoResponse {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of GetServiceInfoResponse to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.version = _value.version;
+        GetServiceInfoResponse.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new GetServiceInfoResponse();
+        GetServiceInfoResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.version = _instance.version || '';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.version = _reader.readString();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        GetServiceInfoResponse.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.version) {
+            _writer.writeString(1, _instance.version);
+        }
+    }
+    get version() {
+        return this._version;
+    }
+    set version(value) {
+        this._version = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        GetServiceInfoResponse.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            version: this.version
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            version: this.version
+        };
+    }
+}
+GetServiceInfoResponse.id = 'ondewo.s2t.GetServiceInfoResponse';
+/**
  * Message implementation for ondewo.s2t.Speech2TextConfig
  */
 class Speech2TextConfig {
@@ -1963,8 +2177,8 @@ class Inference {
         this.ctcAcousticModels = _value.ctcAcousticModels
             ? new CtcAcousticModels(_value.ctcAcousticModels)
             : undefined;
-        this.languageModel = _value.languageModel
-            ? new LanguageModel(_value.languageModel)
+        this.languageModels = _value.languageModels
+            ? new LanguageModels(_value.languageModels)
             : undefined;
         Inference.refineValues(this);
     }
@@ -1983,7 +2197,7 @@ class Inference {
      */
     static refineValues(_instance) {
         _instance.ctcAcousticModels = _instance.ctcAcousticModels || undefined;
-        _instance.languageModel = _instance.languageModel || undefined;
+        _instance.languageModels = _instance.languageModels || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -2000,8 +2214,8 @@ class Inference {
                     _reader.readMessage(_instance.ctcAcousticModels, CtcAcousticModels.deserializeBinaryFromReader);
                     break;
                 case 2:
-                    _instance.languageModel = new LanguageModel();
-                    _reader.readMessage(_instance.languageModel, LanguageModel.deserializeBinaryFromReader);
+                    _instance.languageModels = new LanguageModels();
+                    _reader.readMessage(_instance.languageModels, LanguageModels.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -2018,8 +2232,8 @@ class Inference {
         if (_instance.ctcAcousticModels) {
             _writer.writeMessage(1, _instance.ctcAcousticModels, CtcAcousticModels.serializeBinaryToWriter);
         }
-        if (_instance.languageModel) {
-            _writer.writeMessage(2, _instance.languageModel, LanguageModel.serializeBinaryToWriter);
+        if (_instance.languageModels) {
+            _writer.writeMessage(2, _instance.languageModels, LanguageModels.serializeBinaryToWriter);
         }
     }
     get ctcAcousticModels() {
@@ -2028,11 +2242,11 @@ class Inference {
     set ctcAcousticModels(value) {
         this._ctcAcousticModels = value;
     }
-    get languageModel() {
-        return this._languageModel;
+    get languageModels() {
+        return this._languageModels;
     }
-    set languageModel(value) {
-        this._languageModel = value;
+    set languageModels(value) {
+        this._languageModels = value;
     }
     /**
      * Serialize message to binary data
@@ -2051,8 +2265,8 @@ class Inference {
             ctcAcousticModels: this.ctcAcousticModels
                 ? this.ctcAcousticModels.toObject()
                 : undefined,
-            languageModel: this.languageModel
-                ? this.languageModel.toObject()
+            languageModels: this.languageModels
+                ? this.languageModels.toObject()
                 : undefined
         };
     }
@@ -2074,8 +2288,8 @@ class Inference {
             ctcAcousticModels: this.ctcAcousticModels
                 ? this.ctcAcousticModels.toProtobufJSON(options)
                 : null,
-            languageModel: this.languageModel
-                ? this.languageModel.toProtobufJSON(options)
+            languageModels: this.languageModels
+                ? this.languageModels.toProtobufJSON(options)
                 : null
         };
     }
@@ -2372,6 +2586,7 @@ class Quartznet {
         this.loadType = _value.loadType;
         this.ptFiles = _value.ptFiles ? new PtFiles(_value.ptFiles) : undefined;
         this.ckptFile = _value.ckptFile ? new CkptFile(_value.ckptFile) : undefined;
+        this.useGpu = _value.useGpu;
         Quartznet.refineValues(this);
     }
     /**
@@ -2392,6 +2607,7 @@ class Quartznet {
         _instance.loadType = _instance.loadType || '';
         _instance.ptFiles = _instance.ptFiles || undefined;
         _instance.ckptFile = _instance.ckptFile || undefined;
+        _instance.useGpu = _instance.useGpu || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -2417,6 +2633,9 @@ class Quartznet {
                     _instance.ckptFile = new CkptFile();
                     _reader.readMessage(_instance.ckptFile, CkptFile.deserializeBinaryFromReader);
                     break;
+                case 5:
+                    _instance.useGpu = _reader.readBool();
+                    break;
                 default:
                     _reader.skipField();
             }
@@ -2440,6 +2659,9 @@ class Quartznet {
         }
         if (_instance.ckptFile) {
             _writer.writeMessage(4, _instance.ckptFile, CkptFile.serializeBinaryToWriter);
+        }
+        if (_instance.useGpu) {
+            _writer.writeBool(5, _instance.useGpu);
         }
     }
     get configPath() {
@@ -2466,6 +2688,12 @@ class Quartznet {
     set ckptFile(value) {
         this._ckptFile = value;
     }
+    get useGpu() {
+        return this._useGpu;
+    }
+    set useGpu(value) {
+        this._useGpu = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -2483,7 +2711,8 @@ class Quartznet {
             configPath: this.configPath,
             loadType: this.loadType,
             ptFiles: this.ptFiles ? this.ptFiles.toObject() : undefined,
-            ckptFile: this.ckptFile ? this.ckptFile.toObject() : undefined
+            ckptFile: this.ckptFile ? this.ckptFile.toObject() : undefined,
+            useGpu: this.useGpu
         };
     }
     /**
@@ -2504,7 +2733,8 @@ class Quartznet {
             configPath: this.configPath,
             loadType: this.loadType,
             ptFiles: this.ptFiles ? this.ptFiles.toProtobufJSON(options) : null,
-            ckptFile: this.ckptFile ? this.ckptFile.toProtobufJSON(options) : null
+            ckptFile: this.ckptFile ? this.ckptFile.toProtobufJSON(options) : null,
+            useGpu: this.useGpu
         };
     }
 }
@@ -2861,28 +3091,29 @@ class QuartznetTriton {
 }
 QuartznetTriton.id = 'ondewo.s2t.QuartznetTriton';
 /**
- * Message implementation for ondewo.s2t.LanguageModel
+ * Message implementation for ondewo.s2t.LanguageModels
  */
-class LanguageModel {
+class LanguageModels {
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of LanguageModel to deeply clone from
+     * @param _value initial values object or instance of LanguageModels to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
         this.path = _value.path;
         this.beamSize = _value.beamSize;
+        this.defaultLm = _value.defaultLm;
         this.beamSearchScorerAlpha = _value.beamSearchScorerAlpha;
         this.beamSearchScorerBeta = _value.beamSearchScorerBeta;
-        LanguageModel.refineValues(this);
+        LanguageModels.refineValues(this);
     }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new LanguageModel();
-        LanguageModel.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new LanguageModels();
+        LanguageModels.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -2892,6 +3123,7 @@ class LanguageModel {
     static refineValues(_instance) {
         _instance.path = _instance.path || '';
         _instance.beamSize = _instance.beamSize || '0';
+        _instance.defaultLm = _instance.defaultLm || '';
         _instance.beamSearchScorerAlpha = _instance.beamSearchScorerAlpha || 0;
         _instance.beamSearchScorerBeta = _instance.beamSearchScorerBeta || 0;
     }
@@ -2912,16 +3144,19 @@ class LanguageModel {
                     _instance.beamSize = _reader.readInt64String();
                     break;
                 case 3:
-                    _instance.beamSearchScorerAlpha = _reader.readFloat();
+                    _instance.defaultLm = _reader.readString();
                     break;
                 case 4:
+                    _instance.beamSearchScorerAlpha = _reader.readFloat();
+                    break;
+                case 5:
                     _instance.beamSearchScorerBeta = _reader.readFloat();
                     break;
                 default:
                     _reader.skipField();
             }
         }
-        LanguageModel.refineValues(_instance);
+        LanguageModels.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -2935,11 +3170,14 @@ class LanguageModel {
         if (_instance.beamSize) {
             _writer.writeInt64String(2, _instance.beamSize);
         }
+        if (_instance.defaultLm) {
+            _writer.writeString(3, _instance.defaultLm);
+        }
         if (_instance.beamSearchScorerAlpha) {
-            _writer.writeFloat(3, _instance.beamSearchScorerAlpha);
+            _writer.writeFloat(4, _instance.beamSearchScorerAlpha);
         }
         if (_instance.beamSearchScorerBeta) {
-            _writer.writeFloat(4, _instance.beamSearchScorerBeta);
+            _writer.writeFloat(5, _instance.beamSearchScorerBeta);
         }
     }
     get path() {
@@ -2953,6 +3191,12 @@ class LanguageModel {
     }
     set beamSize(value) {
         this._beamSize = value;
+    }
+    get defaultLm() {
+        return this._defaultLm;
+    }
+    set defaultLm(value) {
+        this._defaultLm = value;
     }
     get beamSearchScorerAlpha() {
         return this._beamSearchScorerAlpha;
@@ -2972,7 +3216,7 @@ class LanguageModel {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        LanguageModel.serializeBinaryToWriter(this, writer);
+        LanguageModels.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -2982,6 +3226,7 @@ class LanguageModel {
         return {
             path: this.path,
             beamSize: this.beamSize,
+            defaultLm: this.defaultLm,
             beamSearchScorerAlpha: this.beamSearchScorerAlpha,
             beamSearchScorerBeta: this.beamSearchScorerBeta
         };
@@ -3003,12 +3248,13 @@ class LanguageModel {
         return {
             path: this.path,
             beamSize: this.beamSize,
+            defaultLm: this.defaultLm,
             beamSearchScorerAlpha: this.beamSearchScorerAlpha,
             beamSearchScorerBeta: this.beamSearchScorerBeta
         };
     }
 }
-LanguageModel.id = 'ondewo.s2t.LanguageModel';
+LanguageModels.id = 'ondewo.s2t.LanguageModels';
 /**
  * Message implementation for ondewo.s2t.StreamingServer
  */
@@ -3182,6 +3428,7 @@ class StreamingSpeechRecognition {
         this.minAudioChunkSize = _value.minAudioChunkSize;
         this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
         this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
+        this.nextChunkTimeout = _value.nextChunkTimeout;
         StreamingSpeechRecognition.refineValues(this);
     }
     /**
@@ -3205,6 +3452,7 @@ class StreamingSpeechRecognition {
         _instance.startOfUtteranceThreshold =
             _instance.startOfUtteranceThreshold || 0;
         _instance.endOfUtteranceThreshold = _instance.endOfUtteranceThreshold || 0;
+        _instance.nextChunkTimeout = _instance.nextChunkTimeout || 0;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -3233,6 +3481,9 @@ class StreamingSpeechRecognition {
                     break;
                 case 6:
                     _instance.endOfUtteranceThreshold = _reader.readFloat();
+                    break;
+                case 7:
+                    _instance.nextChunkTimeout = _reader.readFloat();
                     break;
                 default:
                     _reader.skipField();
@@ -3263,6 +3514,9 @@ class StreamingSpeechRecognition {
         }
         if (_instance.endOfUtteranceThreshold) {
             _writer.writeFloat(6, _instance.endOfUtteranceThreshold);
+        }
+        if (_instance.nextChunkTimeout) {
+            _writer.writeFloat(7, _instance.nextChunkTimeout);
         }
     }
     get transcribeNotFinal() {
@@ -3301,6 +3555,12 @@ class StreamingSpeechRecognition {
     set endOfUtteranceThreshold(value) {
         this._endOfUtteranceThreshold = value;
     }
+    get nextChunkTimeout() {
+        return this._nextChunkTimeout;
+    }
+    set nextChunkTimeout(value) {
+        this._nextChunkTimeout = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -3320,7 +3580,8 @@ class StreamingSpeechRecognition {
             samplingRate: this.samplingRate,
             minAudioChunkSize: this.minAudioChunkSize,
             startOfUtteranceThreshold: this.startOfUtteranceThreshold,
-            endOfUtteranceThreshold: this.endOfUtteranceThreshold
+            endOfUtteranceThreshold: this.endOfUtteranceThreshold,
+            nextChunkTimeout: this.nextChunkTimeout
         };
     }
     /**
@@ -3343,7 +3604,8 @@ class StreamingSpeechRecognition {
             samplingRate: this.samplingRate,
             minAudioChunkSize: this.minAudioChunkSize,
             startOfUtteranceThreshold: this.startOfUtteranceThreshold,
-            endOfUtteranceThreshold: this.endOfUtteranceThreshold
+            endOfUtteranceThreshold: this.endOfUtteranceThreshold,
+            nextChunkTimeout: this.nextChunkTimeout
         };
     }
 }
@@ -4430,6 +4692,327 @@ class Logging {
     }
 }
 Logging.id = 'ondewo.s2t.Logging';
+/**
+ * Message implementation for ondewo.s2t.ListS2tLanguageModelsRequest
+ */
+class ListS2tLanguageModelsRequest {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of ListS2tLanguageModelsRequest to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.ids = (_value.ids || []).slice();
+        ListS2tLanguageModelsRequest.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new ListS2tLanguageModelsRequest();
+        ListS2tLanguageModelsRequest.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.ids = _instance.ids || [];
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    (_instance.ids = _instance.ids || []).push(_reader.readString());
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        ListS2tLanguageModelsRequest.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.ids && _instance.ids.length) {
+            _writer.writeRepeatedString(1, _instance.ids);
+        }
+    }
+    get ids() {
+        return this._ids;
+    }
+    set ids(value) {
+        this._ids = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        ListS2tLanguageModelsRequest.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            ids: (this.ids || []).slice()
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            ids: (this.ids || []).slice()
+        };
+    }
+}
+ListS2tLanguageModelsRequest.id = 'ondewo.s2t.ListS2tLanguageModelsRequest';
+/**
+ * Message implementation for ondewo.s2t.LanguageModelPipelineId
+ */
+class LanguageModelPipelineId {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of LanguageModelPipelineId to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.pipelineId = _value.pipelineId;
+        this.modelNames = (_value.modelNames || []).slice();
+        LanguageModelPipelineId.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new LanguageModelPipelineId();
+        LanguageModelPipelineId.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.pipelineId = _instance.pipelineId || '';
+        _instance.modelNames = _instance.modelNames || [];
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.pipelineId = _reader.readString();
+                    break;
+                case 2:
+                    (_instance.modelNames = _instance.modelNames || []).push(_reader.readString());
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        LanguageModelPipelineId.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.pipelineId) {
+            _writer.writeString(1, _instance.pipelineId);
+        }
+        if (_instance.modelNames && _instance.modelNames.length) {
+            _writer.writeRepeatedString(2, _instance.modelNames);
+        }
+    }
+    get pipelineId() {
+        return this._pipelineId;
+    }
+    set pipelineId(value) {
+        this._pipelineId = value;
+    }
+    get modelNames() {
+        return this._modelNames;
+    }
+    set modelNames(value) {
+        this._modelNames = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        LanguageModelPipelineId.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            pipelineId: this.pipelineId,
+            modelNames: (this.modelNames || []).slice()
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            pipelineId: this.pipelineId,
+            modelNames: (this.modelNames || []).slice()
+        };
+    }
+}
+LanguageModelPipelineId.id = 'ondewo.s2t.LanguageModelPipelineId';
+/**
+ * Message implementation for ondewo.s2t.ListS2tLanguageModelsResponse
+ */
+class ListS2tLanguageModelsResponse {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of ListS2tLanguageModelsResponse to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.lmPipelineIds = (_value.lmPipelineIds || []).map(m => new LanguageModelPipelineId(m));
+        ListS2tLanguageModelsResponse.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new ListS2tLanguageModelsResponse();
+        ListS2tLanguageModelsResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.lmPipelineIds = _instance.lmPipelineIds || [];
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    const messageInitializer1 = new LanguageModelPipelineId();
+                    _reader.readMessage(messageInitializer1, LanguageModelPipelineId.deserializeBinaryFromReader);
+                    (_instance.lmPipelineIds = _instance.lmPipelineIds || []).push(messageInitializer1);
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        ListS2tLanguageModelsResponse.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.lmPipelineIds && _instance.lmPipelineIds.length) {
+            _writer.writeRepeatedMessage(1, _instance.lmPipelineIds, LanguageModelPipelineId.serializeBinaryToWriter);
+        }
+    }
+    get lmPipelineIds() {
+        return this._lmPipelineIds;
+    }
+    set lmPipelineIds(value) {
+        this._lmPipelineIds = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        ListS2tLanguageModelsResponse.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            lmPipelineIds: (this.lmPipelineIds || []).map(m => m.toObject())
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            lmPipelineIds: (this.lmPipelineIds || []).map(m => m.toProtobufJSON(options))
+        };
+    }
+}
+ListS2tLanguageModelsResponse.id = 'ondewo.s2t.ListS2tLanguageModelsResponse';
 
 /* tslint:disable */
 /**
@@ -4605,6 +5188,42 @@ class Speech2TextClient {
                     requestClass: ListS2tDomainsRequest,
                     responseClass: ListS2tDomainsResponse
                 });
+            },
+            /**
+             * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<thisProto.GetServiceInfoResponse>>
+             */
+            getServiceInfo: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/GetServiceInfo',
+                    requestData,
+                    requestMetadata,
+                    requestClass: Empty,
+                    responseClass: GetServiceInfoResponse
+                });
+            },
+            /**
+             * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<thisProto.ListS2tLanguageModelsResponse>>
+             */
+            listS2tLanguageModels: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/ListS2tLanguageModels',
+                    requestData,
+                    requestMetadata,
+                    requestClass: ListS2tLanguageModelsRequest,
+                    responseClass: ListS2tLanguageModelsResponse
+                });
             }
         };
         this.client = clientFactory.createClient('ondewo.s2t.Speech2Text', settings);
@@ -4717,6 +5336,30 @@ class Speech2TextClient {
             .listS2tDomains(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
+    /**
+     * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.GetServiceInfoResponse>
+     */
+    getServiceInfo(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .getServiceInfo(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
+    /**
+     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.ListS2tLanguageModelsResponse>
+     */
+    listS2tLanguageModels(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .listS2tLanguageModels(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
 }
 Speech2TextClient.ɵprov = ɵɵdefineInjectable({ factory: function Speech2TextClient_Factory() { return new Speech2TextClient(ɵɵinject(GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, 8), ɵɵinject(GRPC_CLIENT_FACTORY), ɵɵinject(GrpcHandler)); }, token: Speech2TextClient, providedIn: "any" });
 Speech2TextClient.decorators = [
@@ -4732,5 +5375,5 @@ Speech2TextClient.ctorParameters = () => [
  * Generated bundle index. Do not edit.
  */
 
-export { CTCDecoding, CkptFile, CtcAcousticModels, Description, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, Inference, LanguageModel, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, Normalization, PostProcessing, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeStreamRequest, TranscribeStreamResponse, VoiceActivityDetection, Wav2Vec, WordTiming };
+export { CTCDecoding, CkptFile, CtcAcousticModels, Description, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, GetServiceInfoResponse, Inference, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, Normalization, PostProcessing, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeStreamRequest, TranscribeStreamResponse, VoiceActivityDetection, Wav2Vec, WordTiming };
 //# sourceMappingURL=ondewo-s2t-client-angular.js.map
