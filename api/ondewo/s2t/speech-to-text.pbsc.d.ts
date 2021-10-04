@@ -87,6 +87,22 @@ export declare class Speech2TextClient {
          * @returns Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>
          */
         listS2tDomains: (requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.GetServiceInfoResponse>>
+         */
+        getServiceInfo: (requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.GetServiceInfoResponse>>;
+        /**
+         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<thisProto.ListS2tLanguageModelsResponse>>
+         */
+        listS2tLanguageModels: (requestData: thisProto.ListS2tLanguageModelsRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tLanguageModelsResponse>>;
     };
     constructor(settings: any, clientFactory: GrpcClientFactory<any>, handler: GrpcHandler);
     /**
@@ -161,4 +177,20 @@ export declare class Speech2TextClient {
      * @returns Observable<thisProto.ListS2tDomainsResponse>
      */
     listS2tDomains(requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tDomainsResponse>;
+    /**
+     * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.GetServiceInfoResponse>
+     */
+    getServiceInfo(requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata): Observable<thisProto.GetServiceInfoResponse>;
+    /**
+     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.ListS2tLanguageModelsResponse>
+     */
+    listS2tLanguageModels(requestData: thisProto.ListS2tLanguageModelsRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tLanguageModelsResponse>;
 }

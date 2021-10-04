@@ -1,6 +1,11 @@
 # Release History
 *****************
 
+## Release ONDEWO-S2T Angular Client 1.6.0
+
+### New Features
+* Keeps track of ONDEWO Survey API 1.6.*
+
 ## Release ONDEWO-S2T Angular Client 1.4.1
 
 ### New Features
