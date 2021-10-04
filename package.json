@@ -1,6 +1,6 @@
 {
   "name": "@ondewo/s2t-client-angular",
-  "version": "1.4.1",
+  "version": "1.6.0",
   "description": "Ondewo speech to text client library for angular",
   "keywords": [
     "ondewo",
