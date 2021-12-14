@@ -1,4 +1,4 @@
 [submodule "src/ondewo-s2t-api"]
 	path = src/ondewo-s2t-api
 	url = https://github.com/ondewo/ondewo-s2t-api
-	branch = release/1.6.0
+	branch = release/2.0.0
