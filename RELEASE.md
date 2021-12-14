@@ -1,6 +1,13 @@
 # Release History
 *****************
 
+## Release ONDEWO-S2T Angular Client 2.0.0
+
+### New Features
+* Track version 2.0.x of [S2T-API](https://github.com/ondewo/ondewo-s2t-api)
+
+***
+
 ## Release ONDEWO-S2T Angular Client 1.6.0
 
 ### New Features

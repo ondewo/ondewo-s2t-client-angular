@@ -18,6 +18,885 @@
         CTCDecoding[CTCDecoding["BEAM_SEARCH_WITH_LM"] = 2] = "BEAM_SEARCH_WITH_LM";
     })(exports.CTCDecoding || (exports.CTCDecoding = {}));
     /**
+     * Message implementation for ondewo.s2t.TranscribeRequestConfig
+     */
+    exports.TranscribeRequestConfig = /** @class */ (function () {
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of TranscribeRequestConfig to deeply clone from
+         */
+        function TranscribeRequestConfig(_value) {
+            this._oneofLanguageModelName = TranscribeRequestConfig.OneofLanguageModelNameCase.none;
+            this._oneofPostProcessing = TranscribeRequestConfig.OneofPostProcessingCase.none;
+            this._oneofUtteranceDetection = TranscribeRequestConfig.OneofUtteranceDetectionCase.none;
+            this._voiceActivityDetection = TranscribeRequestConfig.VoiceActivityDetectionCase.none;
+            this._oneofReturnOptions = TranscribeRequestConfig.OneofReturnOptionsCase.none;
+            _value = _value || {};
+            this.s2tPipelineId = _value.s2tPipelineId;
+            this.ctcDecoding = _value.ctcDecoding;
+            this.languageModelName = _value.languageModelName;
+            this.postProcessing = _value.postProcessing
+                ? new PostProcessingOptions(_value.postProcessing)
+                : undefined;
+            this.utteranceDetection = _value.utteranceDetection
+                ? new exports.UtteranceDetectionOptions(_value.utteranceDetection)
+                : undefined;
+            this.pyannote = _value.pyannote ? new exports.Pyannote(_value.pyannote) : undefined;
+            this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
+            this.returnOptions = _value.returnOptions
+                ? new TranscriptionReturnOptions(_value.returnOptions)
+                : undefined;
+            TranscribeRequestConfig.refineValues(this);
+        }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        TranscribeRequestConfig.deserializeBinary = function (bytes) {
+            var instance = new TranscribeRequestConfig();
+            TranscribeRequestConfig.deserializeBinaryFromReader(instance, new googleProtobuf.BinaryReader(bytes));
+            return instance;
+        };
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        TranscribeRequestConfig.refineValues = function (_instance) {
+            _instance.s2tPipelineId = _instance.s2tPipelineId || '';
+            _instance.ctcDecoding = _instance.ctcDecoding || 0;
+        };
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        TranscribeRequestConfig.deserializeBinaryFromReader = function (_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.s2tPipelineId = _reader.readString();
+                        break;
+                    case 2:
+                        _instance.ctcDecoding = _reader.readEnum();
+                        break;
+                    case 3:
+                        _instance.languageModelName = _reader.readString();
+                        break;
+                    case 4:
+                        _instance.postProcessing = new PostProcessingOptions();
+                        _reader.readMessage(_instance.postProcessing, PostProcessingOptions.deserializeBinaryFromReader);
+                        break;
+                    case 5:
+                        _instance.utteranceDetection = new exports.UtteranceDetectionOptions();
+                        _reader.readMessage(_instance.utteranceDetection, exports.UtteranceDetectionOptions.deserializeBinaryFromReader);
+                        break;
+                    case 6:
+                        _instance.pyannote = new exports.Pyannote();
+                        _reader.readMessage(_instance.pyannote, exports.Pyannote.deserializeBinaryFromReader);
+                        break;
+                    case 7:
+                        _instance.matchbox = new Matchbox();
+                        _reader.readMessage(_instance.matchbox, Matchbox.deserializeBinaryFromReader);
+                        break;
+                    case 8:
+                        _instance.returnOptions = new TranscriptionReturnOptions();
+                        _reader.readMessage(_instance.returnOptions, TranscriptionReturnOptions.deserializeBinaryFromReader);
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            TranscribeRequestConfig.refineValues(_instance);
+        };
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        TranscribeRequestConfig.serializeBinaryToWriter = function (_instance, _writer) {
+            if (_instance.s2tPipelineId) {
+                _writer.writeString(1, _instance.s2tPipelineId);
+            }
+            if (_instance.ctcDecoding) {
+                _writer.writeEnum(2, _instance.ctcDecoding);
+            }
+            if (_instance.languageModelName || _instance.languageModelName === '') {
+                _writer.writeString(3, _instance.languageModelName);
+            }
+            if (_instance.postProcessing) {
+                _writer.writeMessage(4, _instance.postProcessing, PostProcessingOptions.serializeBinaryToWriter);
+            }
+            if (_instance.utteranceDetection) {
+                _writer.writeMessage(5, _instance.utteranceDetection, exports.UtteranceDetectionOptions.serializeBinaryToWriter);
+            }
+            if (_instance.pyannote) {
+                _writer.writeMessage(6, _instance.pyannote, exports.Pyannote.serializeBinaryToWriter);
+            }
+            if (_instance.matchbox) {
+                _writer.writeMessage(7, _instance.matchbox, Matchbox.serializeBinaryToWriter);
+            }
+            if (_instance.returnOptions) {
+                _writer.writeMessage(8, _instance.returnOptions, TranscriptionReturnOptions.serializeBinaryToWriter);
+            }
+        };
+        Object.defineProperty(TranscribeRequestConfig.prototype, "s2tPipelineId", {
+            get: function () {
+                return this._s2tPipelineId;
+            },
+            set: function (value) {
+                this._s2tPipelineId = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "ctcDecoding", {
+            get: function () {
+                return this._ctcDecoding;
+            },
+            set: function (value) {
+                this._ctcDecoding = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "languageModelName", {
+            get: function () {
+                return this._languageModelName;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofLanguageModelName =
+                        TranscribeRequestConfig.OneofLanguageModelNameCase.languageModelName;
+                }
+                this._languageModelName = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "postProcessing", {
+            get: function () {
+                return this._postProcessing;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofPostProcessing =
+                        TranscribeRequestConfig.OneofPostProcessingCase.postProcessing;
+                }
+                this._postProcessing = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "utteranceDetection", {
+            get: function () {
+                return this._utteranceDetection;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofUtteranceDetection =
+                        TranscribeRequestConfig.OneofUtteranceDetectionCase.utteranceDetection;
+                }
+                this._utteranceDetection = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "pyannote", {
+            get: function () {
+                return this._pyannote;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._matchbox = undefined;
+                    this._voiceActivityDetection =
+                        TranscribeRequestConfig.VoiceActivityDetectionCase.pyannote;
+                }
+                this._pyannote = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "matchbox", {
+            get: function () {
+                return this._matchbox;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._pyannote = undefined;
+                    this._voiceActivityDetection =
+                        TranscribeRequestConfig.VoiceActivityDetectionCase.matchbox;
+                }
+                this._matchbox = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "returnOptions", {
+            get: function () {
+                return this._returnOptions;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofReturnOptions =
+                        TranscribeRequestConfig.OneofReturnOptionsCase.returnOptions;
+                }
+                this._returnOptions = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "oneofLanguageModelName", {
+            get: function () {
+                return this._oneofLanguageModelName;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "oneofPostProcessing", {
+            get: function () {
+                return this._oneofPostProcessing;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "oneofUtteranceDetection", {
+            get: function () {
+                return this._oneofUtteranceDetection;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "voiceActivityDetection", {
+            get: function () {
+                return this._voiceActivityDetection;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeRequestConfig.prototype, "oneofReturnOptions", {
+            get: function () {
+                return this._oneofReturnOptions;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        TranscribeRequestConfig.prototype.serializeBinary = function () {
+            var writer = new googleProtobuf.BinaryWriter();
+            TranscribeRequestConfig.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        };
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        TranscribeRequestConfig.prototype.toObject = function () {
+            return {
+                s2tPipelineId: this.s2tPipelineId,
+                ctcDecoding: this.ctcDecoding,
+                languageModelName: this.languageModelName,
+                postProcessing: this.postProcessing
+                    ? this.postProcessing.toObject()
+                    : undefined,
+                utteranceDetection: this.utteranceDetection
+                    ? this.utteranceDetection.toObject()
+                    : undefined,
+                pyannote: this.pyannote ? this.pyannote.toObject() : undefined,
+                matchbox: this.matchbox ? this.matchbox.toObject() : undefined,
+                returnOptions: this.returnOptions
+                    ? this.returnOptions.toObject()
+                    : undefined
+            };
+        };
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        TranscribeRequestConfig.prototype.toJSON = function () {
+            return this.toObject();
+        };
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        TranscribeRequestConfig.prototype.toProtobufJSON = function (
+        // @ts-ignore
+        options) {
+            var _a, _b;
+            return {
+                s2tPipelineId: this.s2tPipelineId,
+                ctcDecoding: exports.CTCDecoding[(_a = this.ctcDecoding) !== null && _a !== void 0 ? _a : 0],
+                languageModelName: (_b = this.languageModelName) !== null && _b !== void 0 ? _b : null,
+                postProcessing: this.postProcessing
+                    ? this.postProcessing.toProtobufJSON(options)
+                    : null,
+                utteranceDetection: this.utteranceDetection
+                    ? this.utteranceDetection.toProtobufJSON(options)
+                    : null,
+                pyannote: this.pyannote ? this.pyannote.toProtobufJSON(options) : null,
+                matchbox: this.matchbox ? this.matchbox.toProtobufJSON(options) : null,
+                returnOptions: this.returnOptions
+                    ? this.returnOptions.toProtobufJSON(options)
+                    : null
+            };
+        };
+        return TranscribeRequestConfig;
+    }());
+    exports.TranscribeRequestConfig.id = 'ondewo.s2t.TranscribeRequestConfig';
+    (function (TranscribeRequestConfig) {
+        var OneofLanguageModelNameCase;
+        (function (OneofLanguageModelNameCase) {
+            OneofLanguageModelNameCase[OneofLanguageModelNameCase["none"] = 0] = "none";
+            OneofLanguageModelNameCase[OneofLanguageModelNameCase["languageModelName"] = 1] = "languageModelName";
+        })(OneofLanguageModelNameCase = TranscribeRequestConfig.OneofLanguageModelNameCase || (TranscribeRequestConfig.OneofLanguageModelNameCase = {}));
+        var OneofPostProcessingCase;
+        (function (OneofPostProcessingCase) {
+            OneofPostProcessingCase[OneofPostProcessingCase["none"] = 0] = "none";
+            OneofPostProcessingCase[OneofPostProcessingCase["postProcessing"] = 1] = "postProcessing";
+        })(OneofPostProcessingCase = TranscribeRequestConfig.OneofPostProcessingCase || (TranscribeRequestConfig.OneofPostProcessingCase = {}));
+        var OneofUtteranceDetectionCase;
+        (function (OneofUtteranceDetectionCase) {
+            OneofUtteranceDetectionCase[OneofUtteranceDetectionCase["none"] = 0] = "none";
+            OneofUtteranceDetectionCase[OneofUtteranceDetectionCase["utteranceDetection"] = 1] = "utteranceDetection";
+        })(OneofUtteranceDetectionCase = TranscribeRequestConfig.OneofUtteranceDetectionCase || (TranscribeRequestConfig.OneofUtteranceDetectionCase = {}));
+        var VoiceActivityDetectionCase;
+        (function (VoiceActivityDetectionCase) {
+            VoiceActivityDetectionCase[VoiceActivityDetectionCase["none"] = 0] = "none";
+            VoiceActivityDetectionCase[VoiceActivityDetectionCase["pyannote"] = 1] = "pyannote";
+            VoiceActivityDetectionCase[VoiceActivityDetectionCase["matchbox"] = 2] = "matchbox";
+        })(VoiceActivityDetectionCase = TranscribeRequestConfig.VoiceActivityDetectionCase || (TranscribeRequestConfig.VoiceActivityDetectionCase = {}));
+        var OneofReturnOptionsCase;
+        (function (OneofReturnOptionsCase) {
+            OneofReturnOptionsCase[OneofReturnOptionsCase["none"] = 0] = "none";
+            OneofReturnOptionsCase[OneofReturnOptionsCase["returnOptions"] = 1] = "returnOptions";
+        })(OneofReturnOptionsCase = TranscribeRequestConfig.OneofReturnOptionsCase || (TranscribeRequestConfig.OneofReturnOptionsCase = {}));
+    })(exports.TranscribeRequestConfig || (exports.TranscribeRequestConfig = {}));
+    /**
+     * Message implementation for ondewo.s2t.TranscriptionReturnOptions
+     */
+    var TranscriptionReturnOptions = /** @class */ (function () {
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of TranscriptionReturnOptions to deeply clone from
+         */
+        function TranscriptionReturnOptions(_value) {
+            _value = _value || {};
+            this.returnStartOfSpeech = _value.returnStartOfSpeech;
+            this.returnAudio = _value.returnAudio;
+            this.returnAlternativeTranscriptions =
+                _value.returnAlternativeTranscriptions;
+            this.returnConfidenceScore = _value.returnConfidenceScore;
+            this.returnWordTiming = _value.returnWordTiming;
+            TranscriptionReturnOptions.refineValues(this);
+        }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        TranscriptionReturnOptions.deserializeBinary = function (bytes) {
+            var instance = new TranscriptionReturnOptions();
+            TranscriptionReturnOptions.deserializeBinaryFromReader(instance, new googleProtobuf.BinaryReader(bytes));
+            return instance;
+        };
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        TranscriptionReturnOptions.refineValues = function (_instance) {
+            _instance.returnStartOfSpeech = _instance.returnStartOfSpeech || false;
+            _instance.returnAudio = _instance.returnAudio || false;
+            _instance.returnAlternativeTranscriptions =
+                _instance.returnAlternativeTranscriptions || false;
+            _instance.returnConfidenceScore = _instance.returnConfidenceScore || false;
+            _instance.returnWordTiming = _instance.returnWordTiming || false;
+        };
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        TranscriptionReturnOptions.deserializeBinaryFromReader = function (_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.returnStartOfSpeech = _reader.readBool();
+                        break;
+                    case 2:
+                        _instance.returnAudio = _reader.readBool();
+                        break;
+                    case 3:
+                        _instance.returnAlternativeTranscriptions = _reader.readBool();
+                        break;
+                    case 4:
+                        _instance.returnConfidenceScore = _reader.readBool();
+                        break;
+                    case 8:
+                        _instance.returnWordTiming = _reader.readBool();
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            TranscriptionReturnOptions.refineValues(_instance);
+        };
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        TranscriptionReturnOptions.serializeBinaryToWriter = function (_instance, _writer) {
+            if (_instance.returnStartOfSpeech) {
+                _writer.writeBool(1, _instance.returnStartOfSpeech);
+            }
+            if (_instance.returnAudio) {
+                _writer.writeBool(2, _instance.returnAudio);
+            }
+            if (_instance.returnAlternativeTranscriptions) {
+                _writer.writeBool(3, _instance.returnAlternativeTranscriptions);
+            }
+            if (_instance.returnConfidenceScore) {
+                _writer.writeBool(4, _instance.returnConfidenceScore);
+            }
+            if (_instance.returnWordTiming) {
+                _writer.writeBool(8, _instance.returnWordTiming);
+            }
+        };
+        Object.defineProperty(TranscriptionReturnOptions.prototype, "returnStartOfSpeech", {
+            get: function () {
+                return this._returnStartOfSpeech;
+            },
+            set: function (value) {
+                this._returnStartOfSpeech = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscriptionReturnOptions.prototype, "returnAudio", {
+            get: function () {
+                return this._returnAudio;
+            },
+            set: function (value) {
+                this._returnAudio = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscriptionReturnOptions.prototype, "returnAlternativeTranscriptions", {
+            get: function () {
+                return this._returnAlternativeTranscriptions;
+            },
+            set: function (value) {
+                this._returnAlternativeTranscriptions = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscriptionReturnOptions.prototype, "returnConfidenceScore", {
+            get: function () {
+                return this._returnConfidenceScore;
+            },
+            set: function (value) {
+                this._returnConfidenceScore = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscriptionReturnOptions.prototype, "returnWordTiming", {
+            get: function () {
+                return this._returnWordTiming;
+            },
+            set: function (value) {
+                this._returnWordTiming = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        TranscriptionReturnOptions.prototype.serializeBinary = function () {
+            var writer = new googleProtobuf.BinaryWriter();
+            TranscriptionReturnOptions.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        };
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        TranscriptionReturnOptions.prototype.toObject = function () {
+            return {
+                returnStartOfSpeech: this.returnStartOfSpeech,
+                returnAudio: this.returnAudio,
+                returnAlternativeTranscriptions: this.returnAlternativeTranscriptions,
+                returnConfidenceScore: this.returnConfidenceScore,
+                returnWordTiming: this.returnWordTiming
+            };
+        };
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        TranscriptionReturnOptions.prototype.toJSON = function () {
+            return this.toObject();
+        };
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        TranscriptionReturnOptions.prototype.toProtobufJSON = function (
+        // @ts-ignore
+        options) {
+            return {
+                returnStartOfSpeech: this.returnStartOfSpeech,
+                returnAudio: this.returnAudio,
+                returnAlternativeTranscriptions: this.returnAlternativeTranscriptions,
+                returnConfidenceScore: this.returnConfidenceScore,
+                returnWordTiming: this.returnWordTiming
+            };
+        };
+        return TranscriptionReturnOptions;
+    }());
+    TranscriptionReturnOptions.id = 'ondewo.s2t.TranscriptionReturnOptions';
+    /**
+     * Message implementation for ondewo.s2t.UtteranceDetectionOptions
+     */
+    exports.UtteranceDetectionOptions = /** @class */ (function () {
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of UtteranceDetectionOptions to deeply clone from
+         */
+        function UtteranceDetectionOptions(_value) {
+            this._oneofTranscribeNotFinal = UtteranceDetectionOptions.OneofTranscribeNotFinalCase.none;
+            _value = _value || {};
+            this.transcribeNotFinal = _value.transcribeNotFinal;
+            this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
+            this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
+            this.nextChunkTimeout = _value.nextChunkTimeout;
+            UtteranceDetectionOptions.refineValues(this);
+        }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        UtteranceDetectionOptions.deserializeBinary = function (bytes) {
+            var instance = new UtteranceDetectionOptions();
+            UtteranceDetectionOptions.deserializeBinaryFromReader(instance, new googleProtobuf.BinaryReader(bytes));
+            return instance;
+        };
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        UtteranceDetectionOptions.refineValues = function (_instance) {
+            _instance.startOfUtteranceThreshold =
+                _instance.startOfUtteranceThreshold || 0;
+            _instance.endOfUtteranceThreshold = _instance.endOfUtteranceThreshold || 0;
+            _instance.nextChunkTimeout = _instance.nextChunkTimeout || 0;
+        };
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        UtteranceDetectionOptions.deserializeBinaryFromReader = function (_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.transcribeNotFinal = _reader.readBool();
+                        break;
+                    case 2:
+                        _instance.startOfUtteranceThreshold = _reader.readFloat();
+                        break;
+                    case 3:
+                        _instance.endOfUtteranceThreshold = _reader.readFloat();
+                        break;
+                    case 4:
+                        _instance.nextChunkTimeout = _reader.readFloat();
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            UtteranceDetectionOptions.refineValues(_instance);
+        };
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        UtteranceDetectionOptions.serializeBinaryToWriter = function (_instance, _writer) {
+            if (_instance.transcribeNotFinal ||
+                _instance.transcribeNotFinal === false) {
+                _writer.writeBool(1, _instance.transcribeNotFinal);
+            }
+            if (_instance.startOfUtteranceThreshold) {
+                _writer.writeFloat(2, _instance.startOfUtteranceThreshold);
+            }
+            if (_instance.endOfUtteranceThreshold) {
+                _writer.writeFloat(3, _instance.endOfUtteranceThreshold);
+            }
+            if (_instance.nextChunkTimeout) {
+                _writer.writeFloat(4, _instance.nextChunkTimeout);
+            }
+        };
+        Object.defineProperty(UtteranceDetectionOptions.prototype, "transcribeNotFinal", {
+            get: function () {
+                return this._transcribeNotFinal;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofTranscribeNotFinal =
+                        UtteranceDetectionOptions.OneofTranscribeNotFinalCase.transcribeNotFinal;
+                }
+                this._transcribeNotFinal = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UtteranceDetectionOptions.prototype, "startOfUtteranceThreshold", {
+            get: function () {
+                return this._startOfUtteranceThreshold;
+            },
+            set: function (value) {
+                this._startOfUtteranceThreshold = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UtteranceDetectionOptions.prototype, "endOfUtteranceThreshold", {
+            get: function () {
+                return this._endOfUtteranceThreshold;
+            },
+            set: function (value) {
+                this._endOfUtteranceThreshold = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UtteranceDetectionOptions.prototype, "nextChunkTimeout", {
+            get: function () {
+                return this._nextChunkTimeout;
+            },
+            set: function (value) {
+                this._nextChunkTimeout = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UtteranceDetectionOptions.prototype, "oneofTranscribeNotFinal", {
+            get: function () {
+                return this._oneofTranscribeNotFinal;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        UtteranceDetectionOptions.prototype.serializeBinary = function () {
+            var writer = new googleProtobuf.BinaryWriter();
+            UtteranceDetectionOptions.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        };
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        UtteranceDetectionOptions.prototype.toObject = function () {
+            return {
+                transcribeNotFinal: this.transcribeNotFinal,
+                startOfUtteranceThreshold: this.startOfUtteranceThreshold,
+                endOfUtteranceThreshold: this.endOfUtteranceThreshold,
+                nextChunkTimeout: this.nextChunkTimeout
+            };
+        };
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        UtteranceDetectionOptions.prototype.toJSON = function () {
+            return this.toObject();
+        };
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        UtteranceDetectionOptions.prototype.toProtobufJSON = function (
+        // @ts-ignore
+        options) {
+            return {
+                transcribeNotFinal: this.transcribeNotFinal,
+                startOfUtteranceThreshold: this.startOfUtteranceThreshold,
+                endOfUtteranceThreshold: this.endOfUtteranceThreshold,
+                nextChunkTimeout: this.nextChunkTimeout
+            };
+        };
+        return UtteranceDetectionOptions;
+    }());
+    exports.UtteranceDetectionOptions.id = 'ondewo.s2t.UtteranceDetectionOptions';
+    (function (UtteranceDetectionOptions) {
+        var OneofTranscribeNotFinalCase;
+        (function (OneofTranscribeNotFinalCase) {
+            OneofTranscribeNotFinalCase[OneofTranscribeNotFinalCase["none"] = 0] = "none";
+            OneofTranscribeNotFinalCase[OneofTranscribeNotFinalCase["transcribeNotFinal"] = 1] = "transcribeNotFinal";
+        })(OneofTranscribeNotFinalCase = UtteranceDetectionOptions.OneofTranscribeNotFinalCase || (UtteranceDetectionOptions.OneofTranscribeNotFinalCase = {}));
+    })(exports.UtteranceDetectionOptions || (exports.UtteranceDetectionOptions = {}));
+    /**
+     * Message implementation for ondewo.s2t.PostProcessingOptions
+     */
+    var PostProcessingOptions = /** @class */ (function () {
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of PostProcessingOptions to deeply clone from
+         */
+        function PostProcessingOptions(_value) {
+            _value = _value || {};
+            this.spellingCorrection = _value.spellingCorrection;
+            this.normalize = _value.normalize;
+            this.config = _value.config ? new PostProcessing(_value.config) : undefined;
+            PostProcessingOptions.refineValues(this);
+        }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        PostProcessingOptions.deserializeBinary = function (bytes) {
+            var instance = new PostProcessingOptions();
+            PostProcessingOptions.deserializeBinaryFromReader(instance, new googleProtobuf.BinaryReader(bytes));
+            return instance;
+        };
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        PostProcessingOptions.refineValues = function (_instance) {
+            _instance.spellingCorrection = _instance.spellingCorrection || false;
+            _instance.normalize = _instance.normalize || false;
+            _instance.config = _instance.config || undefined;
+        };
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        PostProcessingOptions.deserializeBinaryFromReader = function (_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.spellingCorrection = _reader.readBool();
+                        break;
+                    case 2:
+                        _instance.normalize = _reader.readBool();
+                        break;
+                    case 3:
+                        _instance.config = new PostProcessing();
+                        _reader.readMessage(_instance.config, PostProcessing.deserializeBinaryFromReader);
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            PostProcessingOptions.refineValues(_instance);
+        };
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        PostProcessingOptions.serializeBinaryToWriter = function (_instance, _writer) {
+            if (_instance.spellingCorrection) {
+                _writer.writeBool(1, _instance.spellingCorrection);
+            }
+            if (_instance.normalize) {
+                _writer.writeBool(2, _instance.normalize);
+            }
+            if (_instance.config) {
+                _writer.writeMessage(3, _instance.config, PostProcessing.serializeBinaryToWriter);
+            }
+        };
+        Object.defineProperty(PostProcessingOptions.prototype, "spellingCorrection", {
+            get: function () {
+                return this._spellingCorrection;
+            },
+            set: function (value) {
+                this._spellingCorrection = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(PostProcessingOptions.prototype, "normalize", {
+            get: function () {
+                return this._normalize;
+            },
+            set: function (value) {
+                this._normalize = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(PostProcessingOptions.prototype, "config", {
+            get: function () {
+                return this._config;
+            },
+            set: function (value) {
+                this._config = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        PostProcessingOptions.prototype.serializeBinary = function () {
+            var writer = new googleProtobuf.BinaryWriter();
+            PostProcessingOptions.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        };
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        PostProcessingOptions.prototype.toObject = function () {
+            return {
+                spellingCorrection: this.spellingCorrection,
+                normalize: this.normalize,
+                config: this.config ? this.config.toObject() : undefined
+            };
+        };
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        PostProcessingOptions.prototype.toJSON = function () {
+            return this.toObject();
+        };
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        PostProcessingOptions.prototype.toProtobufJSON = function (
+        // @ts-ignore
+        options) {
+            return {
+                spellingCorrection: this.spellingCorrection,
+                normalize: this.normalize,
+                config: this.config ? this.config.toProtobufJSON(options) : null
+            };
+        };
+        return PostProcessingOptions;
+    }());
+    PostProcessingOptions.id = 'ondewo.s2t.PostProcessingOptions';
+    /**
      * Message implementation for ondewo.s2t.TranscribeStreamRequest
      */
     var TranscribeStreamRequest = /** @class */ (function () {
@@ -27,15 +906,11 @@
          */
         function TranscribeStreamRequest(_value) {
             _value = _value || {};
-            this.s2tPipelineId = _value.s2tPipelineId;
             this.audioChunk = _value.audioChunk;
-            this.ctcDecoding = _value.ctcDecoding;
-            this.languageModelName = _value.languageModelName;
-            this.spellingCorrection = _value.spellingCorrection;
-            this.disableNormalization = _value.disableNormalization;
             this.endOfStream = _value.endOfStream;
-            this.returnStartOfSpeech = _value.returnStartOfSpeech;
-            this.returnAudio = _value.returnAudio;
+            this.config = _value.config
+                ? new exports.TranscribeRequestConfig(_value.config)
+                : undefined;
             TranscribeStreamRequest.refineValues(this);
         }
         /**
@@ -52,15 +927,9 @@
          * @param _instance message instance
          */
         TranscribeStreamRequest.refineValues = function (_instance) {
-            _instance.s2tPipelineId = _instance.s2tPipelineId || '';
             _instance.audioChunk = _instance.audioChunk || new Uint8Array();
-            _instance.ctcDecoding = _instance.ctcDecoding || 0;
-            _instance.languageModelName = _instance.languageModelName || '';
-            _instance.spellingCorrection = _instance.spellingCorrection || false;
-            _instance.disableNormalization = _instance.disableNormalization || false;
             _instance.endOfStream = _instance.endOfStream || false;
-            _instance.returnStartOfSpeech = _instance.returnStartOfSpeech || false;
-            _instance.returnAudio = _instance.returnAudio || false;
+            _instance.config = _instance.config || undefined;
         };
         /**
          * Deserializes / reads binary message into message instance using provided binary reader
@@ -73,31 +942,14 @@
                     break;
                 switch (_reader.getFieldNumber()) {
                     case 1:
-                        _instance.s2tPipelineId = _reader.readString();
-                        break;
-                    case 2:
                         _instance.audioChunk = _reader.readBytes();
                         break;
-                    case 3:
-                        _instance.ctcDecoding = _reader.readEnum();
-                        break;
-                    case 4:
-                        _instance.languageModelName = _reader.readString();
-                        break;
-                    case 5:
-                        _instance.spellingCorrection = _reader.readBool();
-                        break;
-                    case 6:
-                        _instance.disableNormalization = _reader.readBool();
-                        break;
-                    case 7:
+                    case 2:
                         _instance.endOfStream = _reader.readBool();
                         break;
-                    case 8:
-                        _instance.returnStartOfSpeech = _reader.readBool();
-                        break;
-                    case 9:
-                        _instance.returnAudio = _reader.readBool();
+                    case 3:
+                        _instance.config = new exports.TranscribeRequestConfig();
+                        _reader.readMessage(_instance.config, exports.TranscribeRequestConfig.deserializeBinaryFromReader);
                         break;
                     default:
                         _reader.skipField();
@@ -111,90 +963,22 @@
          * @param _writer binary writer instance
          */
         TranscribeStreamRequest.serializeBinaryToWriter = function (_instance, _writer) {
-            if (_instance.s2tPipelineId) {
-                _writer.writeString(1, _instance.s2tPipelineId);
-            }
             if (_instance.audioChunk && _instance.audioChunk.length) {
-                _writer.writeBytes(2, _instance.audioChunk);
-            }
-            if (_instance.ctcDecoding) {
-                _writer.writeEnum(3, _instance.ctcDecoding);
-            }
-            if (_instance.languageModelName) {
-                _writer.writeString(4, _instance.languageModelName);
-            }
-            if (_instance.spellingCorrection) {
-                _writer.writeBool(5, _instance.spellingCorrection);
-            }
-            if (_instance.disableNormalization) {
-                _writer.writeBool(6, _instance.disableNormalization);
+                _writer.writeBytes(1, _instance.audioChunk);
             }
             if (_instance.endOfStream) {
-                _writer.writeBool(7, _instance.endOfStream);
+                _writer.writeBool(2, _instance.endOfStream);
             }
-            if (_instance.returnStartOfSpeech) {
-                _writer.writeBool(8, _instance.returnStartOfSpeech);
-            }
-            if (_instance.returnAudio) {
-                _writer.writeBool(9, _instance.returnAudio);
+            if (_instance.config) {
+                _writer.writeMessage(3, _instance.config, exports.TranscribeRequestConfig.serializeBinaryToWriter);
             }
         };
-        Object.defineProperty(TranscribeStreamRequest.prototype, "s2tPipelineId", {
-            get: function () {
-                return this._s2tPipelineId;
-            },
-            set: function (value) {
-                this._s2tPipelineId = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
         Object.defineProperty(TranscribeStreamRequest.prototype, "audioChunk", {
             get: function () {
                 return this._audioChunk;
             },
             set: function (value) {
                 this._audioChunk = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeStreamRequest.prototype, "ctcDecoding", {
-            get: function () {
-                return this._ctcDecoding;
-            },
-            set: function (value) {
-                this._ctcDecoding = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeStreamRequest.prototype, "languageModelName", {
-            get: function () {
-                return this._languageModelName;
-            },
-            set: function (value) {
-                this._languageModelName = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeStreamRequest.prototype, "spellingCorrection", {
-            get: function () {
-                return this._spellingCorrection;
-            },
-            set: function (value) {
-                this._spellingCorrection = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeStreamRequest.prototype, "disableNormalization", {
-            get: function () {
-                return this._disableNormalization;
-            },
-            set: function (value) {
-                this._disableNormalization = value;
             },
             enumerable: false,
             configurable: true
@@ -209,22 +993,12 @@
             enumerable: false,
             configurable: true
         });
-        Object.defineProperty(TranscribeStreamRequest.prototype, "returnStartOfSpeech", {
+        Object.defineProperty(TranscribeStreamRequest.prototype, "config", {
             get: function () {
-                return this._returnStartOfSpeech;
+                return this._config;
             },
             set: function (value) {
-                this._returnStartOfSpeech = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeStreamRequest.prototype, "returnAudio", {
-            get: function () {
-                return this._returnAudio;
-            },
-            set: function (value) {
-                this._returnAudio = value;
+                this._config = value;
             },
             enumerable: false,
             configurable: true
@@ -243,17 +1017,11 @@
          */
         TranscribeStreamRequest.prototype.toObject = function () {
             return {
-                s2tPipelineId: this.s2tPipelineId,
                 audioChunk: this.audioChunk
                     ? this.audioChunk.subarray(0)
                     : new Uint8Array(),
-                ctcDecoding: this.ctcDecoding,
-                languageModelName: this.languageModelName,
-                spellingCorrection: this.spellingCorrection,
-                disableNormalization: this.disableNormalization,
                 endOfStream: this.endOfStream,
-                returnStartOfSpeech: this.returnStartOfSpeech,
-                returnAudio: this.returnAudio
+                config: this.config ? this.config.toObject() : undefined
             };
         };
         /**
@@ -270,38 +1038,162 @@
         TranscribeStreamRequest.prototype.toProtobufJSON = function (
         // @ts-ignore
         options) {
-            var _a;
             return {
-                s2tPipelineId: this.s2tPipelineId,
                 audioChunk: this.audioChunk ? common.uint8ArrayToBase64(this.audioChunk) : '',
-                ctcDecoding: exports.CTCDecoding[(_a = this.ctcDecoding) !== null && _a !== void 0 ? _a : 0],
-                languageModelName: this.languageModelName,
-                spellingCorrection: this.spellingCorrection,
-                disableNormalization: this.disableNormalization,
                 endOfStream: this.endOfStream,
-                returnStartOfSpeech: this.returnStartOfSpeech,
-                returnAudio: this.returnAudio
+                config: this.config ? this.config.toProtobufJSON(options) : null
             };
         };
         return TranscribeStreamRequest;
     }());
     TranscribeStreamRequest.id = 'ondewo.s2t.TranscribeStreamRequest';
     /**
+     * Message implementation for ondewo.s2t.Transcription
+     */
+    var Transcription = /** @class */ (function () {
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of Transcription to deeply clone from
+         */
+        function Transcription(_value) {
+            _value = _value || {};
+            this.transcription = _value.transcription;
+            this.confidenceScore = _value.confidenceScore;
+            Transcription.refineValues(this);
+        }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        Transcription.deserializeBinary = function (bytes) {
+            var instance = new Transcription();
+            Transcription.deserializeBinaryFromReader(instance, new googleProtobuf.BinaryReader(bytes));
+            return instance;
+        };
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        Transcription.refineValues = function (_instance) {
+            _instance.transcription = _instance.transcription || '';
+            _instance.confidenceScore = _instance.confidenceScore || 0;
+        };
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        Transcription.deserializeBinaryFromReader = function (_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.transcription = _reader.readString();
+                        break;
+                    case 2:
+                        _instance.confidenceScore = _reader.readFloat();
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            Transcription.refineValues(_instance);
+        };
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        Transcription.serializeBinaryToWriter = function (_instance, _writer) {
+            if (_instance.transcription) {
+                _writer.writeString(1, _instance.transcription);
+            }
+            if (_instance.confidenceScore) {
+                _writer.writeFloat(2, _instance.confidenceScore);
+            }
+        };
+        Object.defineProperty(Transcription.prototype, "transcription", {
+            get: function () {
+                return this._transcription;
+            },
+            set: function (value) {
+                this._transcription = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Transcription.prototype, "confidenceScore", {
+            get: function () {
+                return this._confidenceScore;
+            },
+            set: function (value) {
+                this._confidenceScore = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        Transcription.prototype.serializeBinary = function () {
+            var writer = new googleProtobuf.BinaryWriter();
+            Transcription.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        };
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        Transcription.prototype.toObject = function () {
+            return {
+                transcription: this.transcription,
+                confidenceScore: this.confidenceScore
+            };
+        };
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        Transcription.prototype.toJSON = function () {
+            return this.toObject();
+        };
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        Transcription.prototype.toProtobufJSON = function (
+        // @ts-ignore
+        options) {
+            return {
+                transcription: this.transcription,
+                confidenceScore: this.confidenceScore
+            };
+        };
+        return Transcription;
+    }());
+    Transcription.id = 'ondewo.s2t.Transcription';
+    /**
      * Message implementation for ondewo.s2t.TranscribeStreamResponse
      */
-    var TranscribeStreamResponse = /** @class */ (function () {
+    exports.TranscribeStreamResponse = /** @class */ (function () {
         /**
          * Message constructor. Initializes the properties and applies default Protobuf values if necessary
          * @param _value initial values object or instance of TranscribeStreamResponse to deeply clone from
          */
         function TranscribeStreamResponse(_value) {
+            this._oneofConfig = TranscribeStreamResponse.OneofConfigCase.none;
             _value = _value || {};
-            this.transcription = _value.transcription;
+            this.transcriptions = (_value.transcriptions || []).map(function (m) { return new Transcription(m); });
             this.time = _value.time;
             this.final = _value.final;
             this.returnAudio = _value.returnAudio;
             this.audio = _value.audio;
             this.utteranceStart = _value.utteranceStart;
+            this.audioUuid = _value.audioUuid;
+            this.config = _value.config
+                ? new exports.TranscribeRequestConfig(_value.config)
+                : undefined;
             TranscribeStreamResponse.refineValues(this);
         }
         /**
@@ -318,12 +1210,13 @@
          * @param _instance message instance
          */
         TranscribeStreamResponse.refineValues = function (_instance) {
-            _instance.transcription = _instance.transcription || '';
+            _instance.transcriptions = _instance.transcriptions || [];
             _instance.time = _instance.time || 0;
             _instance.final = _instance.final || false;
             _instance.returnAudio = _instance.returnAudio || false;
             _instance.audio = _instance.audio || new Uint8Array();
             _instance.utteranceStart = _instance.utteranceStart || false;
+            _instance.audioUuid = _instance.audioUuid || '';
         };
         /**
          * Deserializes / reads binary message into message instance using provided binary reader
@@ -336,7 +1229,9 @@
                     break;
                 switch (_reader.getFieldNumber()) {
                     case 1:
-                        _instance.transcription = _reader.readString();
+                        var messageInitializer1 = new Transcription();
+                        _reader.readMessage(messageInitializer1, Transcription.deserializeBinaryFromReader);
+                        (_instance.transcriptions = _instance.transcriptions || []).push(messageInitializer1);
                         break;
                     case 2:
                         _instance.time = _reader.readFloat();
@@ -353,6 +1248,13 @@
                     case 6:
                         _instance.utteranceStart = _reader.readBool();
                         break;
+                    case 7:
+                        _instance.audioUuid = _reader.readString();
+                        break;
+                    case 8:
+                        _instance.config = new exports.TranscribeRequestConfig();
+                        _reader.readMessage(_instance.config, exports.TranscribeRequestConfig.deserializeBinaryFromReader);
+                        break;
                     default:
                         _reader.skipField();
                 }
@@ -365,8 +1267,8 @@
          * @param _writer binary writer instance
          */
         TranscribeStreamResponse.serializeBinaryToWriter = function (_instance, _writer) {
-            if (_instance.transcription) {
-                _writer.writeString(1, _instance.transcription);
+            if (_instance.transcriptions && _instance.transcriptions.length) {
+                _writer.writeRepeatedMessage(1, _instance.transcriptions, Transcription.serializeBinaryToWriter);
             }
             if (_instance.time) {
                 _writer.writeFloat(2, _instance.time);
@@ -383,13 +1285,19 @@
             if (_instance.utteranceStart) {
                 _writer.writeBool(6, _instance.utteranceStart);
             }
+            if (_instance.audioUuid) {
+                _writer.writeString(7, _instance.audioUuid);
+            }
+            if (_instance.config) {
+                _writer.writeMessage(8, _instance.config, exports.TranscribeRequestConfig.serializeBinaryToWriter);
+            }
         };
-        Object.defineProperty(TranscribeStreamResponse.prototype, "transcription", {
+        Object.defineProperty(TranscribeStreamResponse.prototype, "transcriptions", {
             get: function () {
-                return this._transcription;
+                return this._transcriptions;
             },
             set: function (value) {
-                this._transcription = value;
+                this._transcriptions = value;
             },
             enumerable: false,
             configurable: true
@@ -444,6 +1352,36 @@
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(TranscribeStreamResponse.prototype, "audioUuid", {
+            get: function () {
+                return this._audioUuid;
+            },
+            set: function (value) {
+                this._audioUuid = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeStreamResponse.prototype, "config", {
+            get: function () {
+                return this._config;
+            },
+            set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofConfig = TranscribeStreamResponse.OneofConfigCase.config;
+                }
+                this._config = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TranscribeStreamResponse.prototype, "oneofConfig", {
+            get: function () {
+                return this._oneofConfig;
+            },
+            enumerable: false,
+            configurable: true
+        });
         /**
          * Serialize message to binary data
          * @param instance message instance
@@ -458,12 +1396,14 @@
          */
         TranscribeStreamResponse.prototype.toObject = function () {
             return {
-                transcription: this.transcription,
+                transcriptions: (this.transcriptions || []).map(function (m) { return m.toObject(); }),
                 time: this.time,
                 final: this.final,
                 returnAudio: this.returnAudio,
                 audio: this.audio ? this.audio.subarray(0) : new Uint8Array(),
-                utteranceStart: this.utteranceStart
+                utteranceStart: this.utteranceStart,
+                audioUuid: this.audioUuid,
+                config: this.config ? this.config.toObject() : undefined
             };
         };
         /**
@@ -481,17 +1421,26 @@
         // @ts-ignore
         options) {
             return {
-                transcription: this.transcription,
+                transcriptions: (this.transcriptions || []).map(function (m) { return m.toProtobufJSON(options); }),
                 time: this.time,
                 final: this.final,
                 returnAudio: this.returnAudio,
                 audio: this.audio ? common.uint8ArrayToBase64(this.audio) : '',
-                utteranceStart: this.utteranceStart
+                utteranceStart: this.utteranceStart,
+                audioUuid: this.audioUuid,
+                config: this.config ? this.config.toProtobufJSON(options) : null
             };
         };
         return TranscribeStreamResponse;
     }());
-    TranscribeStreamResponse.id = 'ondewo.s2t.TranscribeStreamResponse';
+    exports.TranscribeStreamResponse.id = 'ondewo.s2t.TranscribeStreamResponse';
+    (function (TranscribeStreamResponse) {
+        var OneofConfigCase;
+        (function (OneofConfigCase) {
+            OneofConfigCase[OneofConfigCase["none"] = 0] = "none";
+            OneofConfigCase[OneofConfigCase["config"] = 1] = "config";
+        })(OneofConfigCase = TranscribeStreamResponse.OneofConfigCase || (TranscribeStreamResponse.OneofConfigCase = {}));
+    })(exports.TranscribeStreamResponse || (exports.TranscribeStreamResponse = {}));
     /**
      * Message implementation for ondewo.s2t.TranscribeFileRequest
      */
@@ -502,13 +1451,10 @@
          */
         function TranscribeFileRequest(_value) {
             _value = _value || {};
-            this.s2tPipelineId = _value.s2tPipelineId;
             this.audioFile = _value.audioFile;
-            this.ctcDecoding = _value.ctcDecoding;
-            this.languageModelName = _value.languageModelName;
-            this.spellingCorrection = _value.spellingCorrection;
-            this.disableNormalization = _value.disableNormalization;
-            this.includeTiming = _value.includeTiming;
+            this.config = _value.config
+                ? new exports.TranscribeRequestConfig(_value.config)
+                : undefined;
             TranscribeFileRequest.refineValues(this);
         }
         /**
@@ -525,13 +1471,8 @@
          * @param _instance message instance
          */
         TranscribeFileRequest.refineValues = function (_instance) {
-            _instance.s2tPipelineId = _instance.s2tPipelineId || '';
             _instance.audioFile = _instance.audioFile || new Uint8Array();
-            _instance.ctcDecoding = _instance.ctcDecoding || 0;
-            _instance.languageModelName = _instance.languageModelName || '';
-            _instance.spellingCorrection = _instance.spellingCorrection || false;
-            _instance.disableNormalization = _instance.disableNormalization || false;
-            _instance.includeTiming = _instance.includeTiming || false;
+            _instance.config = _instance.config || undefined;
         };
         /**
          * Deserializes / reads binary message into message instance using provided binary reader
@@ -544,25 +1485,11 @@
                     break;
                 switch (_reader.getFieldNumber()) {
                     case 1:
-                        _instance.s2tPipelineId = _reader.readString();
-                        break;
-                    case 2:
                         _instance.audioFile = _reader.readBytes();
                         break;
-                    case 3:
-                        _instance.ctcDecoding = _reader.readEnum();
-                        break;
-                    case 4:
-                        _instance.languageModelName = _reader.readString();
-                        break;
-                    case 5:
-                        _instance.spellingCorrection = _reader.readBool();
-                        break;
-                    case 6:
-                        _instance.disableNormalization = _reader.readBool();
-                        break;
-                    case 7:
-                        _instance.includeTiming = _reader.readBool();
+                    case 2:
+                        _instance.config = new exports.TranscribeRequestConfig();
+                        _reader.readMessage(_instance.config, exports.TranscribeRequestConfig.deserializeBinaryFromReader);
                         break;
                     default:
                         _reader.skipField();
@@ -576,38 +1503,13 @@
          * @param _writer binary writer instance
          */
         TranscribeFileRequest.serializeBinaryToWriter = function (_instance, _writer) {
-            if (_instance.s2tPipelineId) {
-                _writer.writeString(1, _instance.s2tPipelineId);
-            }
             if (_instance.audioFile && _instance.audioFile.length) {
-                _writer.writeBytes(2, _instance.audioFile);
+                _writer.writeBytes(1, _instance.audioFile);
             }
-            if (_instance.ctcDecoding) {
-                _writer.writeEnum(3, _instance.ctcDecoding);
-            }
-            if (_instance.languageModelName) {
-                _writer.writeString(4, _instance.languageModelName);
-            }
-            if (_instance.spellingCorrection) {
-                _writer.writeBool(5, _instance.spellingCorrection);
-            }
-            if (_instance.disableNormalization) {
-                _writer.writeBool(6, _instance.disableNormalization);
-            }
-            if (_instance.includeTiming) {
-                _writer.writeBool(7, _instance.includeTiming);
+            if (_instance.config) {
+                _writer.writeMessage(2, _instance.config, exports.TranscribeRequestConfig.serializeBinaryToWriter);
             }
         };
-        Object.defineProperty(TranscribeFileRequest.prototype, "s2tPipelineId", {
-            get: function () {
-                return this._s2tPipelineId;
-            },
-            set: function (value) {
-                this._s2tPipelineId = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
         Object.defineProperty(TranscribeFileRequest.prototype, "audioFile", {
             get: function () {
                 return this._audioFile;
@@ -618,52 +1520,12 @@
             enumerable: false,
             configurable: true
         });
-        Object.defineProperty(TranscribeFileRequest.prototype, "ctcDecoding", {
+        Object.defineProperty(TranscribeFileRequest.prototype, "config", {
             get: function () {
-                return this._ctcDecoding;
+                return this._config;
             },
             set: function (value) {
-                this._ctcDecoding = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeFileRequest.prototype, "languageModelName", {
-            get: function () {
-                return this._languageModelName;
-            },
-            set: function (value) {
-                this._languageModelName = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeFileRequest.prototype, "spellingCorrection", {
-            get: function () {
-                return this._spellingCorrection;
-            },
-            set: function (value) {
-                this._spellingCorrection = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeFileRequest.prototype, "disableNormalization", {
-            get: function () {
-                return this._disableNormalization;
-            },
-            set: function (value) {
-                this._disableNormalization = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(TranscribeFileRequest.prototype, "includeTiming", {
-            get: function () {
-                return this._includeTiming;
-            },
-            set: function (value) {
-                this._includeTiming = value;
+                this._config = value;
             },
             enumerable: false,
             configurable: true
@@ -682,13 +1544,8 @@
          */
         TranscribeFileRequest.prototype.toObject = function () {
             return {
-                s2tPipelineId: this.s2tPipelineId,
                 audioFile: this.audioFile ? this.audioFile.subarray(0) : new Uint8Array(),
-                ctcDecoding: this.ctcDecoding,
-                languageModelName: this.languageModelName,
-                spellingCorrection: this.spellingCorrection,
-                disableNormalization: this.disableNormalization,
-                includeTiming: this.includeTiming
+                config: this.config ? this.config.toObject() : undefined
             };
         };
         /**
@@ -705,15 +1562,9 @@
         TranscribeFileRequest.prototype.toProtobufJSON = function (
         // @ts-ignore
         options) {
-            var _a;
             return {
-                s2tPipelineId: this.s2tPipelineId,
                 audioFile: this.audioFile ? common.uint8ArrayToBase64(this.audioFile) : '',
-                ctcDecoding: exports.CTCDecoding[(_a = this.ctcDecoding) !== null && _a !== void 0 ? _a : 0],
-                languageModelName: this.languageModelName,
-                spellingCorrection: this.spellingCorrection,
-                disableNormalization: this.disableNormalization,
-                includeTiming: this.includeTiming
+                config: this.config ? this.config.toProtobufJSON(options) : null
             };
         };
         return TranscribeFileRequest;
@@ -729,9 +1580,10 @@
          */
         function TranscribeFileResponse(_value) {
             _value = _value || {};
-            this.transcription = _value.transcription;
+            this.transcriptions = (_value.transcriptions || []).map(function (m) { return new Transcription(m); });
             this.time = _value.time;
             this.wordTiming = (_value.wordTiming || []).map(function (m) { return new WordTiming(m); });
+            this.audioUuid = _value.audioUuid;
             TranscribeFileResponse.refineValues(this);
         }
         /**
@@ -748,9 +1600,10 @@
          * @param _instance message instance
          */
         TranscribeFileResponse.refineValues = function (_instance) {
-            _instance.transcription = _instance.transcription || '';
+            _instance.transcriptions = _instance.transcriptions || [];
             _instance.time = _instance.time || 0;
             _instance.wordTiming = _instance.wordTiming || [];
+            _instance.audioUuid = _instance.audioUuid || '';
         };
         /**
          * Deserializes / reads binary message into message instance using provided binary reader
@@ -763,7 +1616,9 @@
                     break;
                 switch (_reader.getFieldNumber()) {
                     case 1:
-                        _instance.transcription = _reader.readString();
+                        var messageInitializer1 = new Transcription();
+                        _reader.readMessage(messageInitializer1, Transcription.deserializeBinaryFromReader);
+                        (_instance.transcriptions = _instance.transcriptions || []).push(messageInitializer1);
                         break;
                     case 2:
                         _instance.time = _reader.readFloat();
@@ -772,6 +1627,9 @@
                         var messageInitializer3 = new WordTiming();
                         _reader.readMessage(messageInitializer3, WordTiming.deserializeBinaryFromReader);
                         (_instance.wordTiming = _instance.wordTiming || []).push(messageInitializer3);
+                        break;
+                    case 4:
+                        _instance.audioUuid = _reader.readString();
                         break;
                     default:
                         _reader.skipField();
@@ -785,8 +1643,8 @@
          * @param _writer binary writer instance
          */
         TranscribeFileResponse.serializeBinaryToWriter = function (_instance, _writer) {
-            if (_instance.transcription) {
-                _writer.writeString(1, _instance.transcription);
+            if (_instance.transcriptions && _instance.transcriptions.length) {
+                _writer.writeRepeatedMessage(1, _instance.transcriptions, Transcription.serializeBinaryToWriter);
             }
             if (_instance.time) {
                 _writer.writeFloat(2, _instance.time);
@@ -794,13 +1652,16 @@
             if (_instance.wordTiming && _instance.wordTiming.length) {
                 _writer.writeRepeatedMessage(3, _instance.wordTiming, WordTiming.serializeBinaryToWriter);
             }
+            if (_instance.audioUuid) {
+                _writer.writeString(4, _instance.audioUuid);
+            }
         };
-        Object.defineProperty(TranscribeFileResponse.prototype, "transcription", {
+        Object.defineProperty(TranscribeFileResponse.prototype, "transcriptions", {
             get: function () {
-                return this._transcription;
+                return this._transcriptions;
             },
             set: function (value) {
-                this._transcription = value;
+                this._transcriptions = value;
             },
             enumerable: false,
             configurable: true
@@ -825,6 +1686,16 @@
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(TranscribeFileResponse.prototype, "audioUuid", {
+            get: function () {
+                return this._audioUuid;
+            },
+            set: function (value) {
+                this._audioUuid = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
         /**
          * Serialize message to binary data
          * @param instance message instance
@@ -839,9 +1710,10 @@
          */
         TranscribeFileResponse.prototype.toObject = function () {
             return {
-                transcription: this.transcription,
+                transcriptions: (this.transcriptions || []).map(function (m) { return m.toObject(); }),
                 time: this.time,
-                wordTiming: (this.wordTiming || []).map(function (m) { return m.toObject(); })
+                wordTiming: (this.wordTiming || []).map(function (m) { return m.toObject(); }),
+                audioUuid: this.audioUuid
             };
         };
         /**
@@ -859,9 +1731,10 @@
         // @ts-ignore
         options) {
             return {
-                transcription: this.transcription,
+                transcriptions: (this.transcriptions || []).map(function (m) { return m.toProtobufJSON(options); }),
                 time: this.time,
-                wordTiming: (this.wordTiming || []).map(function (m) { return m.toProtobufJSON(options); })
+                wordTiming: (this.wordTiming || []).map(function (m) { return m.toProtobufJSON(options); }),
+                audioUuid: this.audioUuid
             };
         };
         return TranscribeFileResponse;
@@ -3994,7 +4867,7 @@
             _value = _value || {};
             this.active = _value.active;
             this.samplingRate = _value.samplingRate;
-            this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
+            this.pyannote = _value.pyannote ? new exports.Pyannote(_value.pyannote) : undefined;
             this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
             VoiceActivityDetection.refineValues(this);
         }
@@ -4034,8 +4907,8 @@
                         _instance.samplingRate = _reader.readInt64String();
                         break;
                     case 3:
-                        _instance.pyannote = new Pyannote();
-                        _reader.readMessage(_instance.pyannote, Pyannote.deserializeBinaryFromReader);
+                        _instance.pyannote = new exports.Pyannote();
+                        _reader.readMessage(_instance.pyannote, exports.Pyannote.deserializeBinaryFromReader);
                         break;
                     case 4:
                         _instance.matchbox = new Matchbox();
@@ -4060,7 +4933,7 @@
                 _writer.writeInt64String(2, _instance.samplingRate);
             }
             if (_instance.pyannote) {
-                _writer.writeMessage(3, _instance.pyannote, Pyannote.serializeBinaryToWriter);
+                _writer.writeMessage(3, _instance.pyannote, exports.Pyannote.serializeBinaryToWriter);
             }
             if (_instance.matchbox) {
                 _writer.writeMessage(4, _instance.matchbox, Matchbox.serializeBinaryToWriter);
@@ -4153,12 +5026,13 @@
     /**
      * Message implementation for ondewo.s2t.Pyannote
      */
-    var Pyannote = /** @class */ (function () {
+    exports.Pyannote = /** @class */ (function () {
         /**
          * Message constructor. Initializes the properties and applies default Protobuf values if necessary
          * @param _value initial values object or instance of Pyannote to deeply clone from
          */
         function Pyannote(_value) {
+            this._oneofLogScale = Pyannote.OneofLogScaleCase.none;
             _value = _value || {};
             this.modelPath = _value.modelPath;
             this.minAudioSize = _value.minAudioSize;
@@ -4187,7 +5061,6 @@
             _instance.minAudioSize = _instance.minAudioSize || '0';
             _instance.offset = _instance.offset || 0;
             _instance.onset = _instance.onset || 0;
-            _instance.logScale = _instance.logScale || false;
             _instance.minDurationOff = _instance.minDurationOff || 0;
             _instance.minDurationOn = _instance.minDurationOn || 0;
         };
@@ -4246,7 +5119,7 @@
             if (_instance.onset) {
                 _writer.writeFloat(4, _instance.onset);
             }
-            if (_instance.logScale) {
+            if (_instance.logScale || _instance.logScale === false) {
                 _writer.writeBool(5, _instance.logScale);
             }
             if (_instance.minDurationOff) {
@@ -4301,6 +5174,9 @@
                 return this._logScale;
             },
             set: function (value) {
+                if (value !== undefined && value !== null) {
+                    this._oneofLogScale = Pyannote.OneofLogScaleCase.logScale;
+                }
                 this._logScale = value;
             },
             enumerable: false,
@@ -4322,6 +5198,13 @@
             },
             set: function (value) {
                 this._minDurationOn = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Pyannote.prototype, "oneofLogScale", {
+            get: function () {
+                return this._oneofLogScale;
             },
             enumerable: false,
             configurable: true
@@ -4375,7 +5258,14 @@
         };
         return Pyannote;
     }());
-    Pyannote.id = 'ondewo.s2t.Pyannote';
+    exports.Pyannote.id = 'ondewo.s2t.Pyannote';
+    (function (Pyannote) {
+        var OneofLogScaleCase;
+        (function (OneofLogScaleCase) {
+            OneofLogScaleCase[OneofLogScaleCase["none"] = 0] = "none";
+            OneofLogScaleCase[OneofLogScaleCase["logScale"] = 1] = "logScale";
+        })(OneofLogScaleCase = Pyannote.OneofLogScaleCase || (Pyannote.OneofLogScaleCase = {}));
+    })(exports.Pyannote || (exports.Pyannote = {}));
     /**
      * Message implementation for ondewo.s2t.Matchbox
      */
@@ -5558,7 +6448,7 @@
                         requestData: requestData,
                         requestMetadata: requestMetadata,
                         requestClass: TranscribeStreamRequest,
-                        responseClass: TranscribeStreamResponse
+                        responseClass: exports.TranscribeStreamResponse
                     });
                 },
                 /**
@@ -5914,9 +6804,9 @@
     exports.Matchbox = Matchbox;
     exports.Normalization = Normalization;
     exports.PostProcessing = PostProcessing;
+    exports.PostProcessingOptions = PostProcessingOptions;
     exports.PostProcessors = PostProcessors;
     exports.PtFiles = PtFiles;
-    exports.Pyannote = Pyannote;
     exports.Quartznet = Quartznet;
     exports.QuartznetTriton = QuartznetTriton;
     exports.S2tPipelineId = S2tPipelineId;
@@ -5928,7 +6818,8 @@
     exports.TranscribeFileRequest = TranscribeFileRequest;
     exports.TranscribeFileResponse = TranscribeFileResponse;
     exports.TranscribeStreamRequest = TranscribeStreamRequest;
-    exports.TranscribeStreamResponse = TranscribeStreamResponse;
+    exports.Transcription = Transcription;
+    exports.TranscriptionReturnOptions = TranscriptionReturnOptions;
     exports.VoiceActivityDetection = VoiceActivityDetection;
     exports.Wav2Vec = Wav2Vec;
     exports.WordTiming = WordTiming;
