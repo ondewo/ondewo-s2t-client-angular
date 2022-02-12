@@ -1402,38 +1402,38 @@ export declare module ListS2tDomainsResponse {
     }
 }
 /**
- * Message implementation for ondewo.s2t.GetServiceInfoResponse
+ * Message implementation for ondewo.s2t.S2TGetServiceInfoResponse
  */
-export declare class GetServiceInfoResponse implements GrpcMessage {
+export declare class S2TGetServiceInfoResponse implements GrpcMessage {
     static id: string;
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
-    static deserializeBinary(bytes: ByteSource): GetServiceInfoResponse;
+    static deserializeBinary(bytes: ByteSource): S2TGetServiceInfoResponse;
     /**
      * Check all the properties and set default protobuf values if necessary
      * @param _instance message instance
      */
-    static refineValues(_instance: GetServiceInfoResponse): void;
+    static refineValues(_instance: S2TGetServiceInfoResponse): void;
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
      * @param _instance message instance
      * @param _reader binary reader instance
      */
-    static deserializeBinaryFromReader(_instance: GetServiceInfoResponse, _reader: BinaryReader): void;
+    static deserializeBinaryFromReader(_instance: S2TGetServiceInfoResponse, _reader: BinaryReader): void;
     /**
      * Serializes a message to binary format using provided binary reader
      * @param _instance message instance
      * @param _writer binary writer instance
      */
-    static serializeBinaryToWriter(_instance: GetServiceInfoResponse, _writer: BinaryWriter): void;
+    static serializeBinaryToWriter(_instance: S2TGetServiceInfoResponse, _writer: BinaryWriter): void;
     private _version?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of GetServiceInfoResponse to deeply clone from
+     * @param _value initial values object or instance of S2TGetServiceInfoResponse to deeply clone from
      */
-    constructor(_value?: RecursivePartial<GetServiceInfoResponse.AsObject>);
+    constructor(_value?: RecursivePartial<S2TGetServiceInfoResponse.AsObject>);
     get version(): string | undefined;
     set version(value: string | undefined);
     /**
@@ -1444,27 +1444,27 @@ export declare class GetServiceInfoResponse implements GrpcMessage {
     /**
      * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
      */
-    toObject(): GetServiceInfoResponse.AsObject;
+    toObject(): S2TGetServiceInfoResponse.AsObject;
     /**
      * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
      */
-    toJSON(): GetServiceInfoResponse.AsObject;
+    toJSON(): S2TGetServiceInfoResponse.AsObject;
     /**
      * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
      * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
      * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
      */
-    toProtobufJSON(options?: ToProtobufJSONOptions): GetServiceInfoResponse.AsProtobufJSON;
+    toProtobufJSON(options?: ToProtobufJSONOptions): S2TGetServiceInfoResponse.AsProtobufJSON;
 }
-export declare module GetServiceInfoResponse {
+export declare module S2TGetServiceInfoResponse {
     /**
-     * Standard JavaScript object representation for GetServiceInfoResponse
+     * Standard JavaScript object representation for S2TGetServiceInfoResponse
      */
     interface AsObject {
         version?: string;
     }
     /**
-     * Protobuf JSON representation for GetServiceInfoResponse
+     * Protobuf JSON representation for S2TGetServiceInfoResponse
      */
     interface AsProtobufJSON {
         version?: string;
@@ -1512,12 +1512,12 @@ export declare class Speech2TextConfig implements GrpcMessage {
     constructor(_value?: RecursivePartial<Speech2TextConfig.AsObject>);
     get id(): string | undefined;
     set id(value: string | undefined);
-    get description(): Description | undefined;
-    set description(value: Description | undefined);
+    get description(): S2TDescription | undefined;
+    set description(value: S2TDescription | undefined);
     get active(): boolean | undefined;
     set active(value: boolean | undefined);
-    get inference(): Inference | undefined;
-    set inference(value: Inference | undefined);
+    get inference(): S2TInference | undefined;
+    set inference(value: S2TInference | undefined);
     get streamingServer(): StreamingServer | undefined;
     set streamingServer(value: StreamingServer | undefined);
     get voiceActivityDetection(): VoiceActivityDetection | undefined;
@@ -1552,9 +1552,9 @@ export declare module Speech2TextConfig {
      */
     interface AsObject {
         id?: string;
-        description?: Description.AsObject;
+        description?: S2TDescription.AsObject;
         active?: boolean;
-        inference?: Inference.AsObject;
+        inference?: S2TInference.AsObject;
         streamingServer?: StreamingServer.AsObject;
         voiceActivityDetection?: VoiceActivityDetection.AsObject;
         postProcessing?: PostProcessing.AsObject;
@@ -1565,9 +1565,9 @@ export declare module Speech2TextConfig {
      */
     interface AsProtobufJSON {
         id?: string;
-        description?: Description.AsProtobufJSON | null;
+        description?: S2TDescription.AsProtobufJSON | null;
         active?: boolean;
-        inference?: Inference.AsProtobufJSON | null;
+        inference?: S2TInference.AsProtobufJSON | null;
         streamingServer?: StreamingServer.AsProtobufJSON | null;
         voiceActivityDetection?: VoiceActivityDetection.AsProtobufJSON | null;
         postProcessing?: PostProcessing.AsProtobufJSON | null;
@@ -1575,41 +1575,41 @@ export declare module Speech2TextConfig {
     }
 }
 /**
- * Message implementation for ondewo.s2t.Description
+ * Message implementation for ondewo.s2t.S2TDescription
  */
-export declare class Description implements GrpcMessage {
+export declare class S2TDescription implements GrpcMessage {
     static id: string;
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
-    static deserializeBinary(bytes: ByteSource): Description;
+    static deserializeBinary(bytes: ByteSource): S2TDescription;
     /**
      * Check all the properties and set default protobuf values if necessary
      * @param _instance message instance
      */
-    static refineValues(_instance: Description): void;
+    static refineValues(_instance: S2TDescription): void;
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
      * @param _instance message instance
      * @param _reader binary reader instance
      */
-    static deserializeBinaryFromReader(_instance: Description, _reader: BinaryReader): void;
+    static deserializeBinaryFromReader(_instance: S2TDescription, _reader: BinaryReader): void;
     /**
      * Serializes a message to binary format using provided binary reader
      * @param _instance message instance
      * @param _writer binary writer instance
      */
-    static serializeBinaryToWriter(_instance: Description, _writer: BinaryWriter): void;
+    static serializeBinaryToWriter(_instance: S2TDescription, _writer: BinaryWriter): void;
     private _language?;
     private _pipelineOwner?;
     private _domain?;
     private _comments?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of Description to deeply clone from
+     * @param _value initial values object or instance of S2TDescription to deeply clone from
      */
-    constructor(_value?: RecursivePartial<Description.AsObject>);
+    constructor(_value?: RecursivePartial<S2TDescription.AsObject>);
     get language(): string | undefined;
     set language(value: string | undefined);
     get pipelineOwner(): string | undefined;
@@ -1626,21 +1626,21 @@ export declare class Description implements GrpcMessage {
     /**
      * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
      */
-    toObject(): Description.AsObject;
+    toObject(): S2TDescription.AsObject;
     /**
      * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
      */
-    toJSON(): Description.AsObject;
+    toJSON(): S2TDescription.AsObject;
     /**
      * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
      * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
      * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
      */
-    toProtobufJSON(options?: ToProtobufJSONOptions): Description.AsProtobufJSON;
+    toProtobufJSON(options?: ToProtobufJSONOptions): S2TDescription.AsProtobufJSON;
 }
-export declare module Description {
+export declare module S2TDescription {
     /**
-     * Standard JavaScript object representation for Description
+     * Standard JavaScript object representation for S2TDescription
      */
     interface AsObject {
         language?: string;
@@ -1649,7 +1649,7 @@ export declare module Description {
         comments?: string;
     }
     /**
-     * Protobuf JSON representation for Description
+     * Protobuf JSON representation for S2TDescription
      */
     interface AsProtobufJSON {
         language?: string;
@@ -1659,39 +1659,39 @@ export declare module Description {
     }
 }
 /**
- * Message implementation for ondewo.s2t.Inference
+ * Message implementation for ondewo.s2t.S2TInference
  */
-export declare class Inference implements GrpcMessage {
+export declare class S2TInference implements GrpcMessage {
     static id: string;
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
-    static deserializeBinary(bytes: ByteSource): Inference;
+    static deserializeBinary(bytes: ByteSource): S2TInference;
     /**
      * Check all the properties and set default protobuf values if necessary
      * @param _instance message instance
      */
-    static refineValues(_instance: Inference): void;
+    static refineValues(_instance: S2TInference): void;
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
      * @param _instance message instance
      * @param _reader binary reader instance
      */
-    static deserializeBinaryFromReader(_instance: Inference, _reader: BinaryReader): void;
+    static deserializeBinaryFromReader(_instance: S2TInference, _reader: BinaryReader): void;
     /**
      * Serializes a message to binary format using provided binary reader
      * @param _instance message instance
      * @param _writer binary writer instance
      */
-    static serializeBinaryToWriter(_instance: Inference, _writer: BinaryWriter): void;
+    static serializeBinaryToWriter(_instance: S2TInference, _writer: BinaryWriter): void;
     private _ctcAcousticModels?;
     private _languageModels?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of Inference to deeply clone from
+     * @param _value initial values object or instance of S2TInference to deeply clone from
      */
-    constructor(_value?: RecursivePartial<Inference.AsObject>);
+    constructor(_value?: RecursivePartial<S2TInference.AsObject>);
     get ctcAcousticModels(): CtcAcousticModels | undefined;
     set ctcAcousticModels(value: CtcAcousticModels | undefined);
     get languageModels(): LanguageModels | undefined;
@@ -1704,28 +1704,28 @@ export declare class Inference implements GrpcMessage {
     /**
      * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
      */
-    toObject(): Inference.AsObject;
+    toObject(): S2TInference.AsObject;
     /**
      * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
      */
-    toJSON(): Inference.AsObject;
+    toJSON(): S2TInference.AsObject;
     /**
      * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
      * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
      * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
      */
-    toProtobufJSON(options?: ToProtobufJSONOptions): Inference.AsProtobufJSON;
+    toProtobufJSON(options?: ToProtobufJSONOptions): S2TInference.AsProtobufJSON;
 }
-export declare module Inference {
+export declare module S2TInference {
     /**
-     * Standard JavaScript object representation for Inference
+     * Standard JavaScript object representation for S2TInference
      */
     interface AsObject {
         ctcAcousticModels?: CtcAcousticModels.AsObject;
         languageModels?: LanguageModels.AsObject;
     }
     /**
-     * Protobuf JSON representation for Inference
+     * Protobuf JSON representation for S2TInference
      */
     interface AsProtobufJSON {
         ctcAcousticModels?: CtcAcousticModels.AsProtobufJSON | null;
@@ -2851,8 +2851,8 @@ export declare class PostProcessors implements GrpcMessage {
     constructor(_value?: RecursivePartial<PostProcessors.AsObject>);
     get symSpell(): SymSpell | undefined;
     set symSpell(value: SymSpell | undefined);
-    get normalization(): Normalization | undefined;
-    set normalization(value: Normalization | undefined);
+    get normalization(): S2TNormalization | undefined;
+    set normalization(value: S2TNormalization | undefined);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -2879,14 +2879,14 @@ export declare module PostProcessors {
      */
     interface AsObject {
         symSpell?: SymSpell.AsObject;
-        normalization?: Normalization.AsObject;
+        normalization?: S2TNormalization.AsObject;
     }
     /**
      * Protobuf JSON representation for PostProcessors
      */
     interface AsProtobufJSON {
         symSpell?: SymSpell.AsProtobufJSON | null;
-        normalization?: Normalization.AsProtobufJSON | null;
+        normalization?: S2TNormalization.AsProtobufJSON | null;
     }
 }
 /**
@@ -2969,38 +2969,38 @@ export declare module SymSpell {
     }
 }
 /**
- * Message implementation for ondewo.s2t.Normalization
+ * Message implementation for ondewo.s2t.S2TNormalization
  */
-export declare class Normalization implements GrpcMessage {
+export declare class S2TNormalization implements GrpcMessage {
     static id: string;
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
-    static deserializeBinary(bytes: ByteSource): Normalization;
+    static deserializeBinary(bytes: ByteSource): S2TNormalization;
     /**
      * Check all the properties and set default protobuf values if necessary
      * @param _instance message instance
      */
-    static refineValues(_instance: Normalization): void;
+    static refineValues(_instance: S2TNormalization): void;
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
      * @param _instance message instance
      * @param _reader binary reader instance
      */
-    static deserializeBinaryFromReader(_instance: Normalization, _reader: BinaryReader): void;
+    static deserializeBinaryFromReader(_instance: S2TNormalization, _reader: BinaryReader): void;
     /**
      * Serializes a message to binary format using provided binary reader
      * @param _instance message instance
      * @param _writer binary writer instance
      */
-    static serializeBinaryToWriter(_instance: Normalization, _writer: BinaryWriter): void;
+    static serializeBinaryToWriter(_instance: S2TNormalization, _writer: BinaryWriter): void;
     private _language?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of Normalization to deeply clone from
+     * @param _value initial values object or instance of S2TNormalization to deeply clone from
      */
-    constructor(_value?: RecursivePartial<Normalization.AsObject>);
+    constructor(_value?: RecursivePartial<S2TNormalization.AsObject>);
     get language(): string | undefined;
     set language(value: string | undefined);
     /**
@@ -3011,27 +3011,27 @@ export declare class Normalization implements GrpcMessage {
     /**
      * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
      */
-    toObject(): Normalization.AsObject;
+    toObject(): S2TNormalization.AsObject;
     /**
      * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
      */
-    toJSON(): Normalization.AsObject;
+    toJSON(): S2TNormalization.AsObject;
     /**
      * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
      * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
      * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
      */
-    toProtobufJSON(options?: ToProtobufJSONOptions): Normalization.AsProtobufJSON;
+    toProtobufJSON(options?: ToProtobufJSONOptions): S2TNormalization.AsProtobufJSON;
 }
-export declare module Normalization {
+export declare module S2TNormalization {
     /**
-     * Standard JavaScript object representation for Normalization
+     * Standard JavaScript object representation for S2TNormalization
      */
     interface AsObject {
         language?: string;
     }
     /**
-     * Protobuf JSON representation for Normalization
+     * Protobuf JSON representation for S2TNormalization
      */
     interface AsProtobufJSON {
         language?: string;
@@ -3323,3 +3323,4 @@ export declare module ListS2tLanguageModelsResponse {
         lmPipelineIds?: LanguageModelPipelineId.AsProtobufJSON[] | null;
     }
 }
+//# sourceMappingURL=speech-to-text.pb.d.ts.map

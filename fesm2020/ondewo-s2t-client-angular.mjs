@@ -1,15 +1,10 @@
-import { InjectionToken, ɵɵdefineInjectable, ɵɵinject, Injectable, Optional, Inject } from '@angular/core';
+import * as i0 from '@angular/core';
+import { InjectionToken, Injectable, Optional, Inject } from '@angular/core';
 import { uint8ArrayToBase64, GrpcMetadata, GrpcCallType } from '@ngx-grpc/common';
-import { throwStatusErrors, takeMessages, GRPC_CLIENT_FACTORY, GrpcHandler } from '@ngx-grpc/core';
+import * as i1 from '@ngx-grpc/core';
+import { throwStatusErrors, takeMessages, GRPC_CLIENT_FACTORY } from '@ngx-grpc/core';
 import { BinaryReader, BinaryWriter } from 'google-protobuf';
-import { Empty } from '@ngx-grpc/well-known-types';
-
-/* tslint:disable */
-/**
- * Specific GrpcClientSettings for Speech2Text.
- * Use it only if your default settings are not set or the service requires other settings.
- */
-const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
+import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
 
 /* tslint:disable */
 var CTCDecoding;
@@ -275,11 +270,14 @@ class TranscribeRequestConfig {
     toProtobufJSON(
     // @ts-ignore
     options) {
-        var _a, _b;
         return {
             s2tPipelineId: this.s2tPipelineId,
-            ctcDecoding: CTCDecoding[(_a = this.ctcDecoding) !== null && _a !== void 0 ? _a : 0],
-            languageModelName: (_b = this.languageModelName) !== null && _b !== void 0 ? _b : null,
+            ctcDecoding: CTCDecoding[this.ctcDecoding === null || this.ctcDecoding === undefined
+                ? 0
+                : this.ctcDecoding],
+            languageModelName: this.languageModelName === null || this.languageModelName === undefined
+                ? null
+                : this.languageModelName,
             postProcessing: this.postProcessing
                 ? this.postProcessing.toProtobufJSON(options)
                 : null,
@@ -2455,25 +2453,25 @@ class ListS2tDomainsResponse {
 }
 ListS2tDomainsResponse.id = 'ondewo.s2t.ListS2tDomainsResponse';
 /**
- * Message implementation for ondewo.s2t.GetServiceInfoResponse
+ * Message implementation for ondewo.s2t.S2TGetServiceInfoResponse
  */
-class GetServiceInfoResponse {
+class S2TGetServiceInfoResponse {
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of GetServiceInfoResponse to deeply clone from
+     * @param _value initial values object or instance of S2TGetServiceInfoResponse to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
         this.version = _value.version;
-        GetServiceInfoResponse.refineValues(this);
+        S2TGetServiceInfoResponse.refineValues(this);
     }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new GetServiceInfoResponse();
-        GetServiceInfoResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2TGetServiceInfoResponse();
+        S2TGetServiceInfoResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -2500,7 +2498,7 @@ class GetServiceInfoResponse {
                     _reader.skipField();
             }
         }
-        GetServiceInfoResponse.refineValues(_instance);
+        S2TGetServiceInfoResponse.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -2524,7 +2522,7 @@ class GetServiceInfoResponse {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        GetServiceInfoResponse.serializeBinaryToWriter(this, writer);
+        S2TGetServiceInfoResponse.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -2554,7 +2552,7 @@ class GetServiceInfoResponse {
         };
     }
 }
-GetServiceInfoResponse.id = 'ondewo.s2t.GetServiceInfoResponse';
+S2TGetServiceInfoResponse.id = 'ondewo.s2t.S2TGetServiceInfoResponse';
 /**
  * Message implementation for ondewo.s2t.Speech2TextConfig
  */
@@ -2567,11 +2565,11 @@ class Speech2TextConfig {
         _value = _value || {};
         this.id = _value.id;
         this.description = _value.description
-            ? new Description(_value.description)
+            ? new S2TDescription(_value.description)
             : undefined;
         this.active = _value.active;
         this.inference = _value.inference
-            ? new Inference(_value.inference)
+            ? new S2TInference(_value.inference)
             : undefined;
         this.streamingServer = _value.streamingServer
             ? new StreamingServer(_value.streamingServer)
@@ -2623,15 +2621,15 @@ class Speech2TextConfig {
                     _instance.id = _reader.readString();
                     break;
                 case 2:
-                    _instance.description = new Description();
-                    _reader.readMessage(_instance.description, Description.deserializeBinaryFromReader);
+                    _instance.description = new S2TDescription();
+                    _reader.readMessage(_instance.description, S2TDescription.deserializeBinaryFromReader);
                     break;
                 case 3:
                     _instance.active = _reader.readBool();
                     break;
                 case 4:
-                    _instance.inference = new Inference();
-                    _reader.readMessage(_instance.inference, Inference.deserializeBinaryFromReader);
+                    _instance.inference = new S2TInference();
+                    _reader.readMessage(_instance.inference, S2TInference.deserializeBinaryFromReader);
                     break;
                 case 5:
                     _instance.streamingServer = new StreamingServer();
@@ -2665,13 +2663,13 @@ class Speech2TextConfig {
             _writer.writeString(1, _instance.id);
         }
         if (_instance.description) {
-            _writer.writeMessage(2, _instance.description, Description.serializeBinaryToWriter);
+            _writer.writeMessage(2, _instance.description, S2TDescription.serializeBinaryToWriter);
         }
         if (_instance.active) {
             _writer.writeBool(3, _instance.active);
         }
         if (_instance.inference) {
-            _writer.writeMessage(4, _instance.inference, Inference.serializeBinaryToWriter);
+            _writer.writeMessage(4, _instance.inference, S2TInference.serializeBinaryToWriter);
         }
         if (_instance.streamingServer) {
             _writer.writeMessage(5, _instance.streamingServer, StreamingServer.serializeBinaryToWriter);
@@ -2800,12 +2798,12 @@ class Speech2TextConfig {
 }
 Speech2TextConfig.id = 'ondewo.s2t.Speech2TextConfig';
 /**
- * Message implementation for ondewo.s2t.Description
+ * Message implementation for ondewo.s2t.S2TDescription
  */
-class Description {
+class S2TDescription {
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of Description to deeply clone from
+     * @param _value initial values object or instance of S2TDescription to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
@@ -2813,15 +2811,15 @@ class Description {
         this.pipelineOwner = _value.pipelineOwner;
         this.domain = _value.domain;
         this.comments = _value.comments;
-        Description.refineValues(this);
+        S2TDescription.refineValues(this);
     }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new Description();
-        Description.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2TDescription();
+        S2TDescription.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -2860,7 +2858,7 @@ class Description {
                     _reader.skipField();
             }
         }
-        Description.refineValues(_instance);
+        S2TDescription.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -2911,7 +2909,7 @@ class Description {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        Description.serializeBinaryToWriter(this, writer);
+        S2TDescription.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -2947,14 +2945,14 @@ class Description {
         };
     }
 }
-Description.id = 'ondewo.s2t.Description';
+S2TDescription.id = 'ondewo.s2t.S2TDescription';
 /**
- * Message implementation for ondewo.s2t.Inference
+ * Message implementation for ondewo.s2t.S2TInference
  */
-class Inference {
+class S2TInference {
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of Inference to deeply clone from
+     * @param _value initial values object or instance of S2TInference to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
@@ -2964,15 +2962,15 @@ class Inference {
         this.languageModels = _value.languageModels
             ? new LanguageModels(_value.languageModels)
             : undefined;
-        Inference.refineValues(this);
+        S2TInference.refineValues(this);
     }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new Inference();
-        Inference.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2TInference();
+        S2TInference.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -3005,7 +3003,7 @@ class Inference {
                     _reader.skipField();
             }
         }
-        Inference.refineValues(_instance);
+        S2TInference.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -3038,7 +3036,7 @@ class Inference {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        Inference.serializeBinaryToWriter(this, writer);
+        S2TInference.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -3078,7 +3076,7 @@ class Inference {
         };
     }
 }
-Inference.id = 'ondewo.s2t.Inference';
+S2TInference.id = 'ondewo.s2t.S2TInference';
 /**
  * Message implementation for ondewo.s2t.CtcAcousticModels
  */
@@ -5024,7 +5022,7 @@ class PostProcessors {
         _value = _value || {};
         this.symSpell = _value.symSpell ? new SymSpell(_value.symSpell) : undefined;
         this.normalization = _value.normalization
-            ? new Normalization(_value.normalization)
+            ? new S2TNormalization(_value.normalization)
             : undefined;
         PostProcessors.refineValues(this);
     }
@@ -5060,8 +5058,8 @@ class PostProcessors {
                     _reader.readMessage(_instance.symSpell, SymSpell.deserializeBinaryFromReader);
                     break;
                 case 2:
-                    _instance.normalization = new Normalization();
-                    _reader.readMessage(_instance.normalization, Normalization.deserializeBinaryFromReader);
+                    _instance.normalization = new S2TNormalization();
+                    _reader.readMessage(_instance.normalization, S2TNormalization.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -5079,7 +5077,7 @@ class PostProcessors {
             _writer.writeMessage(1, _instance.symSpell, SymSpell.serializeBinaryToWriter);
         }
         if (_instance.normalization) {
-            _writer.writeMessage(2, _instance.normalization, Normalization.serializeBinaryToWriter);
+            _writer.writeMessage(2, _instance.normalization, S2TNormalization.serializeBinaryToWriter);
         }
     }
     get symSpell() {
@@ -5272,25 +5270,25 @@ class SymSpell {
 }
 SymSpell.id = 'ondewo.s2t.SymSpell';
 /**
- * Message implementation for ondewo.s2t.Normalization
+ * Message implementation for ondewo.s2t.S2TNormalization
  */
-class Normalization {
+class S2TNormalization {
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of Normalization to deeply clone from
+     * @param _value initial values object or instance of S2TNormalization to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
         this.language = _value.language;
-        Normalization.refineValues(this);
+        S2TNormalization.refineValues(this);
     }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new Normalization();
-        Normalization.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2TNormalization();
+        S2TNormalization.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -5317,7 +5315,7 @@ class Normalization {
                     _reader.skipField();
             }
         }
-        Normalization.refineValues(_instance);
+        S2TNormalization.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -5341,7 +5339,7 @@ class Normalization {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        Normalization.serializeBinaryToWriter(this, writer);
+        S2TNormalization.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -5371,7 +5369,7 @@ class Normalization {
         };
     }
 }
-Normalization.id = 'ondewo.s2t.Normalization';
+S2TNormalization.id = 'ondewo.s2t.S2TNormalization';
 /**
  * Message implementation for ondewo.s2t.Logging
  */
@@ -5813,6 +5811,13 @@ ListS2tLanguageModelsResponse.id = 'ondewo.s2t.ListS2tLanguageModelsResponse';
 
 /* tslint:disable */
 /**
+ * Specific GrpcClientSettings for Speech2Text.
+ * Use it only if your default settings are not set or the service requires other settings.
+ */
+const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
+
+/* tslint:disable */
+/**
  * Service client implementation for ondewo.s2t.Speech2Text
  */
 class Speech2TextClient {
@@ -5911,7 +5916,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: S2tPipelineId,
-                    responseClass: Empty
+                    responseClass: googleProtobuf000.Empty
                 });
             },
             /**
@@ -5929,7 +5934,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: Speech2TextConfig,
-                    responseClass: Empty
+                    responseClass: googleProtobuf000.Empty
                 });
             },
             /**
@@ -5991,7 +5996,7 @@ class Speech2TextClient {
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
-             * @returns Observable<GrpcEvent<thisProto.GetServiceInfoResponse>>
+             * @returns Observable<GrpcEvent<thisProto.S2TGetServiceInfoResponse>>
              */
             getServiceInfo: (requestData, requestMetadata = new GrpcMetadata()) => {
                 return this.handler.handle({
@@ -6000,8 +6005,8 @@ class Speech2TextClient {
                     path: '/ondewo.s2t.Speech2Text/GetServiceInfo',
                     requestData,
                     requestMetadata,
-                    requestClass: Empty,
-                    responseClass: GetServiceInfoResponse
+                    requestClass: googleProtobuf000.Empty,
+                    responseClass: S2TGetServiceInfoResponse
                 });
             },
             /**
@@ -6138,7 +6143,7 @@ class Speech2TextClient {
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
-     * @returns Observable<thisProto.GetServiceInfoResponse>
+     * @returns Observable<thisProto.S2TGetServiceInfoResponse>
      */
     getServiceInfo(requestData, requestMetadata = new GrpcMetadata()) {
         return this.$raw
@@ -6158,19 +6163,24 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
 }
-Speech2TextClient.ɵprov = ɵɵdefineInjectable({ factory: function Speech2TextClient_Factory() { return new Speech2TextClient(ɵɵinject(GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, 8), ɵɵinject(GRPC_CLIENT_FACTORY), ɵɵinject(GrpcHandler)); }, token: Speech2TextClient, providedIn: "any" });
-Speech2TextClient.decorators = [
-    { type: Injectable, args: [{ providedIn: 'any' },] }
-];
-Speech2TextClient.ctorParameters = () => [
-    { type: undefined, decorators: [{ type: Optional }, { type: Inject, args: [GRPC_SPEECH2_TEXT_CLIENT_SETTINGS,] }] },
-    { type: undefined, decorators: [{ type: Inject, args: [GRPC_CLIENT_FACTORY,] }] },
-    { type: GrpcHandler }
-];
+Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.2.2", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable });
+Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.2.2", ngImport: i0, type: Speech2TextClient, providedIn: 'any' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.2.2", ngImport: i0, type: Speech2TextClient, decorators: [{
+            type: Injectable,
+            args: [{ providedIn: 'any' }]
+        }], ctorParameters: function () { return [{ type: undefined, decorators: [{
+                    type: Optional
+                }, {
+                    type: Inject,
+                    args: [GRPC_SPEECH2_TEXT_CLIENT_SETTINGS]
+                }] }, { type: undefined, decorators: [{
+                    type: Inject,
+                    args: [GRPC_CLIENT_FACTORY]
+                }] }, { type: i1.GrpcHandler }]; } });
 
 /**
  * Generated bundle index. Do not edit.
  */
 
-export { CTCDecoding, CkptFile, CtcAcousticModels, Description, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, GetServiceInfoResponse, Inference, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, Normalization, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, WordTiming };
-//# sourceMappingURL=ondewo-s2t-client-angular.js.map
+export { CTCDecoding, CkptFile, CtcAcousticModels, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2TDescription, S2TGetServiceInfoResponse, S2TInference, S2TNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, WordTiming };
+//# sourceMappingURL=ondewo-s2t-client-angular.mjs.map

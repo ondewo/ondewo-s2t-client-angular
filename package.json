@@ -1,6 +1,6 @@
 {
   "name": "@ondewo/s2t-client-angular",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Ondewo speech to text client library for angular",
   "keywords": [
     "ondewo",
@@ -23,15 +23,27 @@
     "type": "git",
     "directory": "https://github.com/ondewo/ondewo-s2t-client-angular.git"
   },
-  "main": "bundles/ondewo-s2t-client-angular.umd.js",
-  "module": "fesm2015/ondewo-s2t-client-angular.js",
-  "es2015": "fesm2015/ondewo-s2t-client-angular.js",
-  "esm2015": "esm2015/ondewo-s2t-client-angular.js",
-  "fesm2015": "fesm2015/ondewo-s2t-client-angular.js",
+  "module": "fesm2015/ondewo-s2t-client-angular.mjs",
+  "es2020": "fesm2020/ondewo-s2t-client-angular.mjs",
+  "esm2020": "esm2020/ondewo-s2t-client-angular.mjs",
+  "fesm2020": "fesm2020/ondewo-s2t-client-angular.mjs",
+  "fesm2015": "fesm2015/ondewo-s2t-client-angular.mjs",
   "typings": "ondewo-s2t-client-angular.d.ts",
-  "metadata": "ondewo-s2t-client-angular.metadata.json",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./ondewo-s2t-client-angular.d.ts",
+      "esm2020": "./esm2020/ondewo-s2t-client-angular.mjs",
+      "es2020": "./fesm2020/ondewo-s2t-client-angular.mjs",
+      "es2015": "./fesm2015/ondewo-s2t-client-angular.mjs",
+      "node": "./fesm2015/ondewo-s2t-client-angular.mjs",
+      "default": "./fesm2020/ondewo-s2t-client-angular.mjs"
+    }
+  },
   "sideEffects": false,
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.3.0"
   }
 }
