@@ -1,13 +1,23 @@
 {
   "name": "@ondewo/s2t-client-angular",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Ondewo speech to text client library for angular",
-  "keywords": ["ondewo", "s2t", "api", "client", "ngx-grpc", "grpc"],
+  "keywords": [
+    "ondewo",
+    "s2t",
+    "api",
+    "client",
+    "ngx-grpc",
+    "grpc"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "git submodule update --init --recursive --remote && docker run -it -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler ondewo-s2t-api ondewo",
+    "submodule_update": "git submodule update --init --recursive",
+    "build": "docker run -it -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler ondewo-s2t-api ondewo",
+    "generate": "docker run -it -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler ondewo-s2t-api ondewo",
     "debug": "docker run -it --entrypoint /bin/bash -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-angular-proto-compiler",
-    "publish-npm": "npm publish ../npm --access public"
+    "publish-npm": "npm publish ../npm --access public",
+    "test-in-ondewo-aim": "npm run build && rm -rf ../../ondewo-aim/node_modules/@ondewo/s2t-client-angular/* && cp ../npm/* ../../ondewo-aim/node_modules/@ondewo/s2t-client-angular/. -R"
   },
   "author": "ONDEWO GmbH",
   "homepage": "https://ondewo.com/",

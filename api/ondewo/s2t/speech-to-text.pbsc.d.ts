@@ -3,6 +3,7 @@ import { GrpcHandler } from '@ngx-grpc/core';
 import { Observable } from 'rxjs';
 import * as thisProto from './speech-to-text.pb';
 import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
+import * as i0 from "@angular/core";
 /**
  * Service client implementation for ondewo.s2t.Speech2Text
  */
@@ -92,9 +93,9 @@ export declare class Speech2TextClient {
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
-         * @returns Observable<GrpcEvent<thisProto.GetServiceInfoResponse>>
+         * @returns Observable<GrpcEvent<thisProto.S2TGetServiceInfoResponse>>
          */
-        getServiceInfo: (requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.GetServiceInfoResponse>>;
+        getServiceInfo: (requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.S2TGetServiceInfoResponse>>;
         /**
          * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
          *
@@ -182,9 +183,9 @@ export declare class Speech2TextClient {
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
-     * @returns Observable<thisProto.GetServiceInfoResponse>
+     * @returns Observable<thisProto.S2TGetServiceInfoResponse>
      */
-    getServiceInfo(requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata): Observable<thisProto.GetServiceInfoResponse>;
+    getServiceInfo(requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata): Observable<thisProto.S2TGetServiceInfoResponse>;
     /**
      * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
      *
@@ -193,4 +194,7 @@ export declare class Speech2TextClient {
      * @returns Observable<thisProto.ListS2tLanguageModelsResponse>
      */
     listS2tLanguageModels(requestData: thisProto.ListS2tLanguageModelsRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tLanguageModelsResponse>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Speech2TextClient, [{ optional: true; }, null, null]>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<Speech2TextClient>;
 }
+//# sourceMappingURL=speech-to-text.pbsc.d.ts.map
