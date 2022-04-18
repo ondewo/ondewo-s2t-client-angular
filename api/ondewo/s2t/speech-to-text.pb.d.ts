@@ -428,6 +428,7 @@ export declare class TranscribeStreamRequest implements GrpcMessage {
     private _audioChunk?;
     private _endOfStream?;
     private _config?;
+    private _muteAudio?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
      * @param _value initial values object or instance of TranscribeStreamRequest to deeply clone from
@@ -439,6 +440,8 @@ export declare class TranscribeStreamRequest implements GrpcMessage {
     set endOfStream(value: boolean | undefined);
     get config(): TranscribeRequestConfig | undefined;
     set config(value: TranscribeRequestConfig | undefined);
+    get muteAudio(): boolean | undefined;
+    set muteAudio(value: boolean | undefined);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -467,6 +470,7 @@ export declare module TranscribeStreamRequest {
         audioChunk?: Uint8Array;
         endOfStream?: boolean;
         config?: TranscribeRequestConfig.AsObject;
+        muteAudio?: boolean;
     }
     /**
      * Protobuf JSON representation for TranscribeStreamRequest
@@ -475,6 +479,7 @@ export declare module TranscribeStreamRequest {
         audioChunk?: string;
         endOfStream?: boolean;
         config?: TranscribeRequestConfig.AsProtobufJSON | null;
+        muteAudio?: boolean;
     }
 }
 /**
@@ -997,6 +1002,7 @@ export declare class ListS2tPipelinesRequest implements GrpcMessage {
     private _languages?;
     private _pipelineOwners?;
     private _domains?;
+    private _registeredOnly?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
      * @param _value initial values object or instance of ListS2tPipelinesRequest to deeply clone from
@@ -1008,6 +1014,8 @@ export declare class ListS2tPipelinesRequest implements GrpcMessage {
     set pipelineOwners(value: string[] | undefined);
     get domains(): string[] | undefined;
     set domains(value: string[] | undefined);
+    get registeredOnly(): boolean | undefined;
+    set registeredOnly(value: boolean | undefined);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -1036,6 +1044,7 @@ export declare module ListS2tPipelinesRequest {
         languages?: string[];
         pipelineOwners?: string[];
         domains?: string[];
+        registeredOnly?: boolean;
     }
     /**
      * Protobuf JSON representation for ListS2tPipelinesRequest
@@ -1044,6 +1053,7 @@ export declare module ListS2tPipelinesRequest {
         languages?: string[];
         pipelineOwners?: string[];
         domains?: string[];
+        registeredOnly?: boolean;
     }
 }
 /**
@@ -1763,6 +1773,7 @@ export declare class CtcAcousticModels implements GrpcMessage {
     private _quartznet?;
     private _quartznetTriton?;
     private _wav2vec?;
+    private _wav2vecTriton?;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
      * @param _value initial values object or instance of CtcAcousticModels to deeply clone from
@@ -1776,6 +1787,8 @@ export declare class CtcAcousticModels implements GrpcMessage {
     set quartznetTriton(value: QuartznetTriton | undefined);
     get wav2vec(): Wav2Vec | undefined;
     set wav2vec(value: Wav2Vec | undefined);
+    get wav2vecTriton(): Wav2VecTriton | undefined;
+    set wav2vecTriton(value: Wav2VecTriton | undefined);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -1805,6 +1818,7 @@ export declare module CtcAcousticModels {
         quartznet?: Quartznet.AsObject;
         quartznetTriton?: QuartznetTriton.AsObject;
         wav2vec?: Wav2Vec.AsObject;
+        wav2vecTriton?: Wav2VecTriton.AsObject;
     }
     /**
      * Protobuf JSON representation for CtcAcousticModels
@@ -1814,6 +1828,7 @@ export declare module CtcAcousticModels {
         quartznet?: Quartznet.AsProtobufJSON | null;
         quartznetTriton?: QuartznetTriton.AsProtobufJSON | null;
         wav2vec?: Wav2Vec.AsProtobufJSON | null;
+        wav2vecTriton?: Wav2VecTriton.AsProtobufJSON | null;
     }
 }
 /**
@@ -1888,6 +1903,90 @@ export declare module Wav2Vec {
     interface AsProtobufJSON {
         modelPath?: string;
         useGpu?: boolean;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.Wav2VecTriton
+ */
+export declare class Wav2VecTriton implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): Wav2VecTriton;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: Wav2VecTriton): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: Wav2VecTriton, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: Wav2VecTriton, _writer: BinaryWriter): void;
+    private _processorPath?;
+    private _tritonModelName?;
+    private _tritonModelVersion?;
+    private _checkStatusTimeout?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of Wav2VecTriton to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<Wav2VecTriton.AsObject>);
+    get processorPath(): string | undefined;
+    set processorPath(value: string | undefined);
+    get tritonModelName(): string | undefined;
+    set tritonModelName(value: string | undefined);
+    get tritonModelVersion(): string | undefined;
+    set tritonModelVersion(value: string | undefined);
+    get checkStatusTimeout(): string | undefined;
+    set checkStatusTimeout(value: string | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): Wav2VecTriton.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): Wav2VecTriton.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): Wav2VecTriton.AsProtobufJSON;
+}
+export declare module Wav2VecTriton {
+    /**
+     * Standard JavaScript object representation for Wav2VecTriton
+     */
+    interface AsObject {
+        processorPath?: string;
+        tritonModelName?: string;
+        tritonModelVersion?: string;
+        checkStatusTimeout?: string;
+    }
+    /**
+     * Protobuf JSON representation for Wav2VecTriton
+     */
+    interface AsProtobufJSON {
+        processorPath?: string;
+        tritonModelName?: string;
+        tritonModelVersion?: string;
+        checkStatusTimeout?: string;
     }
 }
 /**
@@ -3323,4 +3422,3 @@ export declare module ListS2tLanguageModelsResponse {
         lmPipelineIds?: LanguageModelPipelineId.AsProtobufJSON[] | null;
     }
 }
-//# sourceMappingURL=speech-to-text.pb.d.ts.map

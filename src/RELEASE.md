@@ -1,31 +1,39 @@
 # Release History
+
 *****************
 
-## Release ONDEWO-S2T Angular Client 3.0.0
+## Release ONDEWO S2T Angular Client 3.0.1
 
-### New Features
-* Track version 3.0.x of [S2T-API](https://github.com/ondewo/ondewo-s2t-api)
+* Track version 3.0.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/3.0.0)
+* Upgraded to Angular >= 13.x.x and ngx-grpc >=3.0.0
+
+*****************
+
+## Release ONDEWO S2T Angular Client 3.0.0
+
+* Track version 3.0.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/3.0.0)
+
+*****************
 
 ## Release ONDEWO-S2T Angular Client 2.0.0
 
-### New Features
-* Track version 2.0.x of [S2T-API](https://github.com/ondewo/ondewo-s2t-api)
+* Track version 2.0.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/2.0.0)
 
-***
+*****************
 
 ## Release ONDEWO-S2T Angular Client 1.6.0
 
-### New Features
-* Keeps track of ONDEWO Survey API 1.6.*
+* Track version 1.6.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/1.6.0)
+
+*****************
 
 ## Release ONDEWO-S2T Angular Client 1.4.1
 
-### New Features
+* Track version 1.4.1 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/1.4.1)
 * Upgraded from ngx-grpc 0.3.1 to 2.1.0
 
-***
+*****************
 
 ## Release ONDEWO-S2T Angular Client 1.4.0
 
-### New Features
- * Compatible with ONDEWO-S2T 1.4.* GRPC server
+* Track version 1.4.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/1.4.0)
