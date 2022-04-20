@@ -17,7 +17,7 @@ export declare class Speech2TextClient {
      */
     $raw: {
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/TranscribeFile
+         * Unary call: /ondewo.s2t.Speech2Text/TranscribeFile
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -25,15 +25,15 @@ export declare class Speech2TextClient {
          */
         transcribeFile: (requestData: thisProto.TranscribeFileRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.TranscribeFileResponse>>;
         /**
-         * Server streaming RPC for /ondewo.s2t.Speech2Text/TranscribeStream
+         * Bidirectional streaming: /ondewo.s2t.Speech2Text/TranscribeStream
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
          * @returns Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>
          */
-        transcribeStream: (requestData: thisProto.TranscribeStreamRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>;
+        transcribeStream: (requestData: Observable<thisProto.TranscribeStreamRequest>, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/GetS2tPipeline
+         * Unary call: /ondewo.s2t.Speech2Text/GetS2tPipeline
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -41,7 +41,7 @@ export declare class Speech2TextClient {
          */
         getS2tPipeline: (requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.Speech2TextConfig>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/CreateS2tPipeline
+         * Unary call: /ondewo.s2t.Speech2Text/CreateS2tPipeline
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -49,7 +49,7 @@ export declare class Speech2TextClient {
          */
         createS2tPipeline: (requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.S2tPipelineId>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/DeleteS2tPipeline
+         * Unary call: /ondewo.s2t.Speech2Text/DeleteS2tPipeline
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -57,7 +57,7 @@ export declare class Speech2TextClient {
          */
         deleteS2tPipeline: (requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/UpdateS2tPipeline
+         * Unary call: /ondewo.s2t.Speech2Text/UpdateS2tPipeline
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -65,7 +65,7 @@ export declare class Speech2TextClient {
          */
         updateS2tPipeline: (requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tPipelines
+         * Unary call: /ondewo.s2t.Speech2Text/ListS2tPipelines
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -73,7 +73,7 @@ export declare class Speech2TextClient {
          */
         listS2tPipelines: (requestData: thisProto.ListS2tPipelinesRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tPipelinesResponse>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguages
+         * Unary call: /ondewo.s2t.Speech2Text/ListS2tLanguages
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -81,7 +81,7 @@ export declare class Speech2TextClient {
          */
         listS2tLanguages: (requestData: thisProto.ListS2tLanguagesRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tLanguagesResponse>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tDomains
+         * Unary call: /ondewo.s2t.Speech2Text/ListS2tDomains
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -89,7 +89,7 @@ export declare class Speech2TextClient {
          */
         listS2tDomains: (requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tDomainsResponse>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+         * Unary call: /ondewo.s2t.Speech2Text/GetServiceInfo
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -97,7 +97,7 @@ export declare class Speech2TextClient {
          */
         getServiceInfo: (requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.S2TGetServiceInfoResponse>>;
         /**
-         * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+         * Unary call: /ondewo.s2t.Speech2Text/ListS2tLanguageModels
          *
          * @param requestMessage Request message
          * @param requestMetadata Request metadata
@@ -107,7 +107,7 @@ export declare class Speech2TextClient {
     };
     constructor(settings: any, clientFactory: GrpcClientFactory<any>, handler: GrpcHandler);
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/TranscribeFile
+     * Unary call @/ondewo.s2t.Speech2Text/TranscribeFile
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -115,15 +115,15 @@ export declare class Speech2TextClient {
      */
     transcribeFile(requestData: thisProto.TranscribeFileRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.TranscribeFileResponse>;
     /**
-     * Server streaming RPC for /ondewo.s2t.Speech2Text/TranscribeStream
+     * Bidirectional streaming @/ondewo.s2t.Speech2Text/TranscribeStream
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
      * @returns Observable<thisProto.TranscribeStreamResponse>
      */
-    transcribeStream(requestData: thisProto.TranscribeStreamRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.TranscribeStreamResponse>;
+    transcribeStream(requestData: Observable<thisProto.TranscribeStreamRequest>, requestMetadata?: GrpcMetadata): Observable<thisProto.TranscribeStreamResponse>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/GetS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/GetS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -131,7 +131,7 @@ export declare class Speech2TextClient {
      */
     getS2tPipeline(requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata): Observable<thisProto.Speech2TextConfig>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/CreateS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/CreateS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -139,7 +139,7 @@ export declare class Speech2TextClient {
      */
     createS2tPipeline(requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata): Observable<thisProto.S2tPipelineId>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/DeleteS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/DeleteS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -147,7 +147,7 @@ export declare class Speech2TextClient {
      */
     deleteS2tPipeline(requestData: thisProto.S2tPipelineId, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/UpdateS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/UpdateS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -155,7 +155,7 @@ export declare class Speech2TextClient {
      */
     updateS2tPipeline(requestData: thisProto.Speech2TextConfig, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tPipelines
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tPipelines
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -163,7 +163,7 @@ export declare class Speech2TextClient {
      */
     listS2tPipelines(requestData: thisProto.ListS2tPipelinesRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tPipelinesResponse>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguages
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tLanguages
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -171,7 +171,7 @@ export declare class Speech2TextClient {
      */
     listS2tLanguages(requestData: thisProto.ListS2tLanguagesRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tLanguagesResponse>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tDomains
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tDomains
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -179,7 +179,7 @@ export declare class Speech2TextClient {
      */
     listS2tDomains(requestData: thisProto.ListS2tDomainsRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tDomainsResponse>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+     * Unary call @/ondewo.s2t.Speech2Text/GetServiceInfo
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -187,7 +187,7 @@ export declare class Speech2TextClient {
      */
     getServiceInfo(requestData: googleProtobuf000.Empty, requestMetadata?: GrpcMetadata): Observable<thisProto.S2TGetServiceInfoResponse>;
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tLanguageModels
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -197,4 +197,3 @@ export declare class Speech2TextClient {
     static ɵfac: i0.ɵɵFactoryDeclaration<Speech2TextClient, [{ optional: true; }, null, null]>;
     static ɵprov: i0.ɵɵInjectableDeclaration<Speech2TextClient>;
 }
-//# sourceMappingURL=speech-to-text.pbsc.d.ts.map

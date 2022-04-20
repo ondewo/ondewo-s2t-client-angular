@@ -802,6 +802,7 @@ class TranscribeStreamRequest {
         this.config = _value.config
             ? new TranscribeRequestConfig(_value.config)
             : undefined;
+        this.muteAudio = _value.muteAudio;
         TranscribeStreamRequest.refineValues(this);
     }
     /**
@@ -821,6 +822,7 @@ class TranscribeStreamRequest {
         _instance.audioChunk = _instance.audioChunk || new Uint8Array();
         _instance.endOfStream = _instance.endOfStream || false;
         _instance.config = _instance.config || undefined;
+        _instance.muteAudio = _instance.muteAudio || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -841,6 +843,9 @@ class TranscribeStreamRequest {
                 case 3:
                     _instance.config = new TranscribeRequestConfig();
                     _reader.readMessage(_instance.config, TranscribeRequestConfig.deserializeBinaryFromReader);
+                    break;
+                case 4:
+                    _instance.muteAudio = _reader.readBool();
                     break;
                 default:
                     _reader.skipField();
@@ -863,6 +868,9 @@ class TranscribeStreamRequest {
         if (_instance.config) {
             _writer.writeMessage(3, _instance.config, TranscribeRequestConfig.serializeBinaryToWriter);
         }
+        if (_instance.muteAudio) {
+            _writer.writeBool(4, _instance.muteAudio);
+        }
     }
     get audioChunk() {
         return this._audioChunk;
@@ -882,6 +890,12 @@ class TranscribeStreamRequest {
     set config(value) {
         this._config = value;
     }
+    get muteAudio() {
+        return this._muteAudio;
+    }
+    set muteAudio(value) {
+        this._muteAudio = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -900,7 +914,8 @@ class TranscribeStreamRequest {
                 ? this.audioChunk.subarray(0)
                 : new Uint8Array(),
             endOfStream: this.endOfStream,
-            config: this.config ? this.config.toObject() : undefined
+            config: this.config ? this.config.toObject() : undefined,
+            muteAudio: this.muteAudio
         };
     }
     /**
@@ -920,7 +935,8 @@ class TranscribeStreamRequest {
         return {
             audioChunk: this.audioChunk ? uint8ArrayToBase64(this.audioChunk) : '',
             endOfStream: this.endOfStream,
-            config: this.config ? this.config.toProtobufJSON(options) : null
+            config: this.config ? this.config.toProtobufJSON(options) : null,
+            muteAudio: this.muteAudio
         };
     }
 }
@@ -1793,6 +1809,7 @@ class ListS2tPipelinesRequest {
         this.languages = (_value.languages || []).slice();
         this.pipelineOwners = (_value.pipelineOwners || []).slice();
         this.domains = (_value.domains || []).slice();
+        this.registeredOnly = _value.registeredOnly;
         ListS2tPipelinesRequest.refineValues(this);
     }
     /**
@@ -1812,6 +1829,7 @@ class ListS2tPipelinesRequest {
         _instance.languages = _instance.languages || [];
         _instance.pipelineOwners = _instance.pipelineOwners || [];
         _instance.domains = _instance.domains || [];
+        _instance.registeredOnly = _instance.registeredOnly || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -1831,6 +1849,9 @@ class ListS2tPipelinesRequest {
                     break;
                 case 3:
                     (_instance.domains = _instance.domains || []).push(_reader.readString());
+                    break;
+                case 4:
+                    _instance.registeredOnly = _reader.readBool();
                     break;
                 default:
                     _reader.skipField();
@@ -1853,6 +1874,9 @@ class ListS2tPipelinesRequest {
         if (_instance.domains && _instance.domains.length) {
             _writer.writeRepeatedString(3, _instance.domains);
         }
+        if (_instance.registeredOnly) {
+            _writer.writeBool(4, _instance.registeredOnly);
+        }
     }
     get languages() {
         return this._languages;
@@ -1872,6 +1896,12 @@ class ListS2tPipelinesRequest {
     set domains(value) {
         this._domains = value;
     }
+    get registeredOnly() {
+        return this._registeredOnly;
+    }
+    set registeredOnly(value) {
+        this._registeredOnly = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -1888,7 +1918,8 @@ class ListS2tPipelinesRequest {
         return {
             languages: (this.languages || []).slice(),
             pipelineOwners: (this.pipelineOwners || []).slice(),
-            domains: (this.domains || []).slice()
+            domains: (this.domains || []).slice(),
+            registeredOnly: this.registeredOnly
         };
     }
     /**
@@ -1908,7 +1939,8 @@ class ListS2tPipelinesRequest {
         return {
             languages: (this.languages || []).slice(),
             pipelineOwners: (this.pipelineOwners || []).slice(),
-            domains: (this.domains || []).slice()
+            domains: (this.domains || []).slice(),
+            registeredOnly: this.registeredOnly
         };
     }
 }
@@ -3095,6 +3127,9 @@ class CtcAcousticModels {
             ? new QuartznetTriton(_value.quartznetTriton)
             : undefined;
         this.wav2vec = _value.wav2vec ? new Wav2Vec(_value.wav2vec) : undefined;
+        this.wav2vecTriton = _value.wav2vecTriton
+            ? new Wav2VecTriton(_value.wav2vecTriton)
+            : undefined;
         CtcAcousticModels.refineValues(this);
     }
     /**
@@ -3115,6 +3150,7 @@ class CtcAcousticModels {
         _instance.quartznet = _instance.quartznet || undefined;
         _instance.quartznetTriton = _instance.quartznetTriton || undefined;
         _instance.wav2vec = _instance.wav2vec || undefined;
+        _instance.wav2vecTriton = _instance.wav2vecTriton || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -3141,6 +3177,10 @@ class CtcAcousticModels {
                     _instance.wav2vec = new Wav2Vec();
                     _reader.readMessage(_instance.wav2vec, Wav2Vec.deserializeBinaryFromReader);
                     break;
+                case 5:
+                    _instance.wav2vecTriton = new Wav2VecTriton();
+                    _reader.readMessage(_instance.wav2vecTriton, Wav2VecTriton.deserializeBinaryFromReader);
+                    break;
                 default:
                     _reader.skipField();
             }
@@ -3164,6 +3204,9 @@ class CtcAcousticModels {
         }
         if (_instance.wav2vec) {
             _writer.writeMessage(4, _instance.wav2vec, Wav2Vec.serializeBinaryToWriter);
+        }
+        if (_instance.wav2vecTriton) {
+            _writer.writeMessage(5, _instance.wav2vecTriton, Wav2VecTriton.serializeBinaryToWriter);
         }
     }
     get type() {
@@ -3190,6 +3233,12 @@ class CtcAcousticModels {
     set wav2vec(value) {
         this._wav2vec = value;
     }
+    get wav2vecTriton() {
+        return this._wav2vecTriton;
+    }
+    set wav2vecTriton(value) {
+        this._wav2vecTriton = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -3209,7 +3258,10 @@ class CtcAcousticModels {
             quartznetTriton: this.quartznetTriton
                 ? this.quartznetTriton.toObject()
                 : undefined,
-            wav2vec: this.wav2vec ? this.wav2vec.toObject() : undefined
+            wav2vec: this.wav2vec ? this.wav2vec.toObject() : undefined,
+            wav2vecTriton: this.wav2vecTriton
+                ? this.wav2vecTriton.toObject()
+                : undefined
         };
     }
     /**
@@ -3232,7 +3284,10 @@ class CtcAcousticModels {
             quartznetTriton: this.quartznetTriton
                 ? this.quartznetTriton.toProtobufJSON(options)
                 : null,
-            wav2vec: this.wav2vec ? this.wav2vec.toProtobufJSON(options) : null
+            wav2vec: this.wav2vec ? this.wav2vec.toProtobufJSON(options) : null,
+            wav2vecTriton: this.wav2vecTriton
+                ? this.wav2vecTriton.toProtobufJSON(options)
+                : null
         };
     }
 }
@@ -3354,6 +3409,155 @@ class Wav2Vec {
     }
 }
 Wav2Vec.id = 'ondewo.s2t.Wav2Vec';
+/**
+ * Message implementation for ondewo.s2t.Wav2VecTriton
+ */
+class Wav2VecTriton {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of Wav2VecTriton to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.processorPath = _value.processorPath;
+        this.tritonModelName = _value.tritonModelName;
+        this.tritonModelVersion = _value.tritonModelVersion;
+        this.checkStatusTimeout = _value.checkStatusTimeout;
+        Wav2VecTriton.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new Wav2VecTriton();
+        Wav2VecTriton.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.processorPath = _instance.processorPath || '';
+        _instance.tritonModelName = _instance.tritonModelName || '';
+        _instance.tritonModelVersion = _instance.tritonModelVersion || '';
+        _instance.checkStatusTimeout = _instance.checkStatusTimeout || '0';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.processorPath = _reader.readString();
+                    break;
+                case 2:
+                    _instance.tritonModelName = _reader.readString();
+                    break;
+                case 3:
+                    _instance.tritonModelVersion = _reader.readString();
+                    break;
+                case 4:
+                    _instance.checkStatusTimeout = _reader.readInt64String();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        Wav2VecTriton.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.processorPath) {
+            _writer.writeString(1, _instance.processorPath);
+        }
+        if (_instance.tritonModelName) {
+            _writer.writeString(2, _instance.tritonModelName);
+        }
+        if (_instance.tritonModelVersion) {
+            _writer.writeString(3, _instance.tritonModelVersion);
+        }
+        if (_instance.checkStatusTimeout) {
+            _writer.writeInt64String(4, _instance.checkStatusTimeout);
+        }
+    }
+    get processorPath() {
+        return this._processorPath;
+    }
+    set processorPath(value) {
+        this._processorPath = value;
+    }
+    get tritonModelName() {
+        return this._tritonModelName;
+    }
+    set tritonModelName(value) {
+        this._tritonModelName = value;
+    }
+    get tritonModelVersion() {
+        return this._tritonModelVersion;
+    }
+    set tritonModelVersion(value) {
+        this._tritonModelVersion = value;
+    }
+    get checkStatusTimeout() {
+        return this._checkStatusTimeout;
+    }
+    set checkStatusTimeout(value) {
+        this._checkStatusTimeout = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        Wav2VecTriton.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            processorPath: this.processorPath,
+            tritonModelName: this.tritonModelName,
+            tritonModelVersion: this.tritonModelVersion,
+            checkStatusTimeout: this.checkStatusTimeout
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            processorPath: this.processorPath,
+            tritonModelName: this.tritonModelName,
+            tritonModelVersion: this.tritonModelVersion,
+            checkStatusTimeout: this.checkStatusTimeout
+        };
+    }
+}
+Wav2VecTriton.id = 'ondewo.s2t.Wav2VecTriton';
 /**
  * Message implementation for ondewo.s2t.Quartznet
  */
@@ -5830,7 +6034,7 @@ class Speech2TextClient {
          */
         this.$raw = {
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/TranscribeFile
+             * Unary call: /ondewo.s2t.Speech2Text/TranscribeFile
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5848,7 +6052,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Server streaming RPC for /ondewo.s2t.Speech2Text/TranscribeStream
+             * Bidirectional streaming: /ondewo.s2t.Speech2Text/TranscribeStream
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5856,7 +6060,7 @@ class Speech2TextClient {
              */
             transcribeStream: (requestData, requestMetadata = new GrpcMetadata()) => {
                 return this.handler.handle({
-                    type: GrpcCallType.serverStream,
+                    type: GrpcCallType.bidiStream,
                     client: this.client,
                     path: '/ondewo.s2t.Speech2Text/TranscribeStream',
                     requestData,
@@ -5866,7 +6070,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/GetS2tPipeline
+             * Unary call: /ondewo.s2t.Speech2Text/GetS2tPipeline
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5884,7 +6088,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/CreateS2tPipeline
+             * Unary call: /ondewo.s2t.Speech2Text/CreateS2tPipeline
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5902,7 +6106,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/DeleteS2tPipeline
+             * Unary call: /ondewo.s2t.Speech2Text/DeleteS2tPipeline
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5920,7 +6124,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/UpdateS2tPipeline
+             * Unary call: /ondewo.s2t.Speech2Text/UpdateS2tPipeline
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5938,7 +6142,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tPipelines
+             * Unary call: /ondewo.s2t.Speech2Text/ListS2tPipelines
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5956,7 +6160,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguages
+             * Unary call: /ondewo.s2t.Speech2Text/ListS2tLanguages
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5974,7 +6178,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tDomains
+             * Unary call: /ondewo.s2t.Speech2Text/ListS2tDomains
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -5992,7 +6196,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+             * Unary call: /ondewo.s2t.Speech2Text/GetServiceInfo
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -6010,7 +6214,7 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+             * Unary call: /ondewo.s2t.Speech2Text/ListS2tLanguageModels
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
@@ -6031,7 +6235,7 @@ class Speech2TextClient {
         this.client = clientFactory.createClient('ondewo.s2t.Speech2Text', settings);
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/TranscribeFile
+     * Unary call @/ondewo.s2t.Speech2Text/TranscribeFile
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6043,7 +6247,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Server streaming RPC for /ondewo.s2t.Speech2Text/TranscribeStream
+     * Bidirectional streaming @/ondewo.s2t.Speech2Text/TranscribeStream
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6055,7 +6259,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/GetS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/GetS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6067,7 +6271,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/CreateS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/CreateS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6079,7 +6283,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/DeleteS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/DeleteS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6091,7 +6295,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/UpdateS2tPipeline
+     * Unary call @/ondewo.s2t.Speech2Text/UpdateS2tPipeline
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6103,7 +6307,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tPipelines
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tPipelines
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6115,7 +6319,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguages
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tLanguages
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6127,7 +6331,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tDomains
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tDomains
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6139,7 +6343,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/GetServiceInfo
+     * Unary call @/ondewo.s2t.Speech2Text/GetServiceInfo
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6151,7 +6355,7 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**
-     * Unary RPC for /ondewo.s2t.Speech2Text/ListS2tLanguageModels
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tLanguageModels
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
@@ -6163,9 +6367,9 @@ class Speech2TextClient {
             .pipe(throwStatusErrors(), takeMessages());
     }
 }
-Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.2.2", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable });
-Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.2.2", ngImport: i0, type: Speech2TextClient, providedIn: 'any' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.2.2", ngImport: i0, type: Speech2TextClient, decorators: [{
+Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.3.3", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable });
+Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.3.3", ngImport: i0, type: Speech2TextClient, providedIn: 'any' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.3.3", ngImport: i0, type: Speech2TextClient, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'any' }]
         }], ctorParameters: function () {
@@ -6184,5 +6388,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.2.2", ngImpor
  * Generated bundle index. Do not edit.
  */
 
-export { CTCDecoding, CkptFile, CtcAcousticModels, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2TDescription, S2TGetServiceInfoResponse, S2TInference, S2TNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, WordTiming };
+export { CTCDecoding, CkptFile, CtcAcousticModels, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2TDescription, S2TGetServiceInfoResponse, S2TInference, S2TNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WordTiming };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
