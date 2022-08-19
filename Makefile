@@ -84,7 +84,7 @@ gh_release: build_utils_docker_image release_to_github_via_docker_image ## Build
 
 npm_release: ## Releases to NPM
 	@echo "Start NPM Release"
-	npm publish ./npm --access public --dry-run
+	npm publish ./npm --access public
 	@echo "Finished NPM Release"
 
 create_release_branch: ## Create Release Branch and push it to origin
