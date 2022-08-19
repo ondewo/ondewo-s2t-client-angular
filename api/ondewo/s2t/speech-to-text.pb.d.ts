@@ -3422,3 +3422,289 @@ export declare module ListS2tLanguageModelsResponse {
         lmPipelineIds?: LanguageModelPipelineId.AsProtobufJSON[] | null;
     }
 }
+/**
+ * Message implementation for ondewo.s2t.CreateUserLanguageModelRequest
+ */
+export declare class CreateUserLanguageModelRequest implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): CreateUserLanguageModelRequest;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: CreateUserLanguageModelRequest): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: CreateUserLanguageModelRequest, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: CreateUserLanguageModelRequest, _writer: BinaryWriter): void;
+    private _languageModelName?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of CreateUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<CreateUserLanguageModelRequest.AsObject>);
+    get languageModelName(): string | undefined;
+    set languageModelName(value: string | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): CreateUserLanguageModelRequest.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): CreateUserLanguageModelRequest.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): CreateUserLanguageModelRequest.AsProtobufJSON;
+}
+export declare module CreateUserLanguageModelRequest {
+    /**
+     * Standard JavaScript object representation for CreateUserLanguageModelRequest
+     */
+    interface AsObject {
+        languageModelName?: string;
+    }
+    /**
+     * Protobuf JSON representation for CreateUserLanguageModelRequest
+     */
+    interface AsProtobufJSON {
+        languageModelName?: string;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.DeleteUserLanguageModelRequest
+ */
+export declare class DeleteUserLanguageModelRequest implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): DeleteUserLanguageModelRequest;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: DeleteUserLanguageModelRequest): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: DeleteUserLanguageModelRequest, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: DeleteUserLanguageModelRequest, _writer: BinaryWriter): void;
+    private _languageModelName?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of DeleteUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<DeleteUserLanguageModelRequest.AsObject>);
+    get languageModelName(): string | undefined;
+    set languageModelName(value: string | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): DeleteUserLanguageModelRequest.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): DeleteUserLanguageModelRequest.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): DeleteUserLanguageModelRequest.AsProtobufJSON;
+}
+export declare module DeleteUserLanguageModelRequest {
+    /**
+     * Standard JavaScript object representation for DeleteUserLanguageModelRequest
+     */
+    interface AsObject {
+        languageModelName?: string;
+    }
+    /**
+     * Protobuf JSON representation for DeleteUserLanguageModelRequest
+     */
+    interface AsProtobufJSON {
+        languageModelName?: string;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.AddDataToUserLanguageModelRequest
+ */
+export declare class AddDataToUserLanguageModelRequest implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): AddDataToUserLanguageModelRequest;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: AddDataToUserLanguageModelRequest): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: AddDataToUserLanguageModelRequest, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: AddDataToUserLanguageModelRequest, _writer: BinaryWriter): void;
+    private _languageModelName?;
+    private _zippedData?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of AddDataToUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<AddDataToUserLanguageModelRequest.AsObject>);
+    get languageModelName(): string | undefined;
+    set languageModelName(value: string | undefined);
+    get zippedData(): Uint8Array | undefined;
+    set zippedData(value: Uint8Array | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): AddDataToUserLanguageModelRequest.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): AddDataToUserLanguageModelRequest.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): AddDataToUserLanguageModelRequest.AsProtobufJSON;
+}
+export declare module AddDataToUserLanguageModelRequest {
+    /**
+     * Standard JavaScript object representation for AddDataToUserLanguageModelRequest
+     */
+    interface AsObject {
+        languageModelName?: string;
+        zippedData?: Uint8Array;
+    }
+    /**
+     * Protobuf JSON representation for AddDataToUserLanguageModelRequest
+     */
+    interface AsProtobufJSON {
+        languageModelName?: string;
+        zippedData?: string;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.TrainUserLanguageModelRequest
+ */
+export declare class TrainUserLanguageModelRequest implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): TrainUserLanguageModelRequest;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: TrainUserLanguageModelRequest): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: TrainUserLanguageModelRequest, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: TrainUserLanguageModelRequest, _writer: BinaryWriter): void;
+    private _languageModelName?;
+    private _order?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TrainUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<TrainUserLanguageModelRequest.AsObject>);
+    get languageModelName(): string | undefined;
+    set languageModelName(value: string | undefined);
+    get order(): string | undefined;
+    set order(value: string | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): TrainUserLanguageModelRequest.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): TrainUserLanguageModelRequest.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): TrainUserLanguageModelRequest.AsProtobufJSON;
+}
+export declare module TrainUserLanguageModelRequest {
+    /**
+     * Standard JavaScript object representation for TrainUserLanguageModelRequest
+     */
+    interface AsObject {
+        languageModelName?: string;
+        order?: string;
+    }
+    /**
+     * Protobuf JSON representation for TrainUserLanguageModelRequest
+     */
+    interface AsProtobufJSON {
+        languageModelName?: string;
+        order?: string;
+    }
+}
