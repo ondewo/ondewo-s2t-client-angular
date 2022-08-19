@@ -1,9 +1,9 @@
+import { uint8ArrayToBase64, GrpcCallType, GrpcMetadata } from '@ngx-grpc/common';
+import { BinaryReader, BinaryWriter } from 'google-protobuf';
 import * as i0 from '@angular/core';
 import { InjectionToken, Injectable, Optional, Inject } from '@angular/core';
-import { uint8ArrayToBase64, GrpcMetadata, GrpcCallType } from '@ngx-grpc/common';
 import * as i1 from '@ngx-grpc/core';
 import { throwStatusErrors, takeMessages, GRPC_CLIENT_FACTORY } from '@ngx-grpc/core';
-import { BinaryReader, BinaryWriter } from 'google-protobuf';
 import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
 
 /* tslint:disable */
@@ -6012,6 +6012,444 @@ class ListS2tLanguageModelsResponse {
     }
 }
 ListS2tLanguageModelsResponse.id = 'ondewo.s2t.ListS2tLanguageModelsResponse';
+/**
+ * Message implementation for ondewo.s2t.CreateUserLanguageModelRequest
+ */
+class CreateUserLanguageModelRequest {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of CreateUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.languageModelName = _value.languageModelName;
+        CreateUserLanguageModelRequest.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new CreateUserLanguageModelRequest();
+        CreateUserLanguageModelRequest.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.languageModelName = _instance.languageModelName || '';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.languageModelName = _reader.readString();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        CreateUserLanguageModelRequest.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.languageModelName) {
+            _writer.writeString(1, _instance.languageModelName);
+        }
+    }
+    get languageModelName() {
+        return this._languageModelName;
+    }
+    set languageModelName(value) {
+        this._languageModelName = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        CreateUserLanguageModelRequest.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            languageModelName: this.languageModelName
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            languageModelName: this.languageModelName
+        };
+    }
+}
+CreateUserLanguageModelRequest.id = 'ondewo.s2t.CreateUserLanguageModelRequest';
+/**
+ * Message implementation for ondewo.s2t.DeleteUserLanguageModelRequest
+ */
+class DeleteUserLanguageModelRequest {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of DeleteUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.languageModelName = _value.languageModelName;
+        DeleteUserLanguageModelRequest.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new DeleteUserLanguageModelRequest();
+        DeleteUserLanguageModelRequest.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.languageModelName = _instance.languageModelName || '';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.languageModelName = _reader.readString();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        DeleteUserLanguageModelRequest.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.languageModelName) {
+            _writer.writeString(1, _instance.languageModelName);
+        }
+    }
+    get languageModelName() {
+        return this._languageModelName;
+    }
+    set languageModelName(value) {
+        this._languageModelName = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        DeleteUserLanguageModelRequest.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            languageModelName: this.languageModelName
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            languageModelName: this.languageModelName
+        };
+    }
+}
+DeleteUserLanguageModelRequest.id = 'ondewo.s2t.DeleteUserLanguageModelRequest';
+/**
+ * Message implementation for ondewo.s2t.AddDataToUserLanguageModelRequest
+ */
+class AddDataToUserLanguageModelRequest {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of AddDataToUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.languageModelName = _value.languageModelName;
+        this.zippedData = _value.zippedData;
+        AddDataToUserLanguageModelRequest.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new AddDataToUserLanguageModelRequest();
+        AddDataToUserLanguageModelRequest.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.languageModelName = _instance.languageModelName || '';
+        _instance.zippedData = _instance.zippedData || new Uint8Array();
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.languageModelName = _reader.readString();
+                    break;
+                case 2:
+                    _instance.zippedData = _reader.readBytes();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        AddDataToUserLanguageModelRequest.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.languageModelName) {
+            _writer.writeString(1, _instance.languageModelName);
+        }
+        if (_instance.zippedData && _instance.zippedData.length) {
+            _writer.writeBytes(2, _instance.zippedData);
+        }
+    }
+    get languageModelName() {
+        return this._languageModelName;
+    }
+    set languageModelName(value) {
+        this._languageModelName = value;
+    }
+    get zippedData() {
+        return this._zippedData;
+    }
+    set zippedData(value) {
+        this._zippedData = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        AddDataToUserLanguageModelRequest.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            languageModelName: this.languageModelName,
+            zippedData: this.zippedData
+                ? this.zippedData.subarray(0)
+                : new Uint8Array()
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            languageModelName: this.languageModelName,
+            zippedData: this.zippedData ? uint8ArrayToBase64(this.zippedData) : ''
+        };
+    }
+}
+AddDataToUserLanguageModelRequest.id = 'ondewo.s2t.AddDataToUserLanguageModelRequest';
+/**
+ * Message implementation for ondewo.s2t.TrainUserLanguageModelRequest
+ */
+class TrainUserLanguageModelRequest {
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TrainUserLanguageModelRequest to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.languageModelName = _value.languageModelName;
+        this.order = _value.order;
+        TrainUserLanguageModelRequest.refineValues(this);
+    }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new TrainUserLanguageModelRequest();
+        TrainUserLanguageModelRequest.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.languageModelName = _instance.languageModelName || '';
+        _instance.order = _instance.order || '0';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.languageModelName = _reader.readString();
+                    break;
+                case 2:
+                    _instance.order = _reader.readInt64String();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        TrainUserLanguageModelRequest.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.languageModelName) {
+            _writer.writeString(1, _instance.languageModelName);
+        }
+        if (_instance.order) {
+            _writer.writeInt64String(2, _instance.order);
+        }
+    }
+    get languageModelName() {
+        return this._languageModelName;
+    }
+    set languageModelName(value) {
+        this._languageModelName = value;
+    }
+    get order() {
+        return this._order;
+    }
+    set order(value) {
+        this._order = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        TrainUserLanguageModelRequest.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            languageModelName: this.languageModelName,
+            order: this.order
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            languageModelName: this.languageModelName,
+            order: this.order
+        };
+    }
+}
+TrainUserLanguageModelRequest.id = 'ondewo.s2t.TrainUserLanguageModelRequest';
 
 /* tslint:disable */
 /**
@@ -6230,6 +6668,78 @@ class Speech2TextClient {
                     requestClass: ListS2tLanguageModelsRequest,
                     responseClass: ListS2tLanguageModelsResponse
                 });
+            },
+            /**
+             * Unary call: /ondewo.s2t.Speech2Text/CreateUserLanguageModel
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+             */
+            createUserLanguageModel: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/CreateUserLanguageModel',
+                    requestData,
+                    requestMetadata,
+                    requestClass: CreateUserLanguageModelRequest,
+                    responseClass: googleProtobuf000.Empty
+                });
+            },
+            /**
+             * Unary call: /ondewo.s2t.Speech2Text/DeleteUserLanguageModel
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+             */
+            deleteUserLanguageModel: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/DeleteUserLanguageModel',
+                    requestData,
+                    requestMetadata,
+                    requestClass: DeleteUserLanguageModelRequest,
+                    responseClass: googleProtobuf000.Empty
+                });
+            },
+            /**
+             * Unary call: /ondewo.s2t.Speech2Text/AddDataToUserLanguageModel
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+             */
+            addDataToUserLanguageModel: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/AddDataToUserLanguageModel',
+                    requestData,
+                    requestMetadata,
+                    requestClass: AddDataToUserLanguageModelRequest,
+                    responseClass: googleProtobuf000.Empty
+                });
+            },
+            /**
+             * Unary call: /ondewo.s2t.Speech2Text/TrainUserLanguageModel
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+             */
+            trainUserLanguageModel: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/TrainUserLanguageModel',
+                    requestData,
+                    requestMetadata,
+                    requestClass: TrainUserLanguageModelRequest,
+                    responseClass: googleProtobuf000.Empty
+                });
             }
         };
         this.client = clientFactory.createClient('ondewo.s2t.Speech2Text', settings);
@@ -6366,10 +6876,58 @@ class Speech2TextClient {
             .listS2tLanguageModels(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/CreateUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    createUserLanguageModel(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .createUserLanguageModel(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/DeleteUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    deleteUserLanguageModel(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .deleteUserLanguageModel(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/AddDataToUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    addDataToUserLanguageModel(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .addDataToUserLanguageModel(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/TrainUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    trainUserLanguageModel(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .trainUserLanguageModel(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
 }
-Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.3.3", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable });
-Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.3.3", ngImport: i0, type: Speech2TextClient, providedIn: 'any' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.3.3", ngImport: i0, type: Speech2TextClient, decorators: [{
+Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "14.1.3", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable });
+Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "14.1.3", ngImport: i0, type: Speech2TextClient, providedIn: 'any' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "14.1.3", ngImport: i0, type: Speech2TextClient, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'any' }]
         }], ctorParameters: function () { return [{ type: undefined, decorators: [{
@@ -6386,5 +6944,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.3.3", ngImpor
  * Generated bundle index. Do not edit.
  */
 
-export { CTCDecoding, CkptFile, CtcAcousticModels, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2TDescription, S2TGetServiceInfoResponse, S2TInference, S2TNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WordTiming };
+export { AddDataToUserLanguageModelRequest, CTCDecoding, CkptFile, CreateUserLanguageModelRequest, CtcAcousticModels, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, Matchbox, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, Quartznet, QuartznetTriton, S2TDescription, S2TGetServiceInfoResponse, S2TInference, S2TNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WordTiming };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map

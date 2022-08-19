@@ -104,6 +104,38 @@ export declare class Speech2TextClient {
          * @returns Observable<GrpcEvent<thisProto.ListS2tLanguageModelsResponse>>
          */
         listS2tLanguageModels: (requestData: thisProto.ListS2tLanguageModelsRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<thisProto.ListS2tLanguageModelsResponse>>;
+        /**
+         * Unary call: /ondewo.s2t.Speech2Text/CreateUserLanguageModel
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+         */
+        createUserLanguageModel: (requestData: thisProto.CreateUserLanguageModelRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
+        /**
+         * Unary call: /ondewo.s2t.Speech2Text/DeleteUserLanguageModel
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+         */
+        deleteUserLanguageModel: (requestData: thisProto.DeleteUserLanguageModelRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
+        /**
+         * Unary call: /ondewo.s2t.Speech2Text/AddDataToUserLanguageModel
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+         */
+        addDataToUserLanguageModel: (requestData: thisProto.AddDataToUserLanguageModelRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
+        /**
+         * Unary call: /ondewo.s2t.Speech2Text/TrainUserLanguageModel
+         *
+         * @param requestMessage Request message
+         * @param requestMetadata Request metadata
+         * @returns Observable<GrpcEvent<googleProtobuf000.Empty>>
+         */
+        trainUserLanguageModel: (requestData: thisProto.TrainUserLanguageModelRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<googleProtobuf000.Empty>>;
     };
     constructor(settings: any, clientFactory: GrpcClientFactory<any>, handler: GrpcHandler);
     /**
@@ -194,6 +226,38 @@ export declare class Speech2TextClient {
      * @returns Observable<thisProto.ListS2tLanguageModelsResponse>
      */
     listS2tLanguageModels(requestData: thisProto.ListS2tLanguageModelsRequest, requestMetadata?: GrpcMetadata): Observable<thisProto.ListS2tLanguageModelsResponse>;
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/CreateUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    createUserLanguageModel(requestData: thisProto.CreateUserLanguageModelRequest, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/DeleteUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    deleteUserLanguageModel(requestData: thisProto.DeleteUserLanguageModelRequest, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/AddDataToUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    addDataToUserLanguageModel(requestData: thisProto.AddDataToUserLanguageModelRequest, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/TrainUserLanguageModel
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<googleProtobuf000.Empty>
+     */
+    trainUserLanguageModel(requestData: thisProto.TrainUserLanguageModelRequest, requestMetadata?: GrpcMetadata): Observable<googleProtobuf000.Empty>;
     static ɵfac: i0.ɵɵFactoryDeclaration<Speech2TextClient, [{ optional: true; }, null, null]>;
     static ɵprov: i0.ɵɵInjectableDeclaration<Speech2TextClient>;
 }
