@@ -23,7 +23,9 @@ npm i --save @ondewo/s2t-client-angular
 ### Using GitHub
 
 **Run:**
+
 ```bash
 git+https://github.com/ondewo/ondewo-s2t-client-angular.git
 ```
+
 inside of your project to install the npm package of this github repository in you angular project.
