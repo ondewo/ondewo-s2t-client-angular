@@ -6815,7 +6815,7 @@ class Speech2TextClient {
 }
 Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({
 	minVersion: '12.0.0',
-	version: '14.2.0',
+	version: '14.2.5',
 	ngImport: i0,
 	type: Speech2TextClient,
 	deps: [
@@ -6827,14 +6827,14 @@ Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({
 });
 Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({
 	minVersion: '12.0.0',
-	version: '14.2.0',
+	version: '14.2.5',
 	ngImport: i0,
 	type: Speech2TextClient,
 	providedIn: 'any'
 });
 i0.ɵɵngDeclareClassMetadata({
 	minVersion: '12.0.0',
-	version: '14.2.0',
+	version: '14.2.5',
 	ngImport: i0,
 	type: Speech2TextClient,
 	decorators: [
