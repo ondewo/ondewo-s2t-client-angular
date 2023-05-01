@@ -1,6 +1,6 @@
 {
 	"name": "@ondewo/s2t-client-angular",
-	"version": "5.2.0",
+	"version": "5.3.0",
 	"description": "Ondewo speech to text client library for angular",
 	"author": "ONDEWO GmbH <office@ondewo.com>",
 	"homepage": "https://ondewo.com/",
@@ -47,9 +47,9 @@
 		"tslib": "^2.3.0"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^5.49.0",
-		"eslint": "^8.32.0",
+		"@typescript-eslint/eslint-plugin": "^5.59.2",
+		"eslint": "^8.39.0",
 		"husky": "^8.0.3",
-		"prettier": "^2.8.3"
+		"prettier": "^2.8.8"
 	}
 }

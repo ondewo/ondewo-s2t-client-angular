@@ -7,6 +7,12 @@ import { BinaryReader, BinaryWriter } from 'google-protobuf';
 import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
 
 /* tslint:disable */
+var InferenceBackend;
+(function (InferenceBackend) {
+	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_UNKNOWN'] = 0)] = 'INFERENCE_BACKEND_UNKNOWN';
+	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_PYTORCH'] = 1)] = 'INFERENCE_BACKEND_PYTORCH';
+	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_FLAX'] = 2)] = 'INFERENCE_BACKEND_FLAX';
+})(InferenceBackend || (InferenceBackend = {}));
 var Decoding;
 (function (Decoding) {
 	Decoding[(Decoding['DEFAULT'] = 0)] = 'DEFAULT';
@@ -18,29 +24,6 @@ var Decoding;
  * Message implementation for ondewo.s2t.TranscribeRequestConfig
  */
 class TranscribeRequestConfig {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TranscribeRequestConfig to deeply clone from
-	 */
-	constructor(_value) {
-		this._oneofLanguageModelName = TranscribeRequestConfig.OneofLanguageModelNameCase.none;
-		this._oneofPostProcessing = TranscribeRequestConfig.OneofPostProcessingCase.none;
-		this._oneofUtteranceDetection = TranscribeRequestConfig.OneofUtteranceDetectionCase.none;
-		this._voiceActivityDetection = TranscribeRequestConfig.VoiceActivityDetectionCase.none;
-		this._oneofReturnOptions = TranscribeRequestConfig.OneofReturnOptionsCase.none;
-		_value = _value || {};
-		this.s2tPipelineId = _value.s2tPipelineId;
-		this.decoding = _value.decoding;
-		this.languageModelName = _value.languageModelName;
-		this.postProcessing = _value.postProcessing ? new PostProcessingOptions(_value.postProcessing) : undefined;
-		this.utteranceDetection = _value.utteranceDetection
-			? new UtteranceDetectionOptions(_value.utteranceDetection)
-			: undefined;
-		this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
-		this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
-		this.returnOptions = _value.returnOptions ? new TranscriptionReturnOptions(_value.returnOptions) : undefined;
-		TranscribeRequestConfig.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -132,6 +115,29 @@ class TranscribeRequestConfig {
 		if (_instance.returnOptions) {
 			_writer.writeMessage(8, _instance.returnOptions, TranscriptionReturnOptions.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscribeRequestConfig to deeply clone from
+	 */
+	constructor(_value) {
+		this._oneofLanguageModelName = TranscribeRequestConfig.OneofLanguageModelNameCase.none;
+		this._oneofPostProcessing = TranscribeRequestConfig.OneofPostProcessingCase.none;
+		this._oneofUtteranceDetection = TranscribeRequestConfig.OneofUtteranceDetectionCase.none;
+		this._voiceActivityDetection = TranscribeRequestConfig.VoiceActivityDetectionCase.none;
+		this._oneofReturnOptions = TranscribeRequestConfig.OneofReturnOptionsCase.none;
+		_value = _value || {};
+		this.s2tPipelineId = _value.s2tPipelineId;
+		this.decoding = _value.decoding;
+		this.languageModelName = _value.languageModelName;
+		this.postProcessing = _value.postProcessing ? new PostProcessingOptions(_value.postProcessing) : undefined;
+		this.utteranceDetection = _value.utteranceDetection
+			? new UtteranceDetectionOptions(_value.utteranceDetection)
+			: undefined;
+		this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
+		this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
+		this.returnOptions = _value.returnOptions ? new TranscriptionReturnOptions(_value.returnOptions) : undefined;
+		TranscribeRequestConfig.refineValues(this);
 	}
 	get s2tPipelineId() {
 		return this._s2tPipelineId;
@@ -317,19 +323,6 @@ TranscribeRequestConfig.id = 'ondewo.s2t.TranscribeRequestConfig';
  */
 class TranscriptionReturnOptions {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TranscriptionReturnOptions to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.returnStartOfSpeech = _value.returnStartOfSpeech;
-		this.returnAudio = _value.returnAudio;
-		this.returnAlternativeTranscriptions = _value.returnAlternativeTranscriptions;
-		this.returnConfidenceScore = _value.returnConfidenceScore;
-		this.returnWordTiming = _value.returnWordTiming;
-		TranscriptionReturnOptions.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -345,8 +338,11 @@ class TranscriptionReturnOptions {
 	static refineValues(_instance) {
 		_instance.returnStartOfSpeech = _instance.returnStartOfSpeech || false;
 		_instance.returnAudio = _instance.returnAudio || false;
-		_instance.returnAlternativeTranscriptions = _instance.returnAlternativeTranscriptions || false;
 		_instance.returnConfidenceScore = _instance.returnConfidenceScore || false;
+		_instance.returnAlternativeTranscriptions = _instance.returnAlternativeTranscriptions || false;
+		_instance.returnAlternativeTranscriptionsNr = _instance.returnAlternativeTranscriptionsNr || 0;
+		_instance.returnAlternativeWords = _instance.returnAlternativeWords || false;
+		_instance.returnAlternativeWordsNr = _instance.returnAlternativeWordsNr || 0;
 		_instance.returnWordTiming = _instance.returnWordTiming || false;
 	}
 	/**
@@ -365,10 +361,19 @@ class TranscriptionReturnOptions {
 					_instance.returnAudio = _reader.readBool();
 					break;
 				case 3:
-					_instance.returnAlternativeTranscriptions = _reader.readBool();
+					_instance.returnConfidenceScore = _reader.readBool();
 					break;
 				case 4:
-					_instance.returnConfidenceScore = _reader.readBool();
+					_instance.returnAlternativeTranscriptions = _reader.readBool();
+					break;
+				case 5:
+					_instance.returnAlternativeTranscriptionsNr = _reader.readInt32();
+					break;
+				case 6:
+					_instance.returnAlternativeWords = _reader.readBool();
+					break;
+				case 7:
+					_instance.returnAlternativeWordsNr = _reader.readInt32();
 					break;
 				case 8:
 					_instance.returnWordTiming = _reader.readBool();
@@ -391,15 +396,40 @@ class TranscriptionReturnOptions {
 		if (_instance.returnAudio) {
 			_writer.writeBool(2, _instance.returnAudio);
 		}
-		if (_instance.returnAlternativeTranscriptions) {
-			_writer.writeBool(3, _instance.returnAlternativeTranscriptions);
-		}
 		if (_instance.returnConfidenceScore) {
-			_writer.writeBool(4, _instance.returnConfidenceScore);
+			_writer.writeBool(3, _instance.returnConfidenceScore);
+		}
+		if (_instance.returnAlternativeTranscriptions) {
+			_writer.writeBool(4, _instance.returnAlternativeTranscriptions);
+		}
+		if (_instance.returnAlternativeTranscriptionsNr) {
+			_writer.writeInt32(5, _instance.returnAlternativeTranscriptionsNr);
+		}
+		if (_instance.returnAlternativeWords) {
+			_writer.writeBool(6, _instance.returnAlternativeWords);
+		}
+		if (_instance.returnAlternativeWordsNr) {
+			_writer.writeInt32(7, _instance.returnAlternativeWordsNr);
 		}
 		if (_instance.returnWordTiming) {
 			_writer.writeBool(8, _instance.returnWordTiming);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscriptionReturnOptions to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.returnStartOfSpeech = _value.returnStartOfSpeech;
+		this.returnAudio = _value.returnAudio;
+		this.returnConfidenceScore = _value.returnConfidenceScore;
+		this.returnAlternativeTranscriptions = _value.returnAlternativeTranscriptions;
+		this.returnAlternativeTranscriptionsNr = _value.returnAlternativeTranscriptionsNr;
+		this.returnAlternativeWords = _value.returnAlternativeWords;
+		this.returnAlternativeWordsNr = _value.returnAlternativeWordsNr;
+		this.returnWordTiming = _value.returnWordTiming;
+		TranscriptionReturnOptions.refineValues(this);
 	}
 	get returnStartOfSpeech() {
 		return this._returnStartOfSpeech;
@@ -413,17 +443,35 @@ class TranscriptionReturnOptions {
 	set returnAudio(value) {
 		this._returnAudio = value;
 	}
+	get returnConfidenceScore() {
+		return this._returnConfidenceScore;
+	}
+	set returnConfidenceScore(value) {
+		this._returnConfidenceScore = value;
+	}
 	get returnAlternativeTranscriptions() {
 		return this._returnAlternativeTranscriptions;
 	}
 	set returnAlternativeTranscriptions(value) {
 		this._returnAlternativeTranscriptions = value;
 	}
-	get returnConfidenceScore() {
-		return this._returnConfidenceScore;
+	get returnAlternativeTranscriptionsNr() {
+		return this._returnAlternativeTranscriptionsNr;
 	}
-	set returnConfidenceScore(value) {
-		this._returnConfidenceScore = value;
+	set returnAlternativeTranscriptionsNr(value) {
+		this._returnAlternativeTranscriptionsNr = value;
+	}
+	get returnAlternativeWords() {
+		return this._returnAlternativeWords;
+	}
+	set returnAlternativeWords(value) {
+		this._returnAlternativeWords = value;
+	}
+	get returnAlternativeWordsNr() {
+		return this._returnAlternativeWordsNr;
+	}
+	set returnAlternativeWordsNr(value) {
+		this._returnAlternativeWordsNr = value;
 	}
 	get returnWordTiming() {
 		return this._returnWordTiming;
@@ -447,8 +495,11 @@ class TranscriptionReturnOptions {
 		return {
 			returnStartOfSpeech: this.returnStartOfSpeech,
 			returnAudio: this.returnAudio,
-			returnAlternativeTranscriptions: this.returnAlternativeTranscriptions,
 			returnConfidenceScore: this.returnConfidenceScore,
+			returnAlternativeTranscriptions: this.returnAlternativeTranscriptions,
+			returnAlternativeTranscriptionsNr: this.returnAlternativeTranscriptionsNr,
+			returnAlternativeWords: this.returnAlternativeWords,
+			returnAlternativeWordsNr: this.returnAlternativeWordsNr,
 			returnWordTiming: this.returnWordTiming
 		};
 	}
@@ -470,8 +521,11 @@ class TranscriptionReturnOptions {
 		return {
 			returnStartOfSpeech: this.returnStartOfSpeech,
 			returnAudio: this.returnAudio,
-			returnAlternativeTranscriptions: this.returnAlternativeTranscriptions,
 			returnConfidenceScore: this.returnConfidenceScore,
+			returnAlternativeTranscriptions: this.returnAlternativeTranscriptions,
+			returnAlternativeTranscriptionsNr: this.returnAlternativeTranscriptionsNr,
+			returnAlternativeWords: this.returnAlternativeWords,
+			returnAlternativeWordsNr: this.returnAlternativeWordsNr,
 			returnWordTiming: this.returnWordTiming
 		};
 	}
@@ -481,19 +535,6 @@ TranscriptionReturnOptions.id = 'ondewo.s2t.TranscriptionReturnOptions';
  * Message implementation for ondewo.s2t.UtteranceDetectionOptions
  */
 class UtteranceDetectionOptions {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of UtteranceDetectionOptions to deeply clone from
-	 */
-	constructor(_value) {
-		this._oneofTranscribeNotFinal = UtteranceDetectionOptions.OneofTranscribeNotFinalCase.none;
-		_value = _value || {};
-		this.transcribeNotFinal = _value.transcribeNotFinal;
-		this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
-		this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
-		this.nextChunkTimeout = _value.nextChunkTimeout;
-		UtteranceDetectionOptions.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -557,6 +598,19 @@ class UtteranceDetectionOptions {
 		if (_instance.nextChunkTimeout) {
 			_writer.writeFloat(4, _instance.nextChunkTimeout);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of UtteranceDetectionOptions to deeply clone from
+	 */
+	constructor(_value) {
+		this._oneofTranscribeNotFinal = UtteranceDetectionOptions.OneofTranscribeNotFinalCase.none;
+		_value = _value || {};
+		this.transcribeNotFinal = _value.transcribeNotFinal;
+		this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
+		this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
+		this.nextChunkTimeout = _value.nextChunkTimeout;
+		UtteranceDetectionOptions.refineValues(this);
 	}
 	get transcribeNotFinal() {
 		return this._transcribeNotFinal;
@@ -648,17 +702,6 @@ UtteranceDetectionOptions.id = 'ondewo.s2t.UtteranceDetectionOptions';
  */
 class PostProcessingOptions {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of PostProcessingOptions to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.spellingCorrection = _value.spellingCorrection;
-		this.normalize = _value.normalize;
-		this.config = _value.config ? new PostProcessing(_value.config) : undefined;
-		PostProcessingOptions.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -716,6 +759,17 @@ class PostProcessingOptions {
 		if (_instance.config) {
 			_writer.writeMessage(3, _instance.config, PostProcessing.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of PostProcessingOptions to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.spellingCorrection = _value.spellingCorrection;
+		this.normalize = _value.normalize;
+		this.config = _value.config ? new PostProcessing(_value.config) : undefined;
+		PostProcessingOptions.refineValues(this);
 	}
 	get spellingCorrection() {
 		return this._spellingCorrection;
@@ -782,18 +836,6 @@ PostProcessingOptions.id = 'ondewo.s2t.PostProcessingOptions';
  */
 class TranscribeStreamRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TranscribeStreamRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.audioChunk = _value.audioChunk;
-		this.endOfStream = _value.endOfStream;
-		this.config = _value.config ? new TranscribeRequestConfig(_value.config) : undefined;
-		this.muteAudio = _value.muteAudio;
-		TranscribeStreamRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -858,6 +900,18 @@ class TranscribeStreamRequest {
 		if (_instance.muteAudio) {
 			_writer.writeBool(4, _instance.muteAudio);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscribeStreamRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.audioChunk = _value.audioChunk;
+		this.endOfStream = _value.endOfStream;
+		this.config = _value.config ? new TranscribeRequestConfig(_value.config) : undefined;
+		this.muteAudio = _value.muteAudio;
+		TranscribeStreamRequest.refineValues(this);
 	}
 	get audioChunk() {
 		return this._audioChunk;
@@ -932,16 +986,6 @@ TranscribeStreamRequest.id = 'ondewo.s2t.TranscribeStreamRequest';
  */
 class Transcription {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Transcription to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.transcription = _value.transcription;
-		this.confidenceScore = _value.confidenceScore;
-		Transcription.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -991,6 +1035,16 @@ class Transcription {
 		if (_instance.confidenceScore) {
 			_writer.writeFloat(2, _instance.confidenceScore);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Transcription to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.transcription = _value.transcription;
+		this.confidenceScore = _value.confidenceScore;
+		Transcription.refineValues(this);
 	}
 	get transcription() {
 		return this._transcription;
@@ -1048,23 +1102,6 @@ Transcription.id = 'ondewo.s2t.Transcription';
  * Message implementation for ondewo.s2t.TranscribeStreamResponse
  */
 class TranscribeStreamResponse {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TranscribeStreamResponse to deeply clone from
-	 */
-	constructor(_value) {
-		this._oneofConfig = TranscribeStreamResponse.OneofConfigCase.none;
-		_value = _value || {};
-		this.transcriptions = (_value.transcriptions || []).map((m) => new Transcription(m));
-		this.time = _value.time;
-		this.final = _value.final;
-		this.returnAudio = _value.returnAudio;
-		this.audio = _value.audio;
-		this.utteranceStart = _value.utteranceStart;
-		this.audioUuid = _value.audioUuid;
-		this.config = _value.config ? new TranscribeRequestConfig(_value.config) : undefined;
-		TranscribeStreamResponse.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -1159,6 +1196,23 @@ class TranscribeStreamResponse {
 		if (_instance.config) {
 			_writer.writeMessage(8, _instance.config, TranscribeRequestConfig.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscribeStreamResponse to deeply clone from
+	 */
+	constructor(_value) {
+		this._oneofConfig = TranscribeStreamResponse.OneofConfigCase.none;
+		_value = _value || {};
+		this.transcriptions = (_value.transcriptions || []).map((m) => new Transcription(m));
+		this.time = _value.time;
+		this.final = _value.final;
+		this.returnAudio = _value.returnAudio;
+		this.audio = _value.audio;
+		this.utteranceStart = _value.utteranceStart;
+		this.audioUuid = _value.audioUuid;
+		this.config = _value.config ? new TranscribeRequestConfig(_value.config) : undefined;
+		TranscribeStreamResponse.refineValues(this);
 	}
 	get transcriptions() {
 		return this._transcriptions;
@@ -1278,16 +1332,6 @@ TranscribeStreamResponse.id = 'ondewo.s2t.TranscribeStreamResponse';
  */
 class TranscribeFileRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TranscribeFileRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.audioFile = _value.audioFile;
-		this.config = _value.config ? new TranscribeRequestConfig(_value.config) : undefined;
-		TranscribeFileRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -1338,6 +1382,16 @@ class TranscribeFileRequest {
 		if (_instance.config) {
 			_writer.writeMessage(2, _instance.config, TranscribeRequestConfig.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscribeFileRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.audioFile = _value.audioFile;
+		this.config = _value.config ? new TranscribeRequestConfig(_value.config) : undefined;
+		TranscribeFileRequest.refineValues(this);
 	}
 	get audioFile() {
 		return this._audioFile;
@@ -1395,18 +1449,6 @@ TranscribeFileRequest.id = 'ondewo.s2t.TranscribeFileRequest';
  * Message implementation for ondewo.s2t.TranscribeFileResponse
  */
 class TranscribeFileResponse {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TranscribeFileResponse to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.transcriptions = (_value.transcriptions || []).map((m) => new Transcription(m));
-		this.time = _value.time;
-		this.wordTiming = (_value.wordTiming || []).map((m) => new WordTiming(m));
-		this.audioUuid = _value.audioUuid;
-		TranscribeFileResponse.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -1475,6 +1517,18 @@ class TranscribeFileResponse {
 		if (_instance.audioUuid) {
 			_writer.writeString(4, _instance.audioUuid);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscribeFileResponse to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.transcriptions = (_value.transcriptions || []).map((m) => new Transcription(m));
+		this.time = _value.time;
+		this.wordTiming = (_value.wordTiming || []).map((m) => new WordTiming(m));
+		this.audioUuid = _value.audioUuid;
+		TranscribeFileResponse.refineValues(this);
 	}
 	get transcriptions() {
 		return this._transcriptions;
@@ -1549,17 +1603,6 @@ TranscribeFileResponse.id = 'ondewo.s2t.TranscribeFileResponse';
  */
 class WordTiming {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of WordTiming to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.word = _value.word;
-		this.begin = _value.begin;
-		this.end = _value.end;
-		WordTiming.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -1616,6 +1659,17 @@ class WordTiming {
 		if (_instance.end) {
 			_writer.writeInt32(3, _instance.end);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of WordTiming to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.word = _value.word;
+		this.begin = _value.begin;
+		this.end = _value.end;
+		WordTiming.refineValues(this);
 	}
 	get word() {
 		return this._word;
@@ -1682,15 +1736,6 @@ WordTiming.id = 'ondewo.s2t.WordTiming';
  */
 class S2tPipelineId {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of S2tPipelineId to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.id = _value.id;
-		S2tPipelineId.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -1733,6 +1778,15 @@ class S2tPipelineId {
 		if (_instance.id) {
 			_writer.writeString(1, _instance.id);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of S2tPipelineId to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.id = _value.id;
+		S2tPipelineId.refineValues(this);
 	}
 	get id() {
 		return this._id;
@@ -1782,18 +1836,6 @@ S2tPipelineId.id = 'ondewo.s2t.S2tPipelineId';
  * Message implementation for ondewo.s2t.ListS2tPipelinesRequest
  */
 class ListS2tPipelinesRequest {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tPipelinesRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languages = (_value.languages || []).slice();
-		this.pipelineOwners = (_value.pipelineOwners || []).slice();
-		this.domains = (_value.domains || []).slice();
-		this.registeredOnly = _value.registeredOnly;
-		ListS2tPipelinesRequest.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -1858,6 +1900,18 @@ class ListS2tPipelinesRequest {
 		if (_instance.registeredOnly) {
 			_writer.writeBool(4, _instance.registeredOnly);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tPipelinesRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languages = (_value.languages || []).slice();
+		this.pipelineOwners = (_value.pipelineOwners || []).slice();
+		this.domains = (_value.domains || []).slice();
+		this.registeredOnly = _value.registeredOnly;
+		ListS2tPipelinesRequest.refineValues(this);
 	}
 	get languages() {
 		return this._languages;
@@ -1932,15 +1986,6 @@ ListS2tPipelinesRequest.id = 'ondewo.s2t.ListS2tPipelinesRequest';
  */
 class ListS2tPipelinesResponse {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tPipelinesResponse to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.pipelineConfigs = (_value.pipelineConfigs || []).map((m) => new Speech2TextConfig(m));
-		ListS2tPipelinesResponse.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -1985,6 +2030,15 @@ class ListS2tPipelinesResponse {
 		if (_instance.pipelineConfigs && _instance.pipelineConfigs.length) {
 			_writer.writeRepeatedMessage(1, _instance.pipelineConfigs, Speech2TextConfig.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tPipelinesResponse to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.pipelineConfigs = (_value.pipelineConfigs || []).map((m) => new Speech2TextConfig(m));
+		ListS2tPipelinesResponse.refineValues(this);
 	}
 	get pipelineConfigs() {
 		return this._pipelineConfigs;
@@ -2035,16 +2089,6 @@ ListS2tPipelinesResponse.id = 'ondewo.s2t.ListS2tPipelinesResponse';
  */
 class ListS2tLanguagesRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tLanguagesRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.domains = (_value.domains || []).slice();
-		this.pipelineOwners = (_value.pipelineOwners || []).slice();
-		ListS2tLanguagesRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2094,6 +2138,16 @@ class ListS2tLanguagesRequest {
 		if (_instance.pipelineOwners && _instance.pipelineOwners.length) {
 			_writer.writeRepeatedString(2, _instance.pipelineOwners);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tLanguagesRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.domains = (_value.domains || []).slice();
+		this.pipelineOwners = (_value.pipelineOwners || []).slice();
+		ListS2tLanguagesRequest.refineValues(this);
 	}
 	get domains() {
 		return this._domains;
@@ -2152,15 +2206,6 @@ ListS2tLanguagesRequest.id = 'ondewo.s2t.ListS2tLanguagesRequest';
  */
 class ListS2tLanguagesResponse {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tLanguagesResponse to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languages = (_value.languages || []).slice();
-		ListS2tLanguagesResponse.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2203,6 +2248,15 @@ class ListS2tLanguagesResponse {
 		if (_instance.languages && _instance.languages.length) {
 			_writer.writeRepeatedString(1, _instance.languages);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tLanguagesResponse to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languages = (_value.languages || []).slice();
+		ListS2tLanguagesResponse.refineValues(this);
 	}
 	get languages() {
 		return this._languages;
@@ -2253,16 +2307,6 @@ ListS2tLanguagesResponse.id = 'ondewo.s2t.ListS2tLanguagesResponse';
  */
 class ListS2tDomainsRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tDomainsRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languages = (_value.languages || []).slice();
-		this.pipelineOwners = (_value.pipelineOwners || []).slice();
-		ListS2tDomainsRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2312,6 +2356,16 @@ class ListS2tDomainsRequest {
 		if (_instance.pipelineOwners && _instance.pipelineOwners.length) {
 			_writer.writeRepeatedString(2, _instance.pipelineOwners);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tDomainsRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languages = (_value.languages || []).slice();
+		this.pipelineOwners = (_value.pipelineOwners || []).slice();
+		ListS2tDomainsRequest.refineValues(this);
 	}
 	get languages() {
 		return this._languages;
@@ -2370,15 +2424,6 @@ ListS2tDomainsRequest.id = 'ondewo.s2t.ListS2tDomainsRequest';
  */
 class ListS2tDomainsResponse {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tDomainsResponse to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.domains = (_value.domains || []).slice();
-		ListS2tDomainsResponse.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2421,6 +2466,15 @@ class ListS2tDomainsResponse {
 		if (_instance.domains && _instance.domains.length) {
 			_writer.writeRepeatedString(1, _instance.domains);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tDomainsResponse to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.domains = (_value.domains || []).slice();
+		ListS2tDomainsResponse.refineValues(this);
 	}
 	get domains() {
 		return this._domains;
@@ -2471,15 +2525,6 @@ ListS2tDomainsResponse.id = 'ondewo.s2t.ListS2tDomainsResponse';
  */
 class S2TGetServiceInfoResponse {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of S2TGetServiceInfoResponse to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.version = _value.version;
-		S2TGetServiceInfoResponse.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2522,6 +2567,15 @@ class S2TGetServiceInfoResponse {
 		if (_instance.version) {
 			_writer.writeString(1, _instance.version);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of S2TGetServiceInfoResponse to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.version = _value.version;
+		S2TGetServiceInfoResponse.refineValues(this);
 	}
 	get version() {
 		return this._version;
@@ -2571,24 +2625,6 @@ S2TGetServiceInfoResponse.id = 'ondewo.s2t.S2TGetServiceInfoResponse';
  * Message implementation for ondewo.s2t.Speech2TextConfig
  */
 class Speech2TextConfig {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Speech2TextConfig to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.id = _value.id;
-		this.description = _value.description ? new S2TDescription(_value.description) : undefined;
-		this.active = _value.active;
-		this.inference = _value.inference ? new S2TInference(_value.inference) : undefined;
-		this.streamingServer = _value.streamingServer ? new StreamingServer(_value.streamingServer) : undefined;
-		this.voiceActivityDetection = _value.voiceActivityDetection
-			? new VoiceActivityDetection(_value.voiceActivityDetection)
-			: undefined;
-		this.postProcessing = _value.postProcessing ? new PostProcessing(_value.postProcessing) : undefined;
-		this.logging = _value.logging ? new Logging(_value.logging) : undefined;
-		Speech2TextConfig.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -2687,6 +2723,24 @@ class Speech2TextConfig {
 		if (_instance.logging) {
 			_writer.writeMessage(8, _instance.logging, Logging.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Speech2TextConfig to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.id = _value.id;
+		this.description = _value.description ? new S2TDescription(_value.description) : undefined;
+		this.active = _value.active;
+		this.inference = _value.inference ? new S2TInference(_value.inference) : undefined;
+		this.streamingServer = _value.streamingServer ? new StreamingServer(_value.streamingServer) : undefined;
+		this.voiceActivityDetection = _value.voiceActivityDetection
+			? new VoiceActivityDetection(_value.voiceActivityDetection)
+			: undefined;
+		this.postProcessing = _value.postProcessing ? new PostProcessing(_value.postProcessing) : undefined;
+		this.logging = _value.logging ? new Logging(_value.logging) : undefined;
+		Speech2TextConfig.refineValues(this);
 	}
 	get id() {
 		return this._id;
@@ -2793,18 +2847,6 @@ Speech2TextConfig.id = 'ondewo.s2t.Speech2TextConfig';
  */
 class S2TDescription {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of S2TDescription to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.language = _value.language;
-		this.pipelineOwner = _value.pipelineOwner;
-		this.domain = _value.domain;
-		this.comments = _value.comments;
-		S2TDescription.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2868,6 +2910,18 @@ class S2TDescription {
 		if (_instance.comments) {
 			_writer.writeString(4, _instance.comments);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of S2TDescription to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.language = _value.language;
+		this.pipelineOwner = _value.pipelineOwner;
+		this.domain = _value.domain;
+		this.comments = _value.comments;
+		S2TDescription.refineValues(this);
 	}
 	get language() {
 		return this._language;
@@ -2942,16 +2996,6 @@ S2TDescription.id = 'ondewo.s2t.S2TDescription';
  */
 class S2TInference {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of S2TInference to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.acousticModels = _value.acousticModels ? new AcousticModels(_value.acousticModels) : undefined;
-		this.languageModels = _value.languageModels ? new LanguageModels(_value.languageModels) : undefined;
-		S2TInference.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -2967,6 +3011,7 @@ class S2TInference {
 	static refineValues(_instance) {
 		_instance.acousticModels = _instance.acousticModels || undefined;
 		_instance.languageModels = _instance.languageModels || undefined;
+		_instance.inferenceBackend = _instance.inferenceBackend || 0;
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -2984,6 +3029,9 @@ class S2TInference {
 				case 2:
 					_instance.languageModels = new LanguageModels();
 					_reader.readMessage(_instance.languageModels, LanguageModels.deserializeBinaryFromReader);
+					break;
+				case 3:
+					_instance.inferenceBackend = _reader.readEnum();
 					break;
 				default:
 					_reader.skipField();
@@ -3003,6 +3051,20 @@ class S2TInference {
 		if (_instance.languageModels) {
 			_writer.writeMessage(2, _instance.languageModels, LanguageModels.serializeBinaryToWriter);
 		}
+		if (_instance.inferenceBackend) {
+			_writer.writeEnum(3, _instance.inferenceBackend);
+		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of S2TInference to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.acousticModels = _value.acousticModels ? new AcousticModels(_value.acousticModels) : undefined;
+		this.languageModels = _value.languageModels ? new LanguageModels(_value.languageModels) : undefined;
+		this.inferenceBackend = _value.inferenceBackend;
+		S2TInference.refineValues(this);
 	}
 	get acousticModels() {
 		return this._acousticModels;
@@ -3015,6 +3077,12 @@ class S2TInference {
 	}
 	set languageModels(value) {
 		this._languageModels = value;
+	}
+	get inferenceBackend() {
+		return this._inferenceBackend;
+	}
+	set inferenceBackend(value) {
+		this._inferenceBackend = value;
 	}
 	/**
 	 * Serialize message to binary data
@@ -3031,7 +3099,8 @@ class S2TInference {
 	toObject() {
 		return {
 			acousticModels: this.acousticModels ? this.acousticModels.toObject() : undefined,
-			languageModels: this.languageModels ? this.languageModels.toObject() : undefined
+			languageModels: this.languageModels ? this.languageModels.toObject() : undefined,
+			inferenceBackend: this.inferenceBackend
 		};
 	}
 	/**
@@ -3051,7 +3120,11 @@ class S2TInference {
 	) {
 		return {
 			acousticModels: this.acousticModels ? this.acousticModels.toProtobufJSON(options) : null,
-			languageModels: this.languageModels ? this.languageModels.toProtobufJSON(options) : null
+			languageModels: this.languageModels ? this.languageModels.toProtobufJSON(options) : null,
+			inferenceBackend:
+				InferenceBackend[
+					this.inferenceBackend === null || this.inferenceBackend === undefined ? 0 : this.inferenceBackend
+				]
 		};
 	}
 }
@@ -3060,21 +3133,6 @@ S2TInference.id = 'ondewo.s2t.S2TInference';
  * Message implementation for ondewo.s2t.AcousticModels
  */
 class AcousticModels {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of AcousticModels to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.type = _value.type;
-		this.quartznet = _value.quartznet ? new Quartznet(_value.quartznet) : undefined;
-		this.quartznetTriton = _value.quartznetTriton ? new QuartznetTriton(_value.quartznetTriton) : undefined;
-		this.wav2vec = _value.wav2vec ? new Wav2Vec(_value.wav2vec) : undefined;
-		this.wav2vecTriton = _value.wav2vecTriton ? new Wav2VecTriton(_value.wav2vecTriton) : undefined;
-		this.whisper = _value.whisper ? new Whisper(_value.whisper) : undefined;
-		this.whisperTriton = _value.whisperTriton ? new WhisperTriton(_value.whisperTriton) : undefined;
-		AcousticModels.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -3166,6 +3224,21 @@ class AcousticModels {
 		if (_instance.whisperTriton) {
 			_writer.writeMessage(7, _instance.whisperTriton, WhisperTriton.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of AcousticModels to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.type = _value.type;
+		this.quartznet = _value.quartznet ? new Quartznet(_value.quartznet) : undefined;
+		this.quartznetTriton = _value.quartznetTriton ? new QuartznetTriton(_value.quartznetTriton) : undefined;
+		this.wav2vec = _value.wav2vec ? new Wav2Vec(_value.wav2vec) : undefined;
+		this.wav2vecTriton = _value.wav2vecTriton ? new Wav2VecTriton(_value.wav2vecTriton) : undefined;
+		this.whisper = _value.whisper ? new Whisper(_value.whisper) : undefined;
+		this.whisperTriton = _value.whisperTriton ? new WhisperTriton(_value.whisperTriton) : undefined;
+		AcousticModels.refineValues(this);
 	}
 	get type() {
 		return this._type;
@@ -3264,17 +3337,6 @@ AcousticModels.id = 'ondewo.s2t.AcousticModels';
  */
 class Whisper {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Whisper to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.modelPath = _value.modelPath;
-		this.useGpu = _value.useGpu;
-		this.language = _value.language;
-		Whisper.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -3331,6 +3393,17 @@ class Whisper {
 		if (_instance.language) {
 			_writer.writeString(3, _instance.language);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Whisper to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.modelPath = _value.modelPath;
+		this.useGpu = _value.useGpu;
+		this.language = _value.language;
+		Whisper.refineValues(this);
 	}
 	get modelPath() {
 		return this._modelPath;
@@ -3397,18 +3470,6 @@ Whisper.id = 'ondewo.s2t.Whisper';
  */
 class WhisperTriton {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of WhisperTriton to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.processorPath = _value.processorPath;
-		this.tritonModelName = _value.tritonModelName;
-		this.tritonModelVersion = _value.tritonModelVersion;
-		this.checkStatusTimeout = _value.checkStatusTimeout;
-		WhisperTriton.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -3472,6 +3533,18 @@ class WhisperTriton {
 		if (_instance.checkStatusTimeout) {
 			_writer.writeInt64String(4, _instance.checkStatusTimeout);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of WhisperTriton to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.processorPath = _value.processorPath;
+		this.tritonModelName = _value.tritonModelName;
+		this.tritonModelVersion = _value.tritonModelVersion;
+		this.checkStatusTimeout = _value.checkStatusTimeout;
+		WhisperTriton.refineValues(this);
 	}
 	get processorPath() {
 		return this._processorPath;
@@ -3546,16 +3619,6 @@ WhisperTriton.id = 'ondewo.s2t.WhisperTriton';
  */
 class Wav2Vec {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Wav2Vec to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.modelPath = _value.modelPath;
-		this.useGpu = _value.useGpu;
-		Wav2Vec.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -3605,6 +3668,16 @@ class Wav2Vec {
 		if (_instance.useGpu) {
 			_writer.writeBool(2, _instance.useGpu);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Wav2Vec to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.modelPath = _value.modelPath;
+		this.useGpu = _value.useGpu;
+		Wav2Vec.refineValues(this);
 	}
 	get modelPath() {
 		return this._modelPath;
@@ -3662,18 +3735,6 @@ Wav2Vec.id = 'ondewo.s2t.Wav2Vec';
  * Message implementation for ondewo.s2t.Wav2VecTriton
  */
 class Wav2VecTriton {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Wav2VecTriton to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.processorPath = _value.processorPath;
-		this.tritonModelName = _value.tritonModelName;
-		this.tritonModelVersion = _value.tritonModelVersion;
-		this.checkStatusTimeout = _value.checkStatusTimeout;
-		Wav2VecTriton.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -3738,6 +3799,18 @@ class Wav2VecTriton {
 		if (_instance.checkStatusTimeout) {
 			_writer.writeInt64String(4, _instance.checkStatusTimeout);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Wav2VecTriton to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.processorPath = _value.processorPath;
+		this.tritonModelName = _value.tritonModelName;
+		this.tritonModelVersion = _value.tritonModelVersion;
+		this.checkStatusTimeout = _value.checkStatusTimeout;
+		Wav2VecTriton.refineValues(this);
 	}
 	get processorPath() {
 		return this._processorPath;
@@ -3812,19 +3885,6 @@ Wav2VecTriton.id = 'ondewo.s2t.Wav2VecTriton';
  */
 class Quartznet {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Quartznet to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.configPath = _value.configPath;
-		this.loadType = _value.loadType;
-		this.ptFiles = _value.ptFiles ? new PtFiles(_value.ptFiles) : undefined;
-		this.ckptFile = _value.ckptFile ? new CkptFile(_value.ckptFile) : undefined;
-		this.useGpu = _value.useGpu;
-		Quartznet.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -3897,6 +3957,19 @@ class Quartznet {
 		if (_instance.useGpu) {
 			_writer.writeBool(5, _instance.useGpu);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Quartznet to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.configPath = _value.configPath;
+		this.loadType = _value.loadType;
+		this.ptFiles = _value.ptFiles ? new PtFiles(_value.ptFiles) : undefined;
+		this.ckptFile = _value.ckptFile ? new CkptFile(_value.ckptFile) : undefined;
+		this.useGpu = _value.useGpu;
+		Quartznet.refineValues(this);
 	}
 	get configPath() {
 		return this._configPath;
@@ -3979,16 +4052,6 @@ Quartznet.id = 'ondewo.s2t.Quartznet';
  */
 class PtFiles {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of PtFiles to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.path = _value.path;
-		this.step = _value.step;
-		PtFiles.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -4038,6 +4101,16 @@ class PtFiles {
 		if (_instance.step) {
 			_writer.writeString(2, _instance.step);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of PtFiles to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.path = _value.path;
+		this.step = _value.step;
+		PtFiles.refineValues(this);
 	}
 	get path() {
 		return this._path;
@@ -4096,15 +4169,6 @@ PtFiles.id = 'ondewo.s2t.PtFiles';
  */
 class CkptFile {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of CkptFile to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.path = _value.path;
-		CkptFile.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -4147,6 +4211,15 @@ class CkptFile {
 		if (_instance.path) {
 			_writer.writeString(1, _instance.path);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of CkptFile to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.path = _value.path;
+		CkptFile.refineValues(this);
 	}
 	get path() {
 		return this._path;
@@ -4196,17 +4269,6 @@ CkptFile.id = 'ondewo.s2t.CkptFile';
  * Message implementation for ondewo.s2t.QuartznetTriton
  */
 class QuartznetTriton {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of QuartznetTriton to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.configPath = _value.configPath;
-		this.tritonUrl = _value.tritonUrl;
-		this.tritonModel = _value.tritonModel;
-		QuartznetTriton.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -4264,6 +4326,17 @@ class QuartznetTriton {
 		if (_instance.tritonModel) {
 			_writer.writeString(3, _instance.tritonModel);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of QuartznetTriton to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.configPath = _value.configPath;
+		this.tritonUrl = _value.tritonUrl;
+		this.tritonModel = _value.tritonModel;
+		QuartznetTriton.refineValues(this);
 	}
 	get configPath() {
 		return this._configPath;
@@ -4329,19 +4402,6 @@ QuartznetTriton.id = 'ondewo.s2t.QuartznetTriton';
  * Message implementation for ondewo.s2t.LanguageModels
  */
 class LanguageModels {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of LanguageModels to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.path = _value.path;
-		this.beamSize = _value.beamSize;
-		this.defaultLm = _value.defaultLm;
-		this.beamSearchScorerAlpha = _value.beamSearchScorerAlpha;
-		this.beamSearchScorerBeta = _value.beamSearchScorerBeta;
-		LanguageModels.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -4413,6 +4473,19 @@ class LanguageModels {
 		if (_instance.beamSearchScorerBeta) {
 			_writer.writeFloat(5, _instance.beamSearchScorerBeta);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of LanguageModels to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.path = _value.path;
+		this.beamSize = _value.beamSize;
+		this.defaultLm = _value.defaultLm;
+		this.beamSearchScorerAlpha = _value.beamSearchScorerAlpha;
+		this.beamSearchScorerBeta = _value.beamSearchScorerBeta;
+		LanguageModels.refineValues(this);
 	}
 	get path() {
 		return this._path;
@@ -4495,20 +4568,6 @@ LanguageModels.id = 'ondewo.s2t.LanguageModels';
  */
 class StreamingServer {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of StreamingServer to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.host = _value.host;
-		this.port = _value.port;
-		this.outputStyle = _value.outputStyle;
-		this.streamingSpeechRecognition = _value.streamingSpeechRecognition
-			? new StreamingSpeechRecognition(_value.streamingSpeechRecognition)
-			: undefined;
-		StreamingServer.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -4576,6 +4635,20 @@ class StreamingServer {
 		if (_instance.streamingSpeechRecognition) {
 			_writer.writeMessage(4, _instance.streamingSpeechRecognition, StreamingSpeechRecognition.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of StreamingServer to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.host = _value.host;
+		this.port = _value.port;
+		this.outputStyle = _value.outputStyle;
+		this.streamingSpeechRecognition = _value.streamingSpeechRecognition
+			? new StreamingSpeechRecognition(_value.streamingSpeechRecognition)
+			: undefined;
+		StreamingServer.refineValues(this);
 	}
 	get host() {
 		return this._host;
@@ -4653,21 +4726,6 @@ StreamingServer.id = 'ondewo.s2t.StreamingServer';
  * Message implementation for ondewo.s2t.StreamingSpeechRecognition
  */
 class StreamingSpeechRecognition {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of StreamingSpeechRecognition to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.transcribeNotFinal = _value.transcribeNotFinal;
-		this.decodingMethod = _value.decodingMethod;
-		this.samplingRate = _value.samplingRate;
-		this.minAudioChunkSize = _value.minAudioChunkSize;
-		this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
-		this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
-		this.nextChunkTimeout = _value.nextChunkTimeout;
-		StreamingSpeechRecognition.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -4753,6 +4811,21 @@ class StreamingSpeechRecognition {
 		if (_instance.nextChunkTimeout) {
 			_writer.writeFloat(7, _instance.nextChunkTimeout);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of StreamingSpeechRecognition to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.transcribeNotFinal = _value.transcribeNotFinal;
+		this.decodingMethod = _value.decodingMethod;
+		this.samplingRate = _value.samplingRate;
+		this.minAudioChunkSize = _value.minAudioChunkSize;
+		this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
+		this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
+		this.nextChunkTimeout = _value.nextChunkTimeout;
+		StreamingSpeechRecognition.refineValues(this);
 	}
 	get transcribeNotFinal() {
 		return this._transcribeNotFinal;
@@ -4851,18 +4924,6 @@ StreamingSpeechRecognition.id = 'ondewo.s2t.StreamingSpeechRecognition';
  */
 class VoiceActivityDetection {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of VoiceActivityDetection to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.active = _value.active;
-		this.samplingRate = _value.samplingRate;
-		this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
-		this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
-		VoiceActivityDetection.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -4928,6 +4989,18 @@ class VoiceActivityDetection {
 		if (_instance.matchbox) {
 			_writer.writeMessage(4, _instance.matchbox, Matchbox.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of VoiceActivityDetection to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.active = _value.active;
+		this.samplingRate = _value.samplingRate;
+		this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
+		this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
+		VoiceActivityDetection.refineValues(this);
 	}
 	get active() {
 		return this._active;
@@ -5001,22 +5074,6 @@ VoiceActivityDetection.id = 'ondewo.s2t.VoiceActivityDetection';
  * Message implementation for ondewo.s2t.Pyannote
  */
 class Pyannote {
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Pyannote to deeply clone from
-	 */
-	constructor(_value) {
-		this._oneofLogScale = Pyannote.OneofLogScaleCase.none;
-		_value = _value || {};
-		this.modelPath = _value.modelPath;
-		this.minAudioSize = _value.minAudioSize;
-		this.offset = _value.offset;
-		this.onset = _value.onset;
-		this.logScale = _value.logScale;
-		this.minDurationOff = _value.minDurationOff;
-		this.minDurationOn = _value.minDurationOn;
-		Pyannote.refineValues(this);
-	}
 	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
@@ -5101,6 +5158,22 @@ class Pyannote {
 		if (_instance.minDurationOn) {
 			_writer.writeFloat(7, _instance.minDurationOn);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Pyannote to deeply clone from
+	 */
+	constructor(_value) {
+		this._oneofLogScale = Pyannote.OneofLogScaleCase.none;
+		_value = _value || {};
+		this.modelPath = _value.modelPath;
+		this.minAudioSize = _value.minAudioSize;
+		this.offset = _value.offset;
+		this.onset = _value.onset;
+		this.logScale = _value.logScale;
+		this.minDurationOff = _value.minDurationOff;
+		this.minDurationOn = _value.minDurationOn;
+		Pyannote.refineValues(this);
 	}
 	get modelPath() {
 		return this._modelPath;
@@ -5212,17 +5285,6 @@ Pyannote.id = 'ondewo.s2t.Pyannote';
  */
 class Matchbox {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Matchbox to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.modelConfig = _value.modelConfig;
-		this.encoderPath = _value.encoderPath;
-		this.decoderPath = _value.decoderPath;
-		Matchbox.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5279,6 +5341,17 @@ class Matchbox {
 		if (_instance.decoderPath) {
 			_writer.writeString(3, _instance.decoderPath);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Matchbox to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.modelConfig = _value.modelConfig;
+		this.encoderPath = _value.encoderPath;
+		this.decoderPath = _value.decoderPath;
+		Matchbox.refineValues(this);
 	}
 	get modelConfig() {
 		return this._modelConfig;
@@ -5345,16 +5418,6 @@ Matchbox.id = 'ondewo.s2t.Matchbox';
  */
 class PostProcessing {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of PostProcessing to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.pipeline = (_value.pipeline || []).slice();
-		this.postProcessors = _value.postProcessors ? new PostProcessors(_value.postProcessors) : undefined;
-		PostProcessing.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5405,6 +5468,16 @@ class PostProcessing {
 		if (_instance.postProcessors) {
 			_writer.writeMessage(2, _instance.postProcessors, PostProcessors.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of PostProcessing to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.pipeline = (_value.pipeline || []).slice();
+		this.postProcessors = _value.postProcessors ? new PostProcessors(_value.postProcessors) : undefined;
+		PostProcessing.refineValues(this);
 	}
 	get pipeline() {
 		return this._pipeline;
@@ -5463,16 +5536,6 @@ PostProcessing.id = 'ondewo.s2t.PostProcessing';
  */
 class PostProcessors {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of PostProcessors to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.symSpell = _value.symSpell ? new SymSpell(_value.symSpell) : undefined;
-		this.normalization = _value.normalization ? new S2TNormalization(_value.normalization) : undefined;
-		PostProcessors.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5524,6 +5587,16 @@ class PostProcessors {
 		if (_instance.normalization) {
 			_writer.writeMessage(2, _instance.normalization, S2TNormalization.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of PostProcessors to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.symSpell = _value.symSpell ? new SymSpell(_value.symSpell) : undefined;
+		this.normalization = _value.normalization ? new S2TNormalization(_value.normalization) : undefined;
+		PostProcessors.refineValues(this);
 	}
 	get symSpell() {
 		return this._symSpell;
@@ -5582,17 +5655,6 @@ PostProcessors.id = 'ondewo.s2t.PostProcessors';
  */
 class SymSpell {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of SymSpell to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.dictPath = _value.dictPath;
-		this.maxDictionaryEditDistance = _value.maxDictionaryEditDistance;
-		this.prefixLength = _value.prefixLength;
-		SymSpell.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5649,6 +5711,17 @@ class SymSpell {
 		if (_instance.prefixLength) {
 			_writer.writeInt64String(3, _instance.prefixLength);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of SymSpell to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.dictPath = _value.dictPath;
+		this.maxDictionaryEditDistance = _value.maxDictionaryEditDistance;
+		this.prefixLength = _value.prefixLength;
+		SymSpell.refineValues(this);
 	}
 	get dictPath() {
 		return this._dictPath;
@@ -5715,15 +5788,6 @@ SymSpell.id = 'ondewo.s2t.SymSpell';
  */
 class S2TNormalization {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of S2TNormalization to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.language = _value.language;
-		S2TNormalization.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5766,6 +5830,15 @@ class S2TNormalization {
 		if (_instance.language) {
 			_writer.writeString(1, _instance.language);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of S2TNormalization to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.language = _value.language;
+		S2TNormalization.refineValues(this);
 	}
 	get language() {
 		return this._language;
@@ -5816,16 +5889,6 @@ S2TNormalization.id = 'ondewo.s2t.S2TNormalization';
  */
 class Logging {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Logging to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.type = _value.type;
-		this.path = _value.path;
-		Logging.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5875,6 +5938,16 @@ class Logging {
 		if (_instance.path) {
 			_writer.writeString(2, _instance.path);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Logging to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.type = _value.type;
+		this.path = _value.path;
+		Logging.refineValues(this);
 	}
 	get type() {
 		return this._type;
@@ -5933,15 +6006,6 @@ Logging.id = 'ondewo.s2t.Logging';
  */
 class ListS2tLanguageModelsRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tLanguageModelsRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.ids = (_value.ids || []).slice();
-		ListS2tLanguageModelsRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -5984,6 +6048,15 @@ class ListS2tLanguageModelsRequest {
 		if (_instance.ids && _instance.ids.length) {
 			_writer.writeRepeatedString(1, _instance.ids);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tLanguageModelsRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.ids = (_value.ids || []).slice();
+		ListS2tLanguageModelsRequest.refineValues(this);
 	}
 	get ids() {
 		return this._ids;
@@ -6034,16 +6107,6 @@ ListS2tLanguageModelsRequest.id = 'ondewo.s2t.ListS2tLanguageModelsRequest';
  */
 class LanguageModelPipelineId {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of LanguageModelPipelineId to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.pipelineId = _value.pipelineId;
-		this.modelNames = (_value.modelNames || []).slice();
-		LanguageModelPipelineId.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -6093,6 +6156,16 @@ class LanguageModelPipelineId {
 		if (_instance.modelNames && _instance.modelNames.length) {
 			_writer.writeRepeatedString(2, _instance.modelNames);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of LanguageModelPipelineId to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.pipelineId = _value.pipelineId;
+		this.modelNames = (_value.modelNames || []).slice();
+		LanguageModelPipelineId.refineValues(this);
 	}
 	get pipelineId() {
 		return this._pipelineId;
@@ -6151,15 +6224,6 @@ LanguageModelPipelineId.id = 'ondewo.s2t.LanguageModelPipelineId';
  */
 class ListS2tLanguageModelsResponse {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of ListS2tLanguageModelsResponse to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.lmPipelineIds = (_value.lmPipelineIds || []).map((m) => new LanguageModelPipelineId(m));
-		ListS2tLanguageModelsResponse.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -6204,6 +6268,15 @@ class ListS2tLanguageModelsResponse {
 		if (_instance.lmPipelineIds && _instance.lmPipelineIds.length) {
 			_writer.writeRepeatedMessage(1, _instance.lmPipelineIds, LanguageModelPipelineId.serializeBinaryToWriter);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of ListS2tLanguageModelsResponse to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.lmPipelineIds = (_value.lmPipelineIds || []).map((m) => new LanguageModelPipelineId(m));
+		ListS2tLanguageModelsResponse.refineValues(this);
 	}
 	get lmPipelineIds() {
 		return this._lmPipelineIds;
@@ -6254,15 +6327,6 @@ ListS2tLanguageModelsResponse.id = 'ondewo.s2t.ListS2tLanguageModelsResponse';
  */
 class CreateUserLanguageModelRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of CreateUserLanguageModelRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languageModelName = _value.languageModelName;
-		CreateUserLanguageModelRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -6305,6 +6369,15 @@ class CreateUserLanguageModelRequest {
 		if (_instance.languageModelName) {
 			_writer.writeString(1, _instance.languageModelName);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of CreateUserLanguageModelRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languageModelName = _value.languageModelName;
+		CreateUserLanguageModelRequest.refineValues(this);
 	}
 	get languageModelName() {
 		return this._languageModelName;
@@ -6355,15 +6428,6 @@ CreateUserLanguageModelRequest.id = 'ondewo.s2t.CreateUserLanguageModelRequest';
  */
 class DeleteUserLanguageModelRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of DeleteUserLanguageModelRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languageModelName = _value.languageModelName;
-		DeleteUserLanguageModelRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -6406,6 +6470,15 @@ class DeleteUserLanguageModelRequest {
 		if (_instance.languageModelName) {
 			_writer.writeString(1, _instance.languageModelName);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of DeleteUserLanguageModelRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languageModelName = _value.languageModelName;
+		DeleteUserLanguageModelRequest.refineValues(this);
 	}
 	get languageModelName() {
 		return this._languageModelName;
@@ -6456,16 +6529,6 @@ DeleteUserLanguageModelRequest.id = 'ondewo.s2t.DeleteUserLanguageModelRequest';
  */
 class AddDataToUserLanguageModelRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of AddDataToUserLanguageModelRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languageModelName = _value.languageModelName;
-		this.zippedData = _value.zippedData;
-		AddDataToUserLanguageModelRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -6515,6 +6578,16 @@ class AddDataToUserLanguageModelRequest {
 		if (_instance.zippedData && _instance.zippedData.length) {
 			_writer.writeBytes(2, _instance.zippedData);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of AddDataToUserLanguageModelRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languageModelName = _value.languageModelName;
+		this.zippedData = _value.zippedData;
+		AddDataToUserLanguageModelRequest.refineValues(this);
 	}
 	get languageModelName() {
 		return this._languageModelName;
@@ -6573,16 +6646,6 @@ AddDataToUserLanguageModelRequest.id = 'ondewo.s2t.AddDataToUserLanguageModelReq
  */
 class TrainUserLanguageModelRequest {
 	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of TrainUserLanguageModelRequest to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.languageModelName = _value.languageModelName;
-		this.order = _value.order;
-		TrainUserLanguageModelRequest.refineValues(this);
-	}
-	/**
 	 * Deserialize binary data to message
 	 * @param instance message instance
 	 */
@@ -6632,6 +6695,16 @@ class TrainUserLanguageModelRequest {
 		if (_instance.order) {
 			_writer.writeInt64String(2, _instance.order);
 		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TrainUserLanguageModelRequest to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.languageModelName = _value.languageModelName;
+		this.order = _value.order;
+		TrainUserLanguageModelRequest.refineValues(this);
 	}
 	get languageModelName() {
 		return this._languageModelName;
@@ -7132,7 +7205,7 @@ class Speech2TextClient {
 }
 Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({
 	minVersion: '12.0.0',
-	version: '15.0.3',
+	version: '15.2.8',
 	ngImport: i0,
 	type: Speech2TextClient,
 	deps: [
@@ -7144,14 +7217,14 @@ Speech2TextClient.ɵfac = i0.ɵɵngDeclareFactory({
 });
 Speech2TextClient.ɵprov = i0.ɵɵngDeclareInjectable({
 	minVersion: '12.0.0',
-	version: '15.0.3',
+	version: '15.2.8',
 	ngImport: i0,
 	type: Speech2TextClient,
 	providedIn: 'any'
 });
 i0.ɵɵngDeclareClassMetadata({
 	minVersion: '12.0.0',
-	version: '15.0.3',
+	version: '15.2.8',
 	ngImport: i0,
 	type: Speech2TextClient,
 	decorators: [
@@ -7200,6 +7273,7 @@ export {
 	Decoding,
 	DeleteUserLanguageModelRequest,
 	GRPC_SPEECH2_TEXT_CLIENT_SETTINGS,
+	InferenceBackend,
 	LanguageModelPipelineId,
 	LanguageModels,
 	ListS2tDomainsRequest,

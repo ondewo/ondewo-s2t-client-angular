@@ -1,5 +1,10 @@
 import { GrpcMessage, RecursivePartial, ToProtobufJSONOptions } from '@ngx-grpc/common';
 import { BinaryReader, BinaryWriter, ByteSource } from 'google-protobuf';
+export declare enum InferenceBackend {
+	INFERENCE_BACKEND_UNKNOWN = 0,
+	INFERENCE_BACKEND_PYTORCH = 1,
+	INFERENCE_BACKEND_FLAX = 2
+}
 export declare enum Decoding {
 	DEFAULT = 0,
 	GREEDY = 1,
@@ -170,8 +175,11 @@ export declare class TranscriptionReturnOptions implements GrpcMessage {
 	static serializeBinaryToWriter(_instance: TranscriptionReturnOptions, _writer: BinaryWriter): void;
 	private _returnStartOfSpeech;
 	private _returnAudio;
-	private _returnAlternativeTranscriptions;
 	private _returnConfidenceScore;
+	private _returnAlternativeTranscriptions;
+	private _returnAlternativeTranscriptionsNr;
+	private _returnAlternativeWords;
+	private _returnAlternativeWordsNr;
 	private _returnWordTiming;
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -182,10 +190,16 @@ export declare class TranscriptionReturnOptions implements GrpcMessage {
 	set returnStartOfSpeech(value: boolean);
 	get returnAudio(): boolean;
 	set returnAudio(value: boolean);
-	get returnAlternativeTranscriptions(): boolean;
-	set returnAlternativeTranscriptions(value: boolean);
 	get returnConfidenceScore(): boolean;
 	set returnConfidenceScore(value: boolean);
+	get returnAlternativeTranscriptions(): boolean;
+	set returnAlternativeTranscriptions(value: boolean);
+	get returnAlternativeTranscriptionsNr(): number;
+	set returnAlternativeTranscriptionsNr(value: number);
+	get returnAlternativeWords(): boolean;
+	set returnAlternativeWords(value: boolean);
+	get returnAlternativeWordsNr(): number;
+	set returnAlternativeWordsNr(value: number);
 	get returnWordTiming(): boolean;
 	set returnWordTiming(value: boolean);
 	/**
@@ -215,8 +229,11 @@ export declare module TranscriptionReturnOptions {
 	interface AsObject {
 		returnStartOfSpeech: boolean;
 		returnAudio: boolean;
-		returnAlternativeTranscriptions: boolean;
 		returnConfidenceScore: boolean;
+		returnAlternativeTranscriptions: boolean;
+		returnAlternativeTranscriptionsNr: number;
+		returnAlternativeWords: boolean;
+		returnAlternativeWordsNr: number;
 		returnWordTiming: boolean;
 	}
 	/**
@@ -225,8 +242,11 @@ export declare module TranscriptionReturnOptions {
 	interface AsProtobufJSON {
 		returnStartOfSpeech: boolean;
 		returnAudio: boolean;
-		returnAlternativeTranscriptions: boolean;
 		returnConfidenceScore: boolean;
+		returnAlternativeTranscriptions: boolean;
+		returnAlternativeTranscriptionsNr: number;
+		returnAlternativeWords: boolean;
+		returnAlternativeWordsNr: number;
 		returnWordTiming: boolean;
 	}
 }
@@ -1698,6 +1718,7 @@ export declare class S2TInference implements GrpcMessage {
 	static serializeBinaryToWriter(_instance: S2TInference, _writer: BinaryWriter): void;
 	private _acousticModels?;
 	private _languageModels?;
+	private _inferenceBackend;
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
 	 * @param _value initial values object or instance of S2TInference to deeply clone from
@@ -1707,6 +1728,8 @@ export declare class S2TInference implements GrpcMessage {
 	set acousticModels(value: AcousticModels | undefined);
 	get languageModels(): LanguageModels | undefined;
 	set languageModels(value: LanguageModels | undefined);
+	get inferenceBackend(): InferenceBackend;
+	set inferenceBackend(value: InferenceBackend);
 	/**
 	 * Serialize message to binary data
 	 * @param instance message instance
@@ -1734,6 +1757,7 @@ export declare module S2TInference {
 	interface AsObject {
 		acousticModels?: AcousticModels.AsObject;
 		languageModels?: LanguageModels.AsObject;
+		inferenceBackend: InferenceBackend;
 	}
 	/**
 	 * Protobuf JSON representation for S2TInference
@@ -1741,6 +1765,7 @@ export declare module S2TInference {
 	interface AsProtobufJSON {
 		acousticModels: AcousticModels.AsProtobufJSON | null;
 		languageModels: LanguageModels.AsProtobufJSON | null;
+		inferenceBackend: string;
 	}
 }
 /**
