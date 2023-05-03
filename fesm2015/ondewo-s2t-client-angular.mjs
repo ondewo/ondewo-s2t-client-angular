@@ -7,12 +7,6 @@ import { BinaryReader, BinaryWriter } from 'google-protobuf';
 import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
 
 /* tslint:disable */
-var InferenceBackend;
-(function (InferenceBackend) {
-	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_UNKNOWN'] = 0)] = 'INFERENCE_BACKEND_UNKNOWN';
-	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_PYTORCH'] = 1)] = 'INFERENCE_BACKEND_PYTORCH';
-	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_FLAX'] = 2)] = 'INFERENCE_BACKEND_FLAX';
-})(InferenceBackend || (InferenceBackend = {}));
 var Decoding;
 (function (Decoding) {
 	Decoding[(Decoding['DEFAULT'] = 0)] = 'DEFAULT';
@@ -20,6 +14,12 @@ var Decoding;
 	Decoding[(Decoding['BEAM_SEARCH_WITH_LM'] = 2)] = 'BEAM_SEARCH_WITH_LM';
 	Decoding[(Decoding['BEAM_SEARCH'] = 3)] = 'BEAM_SEARCH';
 })(Decoding || (Decoding = {}));
+var InferenceBackend;
+(function (InferenceBackend) {
+	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_UNKNOWN'] = 0)] = 'INFERENCE_BACKEND_UNKNOWN';
+	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_PYTORCH'] = 1)] = 'INFERENCE_BACKEND_PYTORCH';
+	InferenceBackend[(InferenceBackend['INFERENCE_BACKEND_FLAX'] = 2)] = 'INFERENCE_BACKEND_FLAX';
+})(InferenceBackend || (InferenceBackend = {}));
 /**
  * Message implementation for ondewo.s2t.TranscribeRequestConfig
  */
@@ -832,6 +832,578 @@ class PostProcessingOptions {
 }
 PostProcessingOptions.id = 'ondewo.s2t.PostProcessingOptions';
 /**
+ * Message implementation for ondewo.s2t.Transcription
+ */
+class Transcription {
+	/**
+	 * Deserialize binary data to message
+	 * @param instance message instance
+	 */
+	static deserializeBinary(bytes) {
+		const instance = new Transcription();
+		Transcription.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	/**
+	 * Check all the properties and set default protobuf values if necessary
+	 * @param _instance message instance
+	 */
+	static refineValues(_instance) {
+		_instance.transcription = _instance.transcription || '';
+		_instance.confidenceScore = _instance.confidenceScore || 0;
+		_instance.words = _instance.words || [];
+		_instance.alternatives = _instance.alternatives || [];
+	}
+	/**
+	 * Deserializes / reads binary message into message instance using provided binary reader
+	 * @param _instance message instance
+	 * @param _reader binary reader instance
+	 */
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.transcription = _reader.readString();
+					break;
+				case 2:
+					_instance.confidenceScore = _reader.readFloat();
+					break;
+				case 3:
+					const messageInitializer3 = new WordDetail();
+					_reader.readMessage(messageInitializer3, WordDetail.deserializeBinaryFromReader);
+					(_instance.words = _instance.words || []).push(messageInitializer3);
+					break;
+				case 4:
+					const messageInitializer4 = new TranscriptionAlternative();
+					_reader.readMessage(messageInitializer4, TranscriptionAlternative.deserializeBinaryFromReader);
+					(_instance.alternatives = _instance.alternatives || []).push(messageInitializer4);
+					break;
+				default:
+					_reader.skipField();
+			}
+		}
+		Transcription.refineValues(_instance);
+	}
+	/**
+	 * Serializes a message to binary format using provided binary reader
+	 * @param _instance message instance
+	 * @param _writer binary writer instance
+	 */
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.transcription) {
+			_writer.writeString(1, _instance.transcription);
+		}
+		if (_instance.confidenceScore) {
+			_writer.writeFloat(2, _instance.confidenceScore);
+		}
+		if (_instance.words && _instance.words.length) {
+			_writer.writeRepeatedMessage(3, _instance.words, WordDetail.serializeBinaryToWriter);
+		}
+		if (_instance.alternatives && _instance.alternatives.length) {
+			_writer.writeRepeatedMessage(4, _instance.alternatives, TranscriptionAlternative.serializeBinaryToWriter);
+		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of Transcription to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.transcription = _value.transcription;
+		this.confidenceScore = _value.confidenceScore;
+		this.words = (_value.words || []).map((m) => new WordDetail(m));
+		this.alternatives = (_value.alternatives || []).map((m) => new TranscriptionAlternative(m));
+		Transcription.refineValues(this);
+	}
+	get transcription() {
+		return this._transcription;
+	}
+	set transcription(value) {
+		this._transcription = value;
+	}
+	get confidenceScore() {
+		return this._confidenceScore;
+	}
+	set confidenceScore(value) {
+		this._confidenceScore = value;
+	}
+	get words() {
+		return this._words;
+	}
+	set words(value) {
+		this._words = value;
+	}
+	get alternatives() {
+		return this._alternatives;
+	}
+	set alternatives(value) {
+		this._alternatives = value;
+	}
+	/**
+	 * Serialize message to binary data
+	 * @param instance message instance
+	 */
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		Transcription.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	/**
+	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+	 */
+	toObject() {
+		return {
+			transcription: this.transcription,
+			confidenceScore: this.confidenceScore,
+			words: (this.words || []).map((m) => m.toObject()),
+			alternatives: (this.alternatives || []).map((m) => m.toObject())
+		};
+	}
+	/**
+	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+	 */
+	toJSON() {
+		return this.toObject();
+	}
+	/**
+	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+	 */
+	toProtobufJSON(
+		// @ts-ignore
+		options
+	) {
+		return {
+			transcription: this.transcription,
+			confidenceScore: this.confidenceScore,
+			words: (this.words || []).map((m) => m.toProtobufJSON(options)),
+			alternatives: (this.alternatives || []).map((m) => m.toProtobufJSON(options))
+		};
+	}
+}
+Transcription.id = 'ondewo.s2t.Transcription';
+/**
+ * Message implementation for ondewo.s2t.TranscriptionAlternative
+ */
+class TranscriptionAlternative {
+	/**
+	 * Deserialize binary data to message
+	 * @param instance message instance
+	 */
+	static deserializeBinary(bytes) {
+		const instance = new TranscriptionAlternative();
+		TranscriptionAlternative.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	/**
+	 * Check all the properties and set default protobuf values if necessary
+	 * @param _instance message instance
+	 */
+	static refineValues(_instance) {
+		_instance.transcript = _instance.transcript || '';
+		_instance.confidence = _instance.confidence || 0;
+		_instance.words = _instance.words || [];
+	}
+	/**
+	 * Deserializes / reads binary message into message instance using provided binary reader
+	 * @param _instance message instance
+	 * @param _reader binary reader instance
+	 */
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.transcript = _reader.readString();
+					break;
+				case 2:
+					_instance.confidence = _reader.readFloat();
+					break;
+				case 3:
+					const messageInitializer3 = new WordDetail();
+					_reader.readMessage(messageInitializer3, WordDetail.deserializeBinaryFromReader);
+					(_instance.words = _instance.words || []).push(messageInitializer3);
+					break;
+				default:
+					_reader.skipField();
+			}
+		}
+		TranscriptionAlternative.refineValues(_instance);
+	}
+	/**
+	 * Serializes a message to binary format using provided binary reader
+	 * @param _instance message instance
+	 * @param _writer binary writer instance
+	 */
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.transcript) {
+			_writer.writeString(1, _instance.transcript);
+		}
+		if (_instance.confidence) {
+			_writer.writeFloat(2, _instance.confidence);
+		}
+		if (_instance.words && _instance.words.length) {
+			_writer.writeRepeatedMessage(3, _instance.words, WordDetail.serializeBinaryToWriter);
+		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of TranscriptionAlternative to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.transcript = _value.transcript;
+		this.confidence = _value.confidence;
+		this.words = (_value.words || []).map((m) => new WordDetail(m));
+		TranscriptionAlternative.refineValues(this);
+	}
+	get transcript() {
+		return this._transcript;
+	}
+	set transcript(value) {
+		this._transcript = value;
+	}
+	get confidence() {
+		return this._confidence;
+	}
+	set confidence(value) {
+		this._confidence = value;
+	}
+	get words() {
+		return this._words;
+	}
+	set words(value) {
+		this._words = value;
+	}
+	/**
+	 * Serialize message to binary data
+	 * @param instance message instance
+	 */
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		TranscriptionAlternative.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	/**
+	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+	 */
+	toObject() {
+		return {
+			transcript: this.transcript,
+			confidence: this.confidence,
+			words: (this.words || []).map((m) => m.toObject())
+		};
+	}
+	/**
+	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+	 */
+	toJSON() {
+		return this.toObject();
+	}
+	/**
+	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+	 */
+	toProtobufJSON(
+		// @ts-ignore
+		options
+	) {
+		return {
+			transcript: this.transcript,
+			confidence: this.confidence,
+			words: (this.words || []).map((m) => m.toProtobufJSON(options))
+		};
+	}
+}
+TranscriptionAlternative.id = 'ondewo.s2t.TranscriptionAlternative';
+/**
+ * Message implementation for ondewo.s2t.WordDetail
+ */
+class WordDetail {
+	/**
+	 * Deserialize binary data to message
+	 * @param instance message instance
+	 */
+	static deserializeBinary(bytes) {
+		const instance = new WordDetail();
+		WordDetail.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	/**
+	 * Check all the properties and set default protobuf values if necessary
+	 * @param _instance message instance
+	 */
+	static refineValues(_instance) {
+		_instance.startTime = _instance.startTime || 0;
+		_instance.endTime = _instance.endTime || 0;
+		_instance.word = _instance.word || '';
+		_instance.confidence = _instance.confidence || 0;
+		_instance.wordAlternatives = _instance.wordAlternatives || [];
+	}
+	/**
+	 * Deserializes / reads binary message into message instance using provided binary reader
+	 * @param _instance message instance
+	 * @param _reader binary reader instance
+	 */
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.startTime = _reader.readFloat();
+					break;
+				case 2:
+					_instance.endTime = _reader.readFloat();
+					break;
+				case 3:
+					_instance.word = _reader.readString();
+					break;
+				case 4:
+					_instance.confidence = _reader.readFloat();
+					break;
+				case 5:
+					const messageInitializer5 = new WordAlternative();
+					_reader.readMessage(messageInitializer5, WordAlternative.deserializeBinaryFromReader);
+					(_instance.wordAlternatives = _instance.wordAlternatives || []).push(messageInitializer5);
+					break;
+				default:
+					_reader.skipField();
+			}
+		}
+		WordDetail.refineValues(_instance);
+	}
+	/**
+	 * Serializes a message to binary format using provided binary reader
+	 * @param _instance message instance
+	 * @param _writer binary writer instance
+	 */
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.startTime) {
+			_writer.writeFloat(1, _instance.startTime);
+		}
+		if (_instance.endTime) {
+			_writer.writeFloat(2, _instance.endTime);
+		}
+		if (_instance.word) {
+			_writer.writeString(3, _instance.word);
+		}
+		if (_instance.confidence) {
+			_writer.writeFloat(4, _instance.confidence);
+		}
+		if (_instance.wordAlternatives && _instance.wordAlternatives.length) {
+			_writer.writeRepeatedMessage(5, _instance.wordAlternatives, WordAlternative.serializeBinaryToWriter);
+		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of WordDetail to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.startTime = _value.startTime;
+		this.endTime = _value.endTime;
+		this.word = _value.word;
+		this.confidence = _value.confidence;
+		this.wordAlternatives = (_value.wordAlternatives || []).map((m) => new WordAlternative(m));
+		WordDetail.refineValues(this);
+	}
+	get startTime() {
+		return this._startTime;
+	}
+	set startTime(value) {
+		this._startTime = value;
+	}
+	get endTime() {
+		return this._endTime;
+	}
+	set endTime(value) {
+		this._endTime = value;
+	}
+	get word() {
+		return this._word;
+	}
+	set word(value) {
+		this._word = value;
+	}
+	get confidence() {
+		return this._confidence;
+	}
+	set confidence(value) {
+		this._confidence = value;
+	}
+	get wordAlternatives() {
+		return this._wordAlternatives;
+	}
+	set wordAlternatives(value) {
+		this._wordAlternatives = value;
+	}
+	/**
+	 * Serialize message to binary data
+	 * @param instance message instance
+	 */
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		WordDetail.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	/**
+	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+	 */
+	toObject() {
+		return {
+			startTime: this.startTime,
+			endTime: this.endTime,
+			word: this.word,
+			confidence: this.confidence,
+			wordAlternatives: (this.wordAlternatives || []).map((m) => m.toObject())
+		};
+	}
+	/**
+	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+	 */
+	toJSON() {
+		return this.toObject();
+	}
+	/**
+	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+	 */
+	toProtobufJSON(
+		// @ts-ignore
+		options
+	) {
+		return {
+			startTime: this.startTime,
+			endTime: this.endTime,
+			word: this.word,
+			confidence: this.confidence,
+			wordAlternatives: (this.wordAlternatives || []).map((m) => m.toProtobufJSON(options))
+		};
+	}
+}
+WordDetail.id = 'ondewo.s2t.WordDetail';
+/**
+ * Message implementation for ondewo.s2t.WordAlternative
+ */
+class WordAlternative {
+	/**
+	 * Deserialize binary data to message
+	 * @param instance message instance
+	 */
+	static deserializeBinary(bytes) {
+		const instance = new WordAlternative();
+		WordAlternative.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	/**
+	 * Check all the properties and set default protobuf values if necessary
+	 * @param _instance message instance
+	 */
+	static refineValues(_instance) {
+		_instance.word = _instance.word || '';
+		_instance.confidence = _instance.confidence || 0;
+	}
+	/**
+	 * Deserializes / reads binary message into message instance using provided binary reader
+	 * @param _instance message instance
+	 * @param _reader binary reader instance
+	 */
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.word = _reader.readString();
+					break;
+				case 2:
+					_instance.confidence = _reader.readFloat();
+					break;
+				default:
+					_reader.skipField();
+			}
+		}
+		WordAlternative.refineValues(_instance);
+	}
+	/**
+	 * Serializes a message to binary format using provided binary reader
+	 * @param _instance message instance
+	 * @param _writer binary writer instance
+	 */
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.word) {
+			_writer.writeString(1, _instance.word);
+		}
+		if (_instance.confidence) {
+			_writer.writeFloat(2, _instance.confidence);
+		}
+	}
+	/**
+	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+	 * @param _value initial values object or instance of WordAlternative to deeply clone from
+	 */
+	constructor(_value) {
+		_value = _value || {};
+		this.word = _value.word;
+		this.confidence = _value.confidence;
+		WordAlternative.refineValues(this);
+	}
+	get word() {
+		return this._word;
+	}
+	set word(value) {
+		this._word = value;
+	}
+	get confidence() {
+		return this._confidence;
+	}
+	set confidence(value) {
+		this._confidence = value;
+	}
+	/**
+	 * Serialize message to binary data
+	 * @param instance message instance
+	 */
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		WordAlternative.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	/**
+	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+	 */
+	toObject() {
+		return {
+			word: this.word,
+			confidence: this.confidence
+		};
+	}
+	/**
+	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+	 */
+	toJSON() {
+		return this.toObject();
+	}
+	/**
+	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+	 */
+	toProtobufJSON(
+		// @ts-ignore
+		options
+	) {
+		return {
+			word: this.word,
+			confidence: this.confidence
+		};
+	}
+}
+WordAlternative.id = 'ondewo.s2t.WordAlternative';
+/**
  * Message implementation for ondewo.s2t.TranscribeStreamRequest
  */
 class TranscribeStreamRequest {
@@ -981,123 +1553,6 @@ class TranscribeStreamRequest {
 	}
 }
 TranscribeStreamRequest.id = 'ondewo.s2t.TranscribeStreamRequest';
-/**
- * Message implementation for ondewo.s2t.Transcription
- */
-class Transcription {
-	/**
-	 * Deserialize binary data to message
-	 * @param instance message instance
-	 */
-	static deserializeBinary(bytes) {
-		const instance = new Transcription();
-		Transcription.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-		return instance;
-	}
-	/**
-	 * Check all the properties and set default protobuf values if necessary
-	 * @param _instance message instance
-	 */
-	static refineValues(_instance) {
-		_instance.transcription = _instance.transcription || '';
-		_instance.confidenceScore = _instance.confidenceScore || 0;
-	}
-	/**
-	 * Deserializes / reads binary message into message instance using provided binary reader
-	 * @param _instance message instance
-	 * @param _reader binary reader instance
-	 */
-	static deserializeBinaryFromReader(_instance, _reader) {
-		while (_reader.nextField()) {
-			if (_reader.isEndGroup()) break;
-			switch (_reader.getFieldNumber()) {
-				case 1:
-					_instance.transcription = _reader.readString();
-					break;
-				case 2:
-					_instance.confidenceScore = _reader.readFloat();
-					break;
-				default:
-					_reader.skipField();
-			}
-		}
-		Transcription.refineValues(_instance);
-	}
-	/**
-	 * Serializes a message to binary format using provided binary reader
-	 * @param _instance message instance
-	 * @param _writer binary writer instance
-	 */
-	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.transcription) {
-			_writer.writeString(1, _instance.transcription);
-		}
-		if (_instance.confidenceScore) {
-			_writer.writeFloat(2, _instance.confidenceScore);
-		}
-	}
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Transcription to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.transcription = _value.transcription;
-		this.confidenceScore = _value.confidenceScore;
-		Transcription.refineValues(this);
-	}
-	get transcription() {
-		return this._transcription;
-	}
-	set transcription(value) {
-		this._transcription = value;
-	}
-	get confidenceScore() {
-		return this._confidenceScore;
-	}
-	set confidenceScore(value) {
-		this._confidenceScore = value;
-	}
-	/**
-	 * Serialize message to binary data
-	 * @param instance message instance
-	 */
-	serializeBinary() {
-		const writer = new BinaryWriter();
-		Transcription.serializeBinaryToWriter(this, writer);
-		return writer.getResultBuffer();
-	}
-	/**
-	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-	 */
-	toObject() {
-		return {
-			transcription: this.transcription,
-			confidenceScore: this.confidenceScore
-		};
-	}
-	/**
-	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-	 */
-	toJSON() {
-		return this.toObject();
-	}
-	/**
-	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-	 */
-	toProtobufJSON(
-		// @ts-ignore
-		options
-	) {
-		return {
-			transcription: this.transcription,
-			confidenceScore: this.confidenceScore
-		};
-	}
-}
-Transcription.id = 'ondewo.s2t.Transcription';
 /**
  * Message implementation for ondewo.s2t.TranscribeStreamResponse
  */
@@ -1465,7 +1920,6 @@ class TranscribeFileResponse {
 	static refineValues(_instance) {
 		_instance.transcriptions = _instance.transcriptions || [];
 		_instance.time = _instance.time || 0;
-		_instance.wordTiming = _instance.wordTiming || [];
 		_instance.audioUuid = _instance.audioUuid || '';
 	}
 	/**
@@ -1486,11 +1940,6 @@ class TranscribeFileResponse {
 					_instance.time = _reader.readFloat();
 					break;
 				case 3:
-					const messageInitializer3 = new WordTiming();
-					_reader.readMessage(messageInitializer3, WordTiming.deserializeBinaryFromReader);
-					(_instance.wordTiming = _instance.wordTiming || []).push(messageInitializer3);
-					break;
-				case 4:
 					_instance.audioUuid = _reader.readString();
 					break;
 				default:
@@ -1511,11 +1960,8 @@ class TranscribeFileResponse {
 		if (_instance.time) {
 			_writer.writeFloat(2, _instance.time);
 		}
-		if (_instance.wordTiming && _instance.wordTiming.length) {
-			_writer.writeRepeatedMessage(3, _instance.wordTiming, WordTiming.serializeBinaryToWriter);
-		}
 		if (_instance.audioUuid) {
-			_writer.writeString(4, _instance.audioUuid);
+			_writer.writeString(3, _instance.audioUuid);
 		}
 	}
 	/**
@@ -1526,7 +1972,6 @@ class TranscribeFileResponse {
 		_value = _value || {};
 		this.transcriptions = (_value.transcriptions || []).map((m) => new Transcription(m));
 		this.time = _value.time;
-		this.wordTiming = (_value.wordTiming || []).map((m) => new WordTiming(m));
 		this.audioUuid = _value.audioUuid;
 		TranscribeFileResponse.refineValues(this);
 	}
@@ -1541,12 +1986,6 @@ class TranscribeFileResponse {
 	}
 	set time(value) {
 		this._time = value;
-	}
-	get wordTiming() {
-		return this._wordTiming;
-	}
-	set wordTiming(value) {
-		this._wordTiming = value;
 	}
 	get audioUuid() {
 		return this._audioUuid;
@@ -1570,7 +2009,6 @@ class TranscribeFileResponse {
 		return {
 			transcriptions: (this.transcriptions || []).map((m) => m.toObject()),
 			time: this.time,
-			wordTiming: (this.wordTiming || []).map((m) => m.toObject()),
 			audioUuid: this.audioUuid
 		};
 	}
@@ -1592,145 +2030,11 @@ class TranscribeFileResponse {
 		return {
 			transcriptions: (this.transcriptions || []).map((m) => m.toProtobufJSON(options)),
 			time: this.time,
-			wordTiming: (this.wordTiming || []).map((m) => m.toProtobufJSON(options)),
 			audioUuid: this.audioUuid
 		};
 	}
 }
 TranscribeFileResponse.id = 'ondewo.s2t.TranscribeFileResponse';
-/**
- * Message implementation for ondewo.s2t.WordTiming
- */
-class WordTiming {
-	/**
-	 * Deserialize binary data to message
-	 * @param instance message instance
-	 */
-	static deserializeBinary(bytes) {
-		const instance = new WordTiming();
-		WordTiming.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-		return instance;
-	}
-	/**
-	 * Check all the properties and set default protobuf values if necessary
-	 * @param _instance message instance
-	 */
-	static refineValues(_instance) {
-		_instance.word = _instance.word || '';
-		_instance.begin = _instance.begin || 0;
-		_instance.end = _instance.end || 0;
-	}
-	/**
-	 * Deserializes / reads binary message into message instance using provided binary reader
-	 * @param _instance message instance
-	 * @param _reader binary reader instance
-	 */
-	static deserializeBinaryFromReader(_instance, _reader) {
-		while (_reader.nextField()) {
-			if (_reader.isEndGroup()) break;
-			switch (_reader.getFieldNumber()) {
-				case 1:
-					_instance.word = _reader.readString();
-					break;
-				case 2:
-					_instance.begin = _reader.readInt32();
-					break;
-				case 3:
-					_instance.end = _reader.readInt32();
-					break;
-				default:
-					_reader.skipField();
-			}
-		}
-		WordTiming.refineValues(_instance);
-	}
-	/**
-	 * Serializes a message to binary format using provided binary reader
-	 * @param _instance message instance
-	 * @param _writer binary writer instance
-	 */
-	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.word) {
-			_writer.writeString(1, _instance.word);
-		}
-		if (_instance.begin) {
-			_writer.writeInt32(2, _instance.begin);
-		}
-		if (_instance.end) {
-			_writer.writeInt32(3, _instance.end);
-		}
-	}
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of WordTiming to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.word = _value.word;
-		this.begin = _value.begin;
-		this.end = _value.end;
-		WordTiming.refineValues(this);
-	}
-	get word() {
-		return this._word;
-	}
-	set word(value) {
-		this._word = value;
-	}
-	get begin() {
-		return this._begin;
-	}
-	set begin(value) {
-		this._begin = value;
-	}
-	get end() {
-		return this._end;
-	}
-	set end(value) {
-		this._end = value;
-	}
-	/**
-	 * Serialize message to binary data
-	 * @param instance message instance
-	 */
-	serializeBinary() {
-		const writer = new BinaryWriter();
-		WordTiming.serializeBinaryToWriter(this, writer);
-		return writer.getResultBuffer();
-	}
-	/**
-	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-	 */
-	toObject() {
-		return {
-			word: this.word,
-			begin: this.begin,
-			end: this.end
-		};
-	}
-	/**
-	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-	 */
-	toJSON() {
-		return this.toObject();
-	}
-	/**
-	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-	 */
-	toProtobufJSON(
-		// @ts-ignore
-		options
-	) {
-		return {
-			word: this.word,
-			begin: this.begin,
-			end: this.end
-		};
-	}
-}
-WordTiming.id = 'ondewo.s2t.WordTiming';
 /**
  * Message implementation for ondewo.s2t.S2tPipelineId
  */
@@ -7310,6 +7614,7 @@ export {
 	TranscribeStreamRequest,
 	TranscribeStreamResponse,
 	Transcription,
+	TranscriptionAlternative,
 	TranscriptionReturnOptions,
 	UtteranceDetectionOptions,
 	VoiceActivityDetection,
@@ -7317,6 +7622,7 @@ export {
 	Wav2VecTriton,
 	Whisper,
 	WhisperTriton,
-	WordTiming
+	WordAlternative,
+	WordDetail
 };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
