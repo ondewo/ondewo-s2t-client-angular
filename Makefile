@@ -18,7 +18,7 @@ export
 ONDEWO_S2T_VERSION = 5.4.0
 
 S2T_API_GIT_BRANCH=tags/5.4.0
-ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/4.2.0
+ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/4.6.0
 ONDEWO_PROTO_COMPILER_DIR=ondewo-proto-compiler
 S2T_APIS_DIR=src/ondewo-s2t-api
 S2T_PROTOS_DIR=${S2T_APIS_DIR}/ondewo
@@ -228,8 +228,10 @@ check_out_correct_submodule_versions: ## Fetches all Submodules and checksout sp
 	git submodule update --init --recursive
 	git -C ${S2T_APIS_DIR} fetch --all
 	git -C ${S2T_APIS_DIR} checkout ${S2T_API_GIT_BRANCH}
+	git -C ${S2T_APIS_DIR} pull
 	git -C ${ONDEWO_PROTO_COMPILER_DIR} fetch --all
 	git -C ${ONDEWO_PROTO_COMPILER_DIR} checkout ${ONDEWO_PROTO_COMPILER_GIT_BRANCH}
+	git -C ${ONDEWO_PROTO_COMPILER_DIR} pull
 	@echo "DONE checking out correct submodule versions."
 
 npm_run_build: ## Runs the build command in package.json
