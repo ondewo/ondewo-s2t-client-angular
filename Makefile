@@ -15,10 +15,10 @@ export
 # 		Variables
 ########################################################
 
-ONDEWO_S2T_VERSION = 5.4.0
+ONDEWO_S2T_VERSION = 5.4.1
 
 S2T_API_GIT_BRANCH=tags/5.4.0
-ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/4.6.0
+ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/4.7.0
 ONDEWO_PROTO_COMPILER_DIR=ondewo-proto-compiler
 S2T_APIS_DIR=src/ondewo-s2t-api
 S2T_PROTOS_DIR=${S2T_APIS_DIR}/ondewo
@@ -84,12 +84,10 @@ check_build: #Checks if all built proto-code is there
 	do \
 		find api -iname "*pb*" | grep -q $${file}; \
 		if test $$? != 0; then  echo "No Proto-Code for $${file} in api" & exit 1;fi; \
-		find esm2020 -iname "*pb*" | grep -q $${file}; \
-		if test $$? != 0; then  echo "No Proto-Code for $${file} in esm2020" & exit 1;fi; \
-		find fesm2015 -iname "*ondewo-s2t-client-angular*" | wc -l | grep -q "2"; \
-		if test $$? != 0; then  echo "No Proto-Code for $${file} in fesm2015" & exit 1;fi; \
-		find fesm2020 -iname "*ondewo-s2t-client-angular*" | wc -l | grep -q "2"; \
-		if test $$? != 0; then  echo "No Proto-Code for $${file} in fesm2020" & exit 1;fi; \
+		find esm2022 -iname "*pb*" | grep -q $${file}; \
+		if test $$? != 0; then  echo "No Proto-Code for $${file} in esm2022" & exit 1;fi; \
+		find fesm2022 -iname "*ondewo-s2t-client-angular*" | wc -l | grep -q "2"; \
+		if test $$? != 0; then  echo "No Proto-Code for $${file} in fesm2022" & exit 1;fi; \
 	done
 	@rm -rf build_check.txt
 	@rm -rf build_check_temp.txt
@@ -109,9 +107,8 @@ release: ## Create Github and NPM Release
 	make run_precommit_hooks
 	git status
 	git add api
-	git add esm2020
-	git add fesm2020
-	git add fesm2015
+	git add esm2022
+	git add fesm2022
 	git add src
 	git add README.md
 	git add RELEASE.md
@@ -202,7 +199,6 @@ spc: ## Checks if the Release Branch, Tag and Pypi version already exist
 	@if test "$(filtered_branches)" != ""; then echo "-- Test 1: Branch exists!!" & exit 1; else echo "-- Test 1: Branch is fine";fi
 	@if test "$(filtered_tags)" != ""; then echo "-- Test 2: Tag exists!!" & exit 1; else echo "-- Test 2: Tag is fine";fi
 
-
 ########################################################
 # Build
 
@@ -228,10 +224,10 @@ check_out_correct_submodule_versions: ## Fetches all Submodules and checksout sp
 	git submodule update --init --recursive
 	git -C ${S2T_APIS_DIR} fetch --all
 	git -C ${S2T_APIS_DIR} checkout ${S2T_API_GIT_BRANCH}
-	git -C ${S2T_APIS_DIR} pull
+	-git -C ${S2T_APIS_DIR} pull
 	git -C ${ONDEWO_PROTO_COMPILER_DIR} fetch --all
 	git -C ${ONDEWO_PROTO_COMPILER_DIR} checkout ${ONDEWO_PROTO_COMPILER_GIT_BRANCH}
-	git -C ${ONDEWO_PROTO_COMPILER_DIR} pull
+	-git -C ${ONDEWO_PROTO_COMPILER_DIR} pull
 	@echo "DONE checking out correct submodule versions."
 
 npm_run_build: ## Runs the build command in package.json

@@ -28,6 +28,7 @@
 
 ONDEWO APIs use [Protocol Buffers](https://github.com/google/protobuf) version 3 (proto3) as their Interface Definition Language (IDL) to define the API interface and the structure of the payload messages. The same interface definition is used for gRPC versions of the API in all languages.
 
+
 ## Setup
 
 Using NPM:
@@ -54,7 +55,7 @@ npm
 │           ├── speech-to-text.pbconf.d.ts
 │           ├── speech-to-text.pb.d.ts
 │           └── speech-to-text.pbsc.d.ts
-├── esm2020
+├── esm2022
 │   ├── api
 │   │   └── ondewo
 │   │       └── s2t
@@ -63,10 +64,7 @@ npm
 │   │           └── speech-to-text.pbsc.mjs
 │   ├── ondewo-s2t-client-angular.mjs
 │   └── public-api.mjs
-├── fesm2015
-│   ├── ondewo-s2t-client-angular.mjs
-│   └── ondewo-s2t-client-angular.mjs.map
-├── fesm2020
+├── fesm2022
 │   ├── ondewo-s2t-client-angular.mjs
 │   └── ondewo-s2t-client-angular.mjs.map
 ├── ondewo-s2t-api

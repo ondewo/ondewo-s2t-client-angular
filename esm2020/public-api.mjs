@@ -1,4 +1,0 @@
-export * from './api/ondewo/s2t/speech-to-text.pbsc';
-export * from './api/ondewo/s2t/speech-to-text.pb';
-export * from './api/ondewo/s2t/speech-to-text.pbconf';
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3B1YmxpYy1hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsY0FBYyxzQ0FBc0MsQ0FBQztBQUNyRCxjQUFjLG9DQUFvQyxDQUFDO0FBQ25ELGNBQWMsd0NBQXdDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgKiBmcm9tICcuL2FwaS9vbmRld28vczJ0L3NwZWVjaC10by10ZXh0LnBic2MnO1xuZXhwb3J0ICogZnJvbSAnLi9hcGkvb25kZXdvL3MydC9zcGVlY2gtdG8tdGV4dC5wYic7XG5leHBvcnQgKiBmcm9tICcuL2FwaS9vbmRld28vczJ0L3NwZWVjaC10by10ZXh0LnBiY29uZic7XG4iXX0=
