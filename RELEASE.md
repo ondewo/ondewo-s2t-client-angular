@@ -1,11 +1,50 @@
 # Release History
 
 ***************** 
-## Release ONDEWO S2T Angular Client 4.0.0 
- 
-### Improvements 
- * Tracking API Version [4.0.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/4.0.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) ) 
 
+## Release ONDEWO S2T Angular Client 5.4.1
+
+### Improvements
+
+* Optimized for Angular 16 (esm2022 and fesm2022)
+* Tracking API
+  Version [5.4.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/5.4.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) )
+
+***************** 
+
+## Release ONDEWO S2T Angular Client 5.4.0
+
+### Improvements
+
+* Tracking API
+  Version [5.4.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/5.4.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) )
+
+***************** 
+
+## Release ONDEWO S2T Angular Client 5.3.0
+
+### Improvements
+
+* Tracking API
+  Version [5.3.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/5.3.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) )
+
+***************** 
+
+## Release ONDEWO S2T Angular Client 5.2.0
+
+### Improvements
+
+* Tracking API
+  Version [5.2.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/5.2.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) )
+
+***************** 
+
+## Release ONDEWO S2T Angular Client 4.0.0
+
+### Improvements
+
+* Tracking API
+  Version [4.0.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/4.0.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) )
 
 *****************
 
