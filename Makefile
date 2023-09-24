@@ -15,7 +15,7 @@ export
 # 		Variables
 ########################################################
 
-ONDEWO_S2T_VERSION = 5.4.1
+ONDEWO_S2T_VERSION=5.4.1
 
 S2T_API_GIT_BRANCH=tags/5.4.0
 ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/4.7.0
