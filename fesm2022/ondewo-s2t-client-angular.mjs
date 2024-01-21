@@ -60,6 +60,8 @@ class TranscribeRequestConfig {
 	static refineValues(_instance) {
 		_instance.s2tPipelineId = _instance.s2tPipelineId || '';
 		_instance.decoding = _instance.decoding || 0;
+		_instance.language = _instance.language || '';
+		_instance.task = _instance.task || '';
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -91,13 +93,15 @@ class TranscribeRequestConfig {
 					_instance.pyannote = new Pyannote();
 					_reader.readMessage(_instance.pyannote, Pyannote.deserializeBinaryFromReader);
 					break;
-				case 7:
-					_instance.matchbox = new Matchbox();
-					_reader.readMessage(_instance.matchbox, Matchbox.deserializeBinaryFromReader);
-					break;
 				case 8:
 					_instance.returnOptions = new TranscriptionReturnOptions();
 					_reader.readMessage(_instance.returnOptions, TranscriptionReturnOptions.deserializeBinaryFromReader);
+					break;
+				case 9:
+					_instance.language = _reader.readString();
+					break;
+				case 10:
+					_instance.task = _reader.readString();
 					break;
 				default:
 					_reader.skipField();
@@ -129,11 +133,14 @@ class TranscribeRequestConfig {
 		if (_instance.pyannote) {
 			_writer.writeMessage(6, _instance.pyannote, Pyannote.serializeBinaryToWriter);
 		}
-		if (_instance.matchbox) {
-			_writer.writeMessage(7, _instance.matchbox, Matchbox.serializeBinaryToWriter);
-		}
 		if (_instance.returnOptions) {
 			_writer.writeMessage(8, _instance.returnOptions, TranscriptionReturnOptions.serializeBinaryToWriter);
+		}
+		if (_instance.language) {
+			_writer.writeString(9, _instance.language);
+		}
+		if (_instance.task) {
+			_writer.writeString(10, _instance.task);
 		}
 	}
 	/**
@@ -155,8 +162,9 @@ class TranscribeRequestConfig {
 			? new UtteranceDetectionOptions(_value.utteranceDetection)
 			: undefined;
 		this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
-		this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
 		this.returnOptions = _value.returnOptions ? new TranscriptionReturnOptions(_value.returnOptions) : undefined;
+		this.language = _value.language;
+		this.task = _value.task;
 		TranscribeRequestConfig.refineValues(this);
 	}
 	get s2tPipelineId() {
@@ -203,20 +211,9 @@ class TranscribeRequestConfig {
 	}
 	set pyannote(value) {
 		if (value !== undefined && value !== null) {
-			this._matchbox = undefined;
 			this._voiceActivityDetection = TranscribeRequestConfig.VoiceActivityDetectionCase.pyannote;
 		}
 		this._pyannote = value;
-	}
-	get matchbox() {
-		return this._matchbox;
-	}
-	set matchbox(value) {
-		if (value !== undefined && value !== null) {
-			this._pyannote = undefined;
-			this._voiceActivityDetection = TranscribeRequestConfig.VoiceActivityDetectionCase.matchbox;
-		}
-		this._matchbox = value;
 	}
 	get returnOptions() {
 		return this._returnOptions;
@@ -226,6 +223,18 @@ class TranscribeRequestConfig {
 			this._oneofReturnOptions = TranscribeRequestConfig.OneofReturnOptionsCase.returnOptions;
 		}
 		this._returnOptions = value;
+	}
+	get language() {
+		return this._language;
+	}
+	set language(value) {
+		this._language = value;
+	}
+	get task() {
+		return this._task;
+	}
+	set task(value) {
+		this._task = value;
 	}
 	get oneofLanguageModelName() {
 		return this._oneofLanguageModelName;
@@ -262,8 +271,9 @@ class TranscribeRequestConfig {
 			postProcessing: this.postProcessing ? this.postProcessing.toObject() : undefined,
 			utteranceDetection: this.utteranceDetection ? this.utteranceDetection.toObject() : undefined,
 			pyannote: this.pyannote ? this.pyannote.toObject() : undefined,
-			matchbox: this.matchbox ? this.matchbox.toObject() : undefined,
-			returnOptions: this.returnOptions ? this.returnOptions.toObject() : undefined
+			returnOptions: this.returnOptions ? this.returnOptions.toObject() : undefined,
+			language: this.language,
+			task: this.task
 		};
 	}
 	/**
@@ -289,8 +299,9 @@ class TranscribeRequestConfig {
 			postProcessing: this.postProcessing ? this.postProcessing.toProtobufJSON(options) : null,
 			utteranceDetection: this.utteranceDetection ? this.utteranceDetection.toProtobufJSON(options) : null,
 			pyannote: this.pyannote ? this.pyannote.toProtobufJSON(options) : null,
-			matchbox: this.matchbox ? this.matchbox.toProtobufJSON(options) : null,
-			returnOptions: this.returnOptions ? this.returnOptions.toProtobufJSON(options) : null
+			returnOptions: this.returnOptions ? this.returnOptions.toProtobufJSON(options) : null,
+			language: this.language,
+			task: this.task
 		};
 	}
 }
@@ -323,7 +334,6 @@ class TranscribeRequestConfig {
 	(function (VoiceActivityDetectionCase) {
 		VoiceActivityDetectionCase[(VoiceActivityDetectionCase['none'] = 0)] = 'none';
 		VoiceActivityDetectionCase[(VoiceActivityDetectionCase['pyannote'] = 1)] = 'pyannote';
-		VoiceActivityDetectionCase[(VoiceActivityDetectionCase['matchbox'] = 2)] = 'matchbox';
 	})(
 		(VoiceActivityDetectionCase =
 			TranscribeRequestConfig.VoiceActivityDetectionCase || (TranscribeRequestConfig.VoiceActivityDetectionCase = {}))
@@ -3518,8 +3528,6 @@ class AcousticModels {
 	 */
 	static refineValues(_instance) {
 		_instance.type = _instance.type || '';
-		_instance.quartznet = _instance.quartznet || undefined;
-		_instance.quartznetTriton = _instance.quartznetTriton || undefined;
 		_instance.wav2vec = _instance.wav2vec || undefined;
 		_instance.wav2vecTriton = _instance.wav2vecTriton || undefined;
 		_instance.whisper = _instance.whisper || undefined;
@@ -3538,26 +3546,18 @@ class AcousticModels {
 					_instance.type = _reader.readString();
 					break;
 				case 2:
-					_instance.quartznet = new Quartznet();
-					_reader.readMessage(_instance.quartznet, Quartznet.deserializeBinaryFromReader);
-					break;
-				case 3:
-					_instance.quartznetTriton = new QuartznetTriton();
-					_reader.readMessage(_instance.quartznetTriton, QuartznetTriton.deserializeBinaryFromReader);
-					break;
-				case 4:
 					_instance.wav2vec = new Wav2Vec();
 					_reader.readMessage(_instance.wav2vec, Wav2Vec.deserializeBinaryFromReader);
 					break;
-				case 5:
+				case 3:
 					_instance.wav2vecTriton = new Wav2VecTriton();
 					_reader.readMessage(_instance.wav2vecTriton, Wav2VecTriton.deserializeBinaryFromReader);
 					break;
-				case 6:
+				case 4:
 					_instance.whisper = new Whisper();
 					_reader.readMessage(_instance.whisper, Whisper.deserializeBinaryFromReader);
 					break;
-				case 7:
+				case 5:
 					_instance.whisperTriton = new WhisperTriton();
 					_reader.readMessage(_instance.whisperTriton, WhisperTriton.deserializeBinaryFromReader);
 					break;
@@ -3576,23 +3576,17 @@ class AcousticModels {
 		if (_instance.type) {
 			_writer.writeString(1, _instance.type);
 		}
-		if (_instance.quartznet) {
-			_writer.writeMessage(2, _instance.quartznet, Quartznet.serializeBinaryToWriter);
-		}
-		if (_instance.quartznetTriton) {
-			_writer.writeMessage(3, _instance.quartznetTriton, QuartznetTriton.serializeBinaryToWriter);
-		}
 		if (_instance.wav2vec) {
-			_writer.writeMessage(4, _instance.wav2vec, Wav2Vec.serializeBinaryToWriter);
+			_writer.writeMessage(2, _instance.wav2vec, Wav2Vec.serializeBinaryToWriter);
 		}
 		if (_instance.wav2vecTriton) {
-			_writer.writeMessage(5, _instance.wav2vecTriton, Wav2VecTriton.serializeBinaryToWriter);
+			_writer.writeMessage(3, _instance.wav2vecTriton, Wav2VecTriton.serializeBinaryToWriter);
 		}
 		if (_instance.whisper) {
-			_writer.writeMessage(6, _instance.whisper, Whisper.serializeBinaryToWriter);
+			_writer.writeMessage(4, _instance.whisper, Whisper.serializeBinaryToWriter);
 		}
 		if (_instance.whisperTriton) {
-			_writer.writeMessage(7, _instance.whisperTriton, WhisperTriton.serializeBinaryToWriter);
+			_writer.writeMessage(5, _instance.whisperTriton, WhisperTriton.serializeBinaryToWriter);
 		}
 	}
 	/**
@@ -3602,8 +3596,6 @@ class AcousticModels {
 	constructor(_value) {
 		_value = _value || {};
 		this.type = _value.type;
-		this.quartznet = _value.quartznet ? new Quartznet(_value.quartznet) : undefined;
-		this.quartznetTriton = _value.quartznetTriton ? new QuartznetTriton(_value.quartznetTriton) : undefined;
 		this.wav2vec = _value.wav2vec ? new Wav2Vec(_value.wav2vec) : undefined;
 		this.wav2vecTriton = _value.wav2vecTriton ? new Wav2VecTriton(_value.wav2vecTriton) : undefined;
 		this.whisper = _value.whisper ? new Whisper(_value.whisper) : undefined;
@@ -3615,18 +3607,6 @@ class AcousticModels {
 	}
 	set type(value) {
 		this._type = value;
-	}
-	get quartznet() {
-		return this._quartznet;
-	}
-	set quartznet(value) {
-		this._quartznet = value;
-	}
-	get quartznetTriton() {
-		return this._quartznetTriton;
-	}
-	set quartznetTriton(value) {
-		this._quartznetTriton = value;
 	}
 	get wav2vec() {
 		return this._wav2vec;
@@ -3667,8 +3647,6 @@ class AcousticModels {
 	toObject() {
 		return {
 			type: this.type,
-			quartznet: this.quartznet ? this.quartznet.toObject() : undefined,
-			quartznetTriton: this.quartznetTriton ? this.quartznetTriton.toObject() : undefined,
 			wav2vec: this.wav2vec ? this.wav2vec.toObject() : undefined,
 			wav2vecTriton: this.wav2vecTriton ? this.wav2vecTriton.toObject() : undefined,
 			whisper: this.whisper ? this.whisper.toObject() : undefined,
@@ -3692,8 +3670,6 @@ class AcousticModels {
 	) {
 		return {
 			type: this.type,
-			quartznet: this.quartznet ? this.quartznet.toProtobufJSON(options) : null,
-			quartznetTriton: this.quartznetTriton ? this.quartznetTriton.toProtobufJSON(options) : null,
 			wav2vec: this.wav2vec ? this.wav2vec.toProtobufJSON(options) : null,
 			wav2vecTriton: this.wav2vecTriton ? this.wav2vecTriton.toProtobufJSON(options) : null,
 			whisper: this.whisper ? this.whisper.toProtobufJSON(options) : null,
@@ -3725,6 +3701,7 @@ class Whisper {
 		_instance.modelPath = _instance.modelPath || '';
 		_instance.useGpu = _instance.useGpu || false;
 		_instance.language = _instance.language || '';
+		_instance.task = _instance.task || '';
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -3743,6 +3720,9 @@ class Whisper {
 					break;
 				case 3:
 					_instance.language = _reader.readString();
+					break;
+				case 4:
+					_instance.task = _reader.readString();
 					break;
 				default:
 					_reader.skipField();
@@ -3765,6 +3745,9 @@ class Whisper {
 		if (_instance.language) {
 			_writer.writeString(3, _instance.language);
 		}
+		if (_instance.task) {
+			_writer.writeString(4, _instance.task);
+		}
 	}
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -3775,6 +3758,7 @@ class Whisper {
 		this.modelPath = _value.modelPath;
 		this.useGpu = _value.useGpu;
 		this.language = _value.language;
+		this.task = _value.task;
 		Whisper.refineValues(this);
 	}
 	get modelPath() {
@@ -3795,6 +3779,12 @@ class Whisper {
 	set language(value) {
 		this._language = value;
 	}
+	get task() {
+		return this._task;
+	}
+	set task(value) {
+		this._task = value;
+	}
 	/**
 	 * Serialize message to binary data
 	 * @param instance message instance
@@ -3811,7 +3801,8 @@ class Whisper {
 		return {
 			modelPath: this.modelPath,
 			useGpu: this.useGpu,
-			language: this.language
+			language: this.language,
+			task: this.task
 		};
 	}
 	/**
@@ -3832,7 +3823,8 @@ class Whisper {
 		return {
 			modelPath: this.modelPath,
 			useGpu: this.useGpu,
-			language: this.language
+			language: this.language,
+			task: this.task
 		};
 	}
 }
@@ -3861,6 +3853,10 @@ class WhisperTriton {
 		_instance.tritonModelName = _instance.tritonModelName || '';
 		_instance.tritonModelVersion = _instance.tritonModelVersion || '';
 		_instance.checkStatusTimeout = _instance.checkStatusTimeout || '0';
+		_instance.language = _instance.language || '';
+		_instance.task = _instance.task || '';
+		_instance.tritonServerHost = _instance.tritonServerHost || '';
+		_instance.tritonServerPort = _instance.tritonServerPort || '0';
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -3882,6 +3878,18 @@ class WhisperTriton {
 					break;
 				case 4:
 					_instance.checkStatusTimeout = _reader.readInt64String();
+					break;
+				case 5:
+					_instance.language = _reader.readString();
+					break;
+				case 6:
+					_instance.task = _reader.readString();
+					break;
+				case 7:
+					_instance.tritonServerHost = _reader.readString();
+					break;
+				case 8:
+					_instance.tritonServerPort = _reader.readInt64String();
 					break;
 				default:
 					_reader.skipField();
@@ -3907,6 +3915,18 @@ class WhisperTriton {
 		if (_instance.checkStatusTimeout) {
 			_writer.writeInt64String(4, _instance.checkStatusTimeout);
 		}
+		if (_instance.language) {
+			_writer.writeString(5, _instance.language);
+		}
+		if (_instance.task) {
+			_writer.writeString(6, _instance.task);
+		}
+		if (_instance.tritonServerHost) {
+			_writer.writeString(7, _instance.tritonServerHost);
+		}
+		if (_instance.tritonServerPort) {
+			_writer.writeInt64String(8, _instance.tritonServerPort);
+		}
 	}
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -3918,6 +3938,10 @@ class WhisperTriton {
 		this.tritonModelName = _value.tritonModelName;
 		this.tritonModelVersion = _value.tritonModelVersion;
 		this.checkStatusTimeout = _value.checkStatusTimeout;
+		this.language = _value.language;
+		this.task = _value.task;
+		this.tritonServerHost = _value.tritonServerHost;
+		this.tritonServerPort = _value.tritonServerPort;
 		WhisperTriton.refineValues(this);
 	}
 	get processorPath() {
@@ -3944,6 +3968,30 @@ class WhisperTriton {
 	set checkStatusTimeout(value) {
 		this._checkStatusTimeout = value;
 	}
+	get language() {
+		return this._language;
+	}
+	set language(value) {
+		this._language = value;
+	}
+	get task() {
+		return this._task;
+	}
+	set task(value) {
+		this._task = value;
+	}
+	get tritonServerHost() {
+		return this._tritonServerHost;
+	}
+	set tritonServerHost(value) {
+		this._tritonServerHost = value;
+	}
+	get tritonServerPort() {
+		return this._tritonServerPort;
+	}
+	set tritonServerPort(value) {
+		this._tritonServerPort = value;
+	}
 	/**
 	 * Serialize message to binary data
 	 * @param instance message instance
@@ -3961,7 +4009,11 @@ class WhisperTriton {
 			processorPath: this.processorPath,
 			tritonModelName: this.tritonModelName,
 			tritonModelVersion: this.tritonModelVersion,
-			checkStatusTimeout: this.checkStatusTimeout
+			checkStatusTimeout: this.checkStatusTimeout,
+			language: this.language,
+			task: this.task,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort
 		};
 	}
 	/**
@@ -3983,7 +4035,11 @@ class WhisperTriton {
 			processorPath: this.processorPath,
 			tritonModelName: this.tritonModelName,
 			tritonModelVersion: this.tritonModelVersion,
-			checkStatusTimeout: this.checkStatusTimeout
+			checkStatusTimeout: this.checkStatusTimeout,
+			language: this.language,
+			task: this.task,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort
 		};
 	}
 }
@@ -4131,6 +4187,8 @@ class Wav2VecTriton {
 		_instance.tritonModelName = _instance.tritonModelName || '';
 		_instance.tritonModelVersion = _instance.tritonModelVersion || '';
 		_instance.checkStatusTimeout = _instance.checkStatusTimeout || '0';
+		_instance.tritonServerHost = _instance.tritonServerHost || '';
+		_instance.tritonServerPort = _instance.tritonServerPort || '0';
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -4152,6 +4210,12 @@ class Wav2VecTriton {
 					break;
 				case 4:
 					_instance.checkStatusTimeout = _reader.readInt64String();
+					break;
+				case 5:
+					_instance.tritonServerHost = _reader.readString();
+					break;
+				case 6:
+					_instance.tritonServerPort = _reader.readInt64String();
 					break;
 				default:
 					_reader.skipField();
@@ -4177,6 +4241,12 @@ class Wav2VecTriton {
 		if (_instance.checkStatusTimeout) {
 			_writer.writeInt64String(4, _instance.checkStatusTimeout);
 		}
+		if (_instance.tritonServerHost) {
+			_writer.writeString(5, _instance.tritonServerHost);
+		}
+		if (_instance.tritonServerPort) {
+			_writer.writeInt64String(6, _instance.tritonServerPort);
+		}
 	}
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -4188,6 +4258,8 @@ class Wav2VecTriton {
 		this.tritonModelName = _value.tritonModelName;
 		this.tritonModelVersion = _value.tritonModelVersion;
 		this.checkStatusTimeout = _value.checkStatusTimeout;
+		this.tritonServerHost = _value.tritonServerHost;
+		this.tritonServerPort = _value.tritonServerPort;
 		Wav2VecTriton.refineValues(this);
 	}
 	get processorPath() {
@@ -4214,6 +4286,18 @@ class Wav2VecTriton {
 	set checkStatusTimeout(value) {
 		this._checkStatusTimeout = value;
 	}
+	get tritonServerHost() {
+		return this._tritonServerHost;
+	}
+	set tritonServerHost(value) {
+		this._tritonServerHost = value;
+	}
+	get tritonServerPort() {
+		return this._tritonServerPort;
+	}
+	set tritonServerPort(value) {
+		this._tritonServerPort = value;
+	}
 	/**
 	 * Serialize message to binary data
 	 * @param instance message instance
@@ -4231,7 +4315,9 @@ class Wav2VecTriton {
 			processorPath: this.processorPath,
 			tritonModelName: this.tritonModelName,
 			tritonModelVersion: this.tritonModelVersion,
-			checkStatusTimeout: this.checkStatusTimeout
+			checkStatusTimeout: this.checkStatusTimeout,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort
 		};
 	}
 	/**
@@ -4253,176 +4339,9 @@ class Wav2VecTriton {
 			processorPath: this.processorPath,
 			tritonModelName: this.tritonModelName,
 			tritonModelVersion: this.tritonModelVersion,
-			checkStatusTimeout: this.checkStatusTimeout
-		};
-	}
-}
-/**
- * Message implementation for ondewo.s2t.Quartznet
- */
-class Quartznet {
-	static {
-		this.id = 'ondewo.s2t.Quartznet';
-	}
-	/**
-	 * Deserialize binary data to message
-	 * @param instance message instance
-	 */
-	static deserializeBinary(bytes) {
-		const instance = new Quartznet();
-		Quartznet.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-		return instance;
-	}
-	/**
-	 * Check all the properties and set default protobuf values if necessary
-	 * @param _instance message instance
-	 */
-	static refineValues(_instance) {
-		_instance.configPath = _instance.configPath || '';
-		_instance.loadType = _instance.loadType || '';
-		_instance.ptFiles = _instance.ptFiles || undefined;
-		_instance.ckptFile = _instance.ckptFile || undefined;
-		_instance.useGpu = _instance.useGpu || false;
-	}
-	/**
-	 * Deserializes / reads binary message into message instance using provided binary reader
-	 * @param _instance message instance
-	 * @param _reader binary reader instance
-	 */
-	static deserializeBinaryFromReader(_instance, _reader) {
-		while (_reader.nextField()) {
-			if (_reader.isEndGroup()) break;
-			switch (_reader.getFieldNumber()) {
-				case 1:
-					_instance.configPath = _reader.readString();
-					break;
-				case 2:
-					_instance.loadType = _reader.readString();
-					break;
-				case 3:
-					_instance.ptFiles = new PtFiles();
-					_reader.readMessage(_instance.ptFiles, PtFiles.deserializeBinaryFromReader);
-					break;
-				case 4:
-					_instance.ckptFile = new CkptFile();
-					_reader.readMessage(_instance.ckptFile, CkptFile.deserializeBinaryFromReader);
-					break;
-				case 5:
-					_instance.useGpu = _reader.readBool();
-					break;
-				default:
-					_reader.skipField();
-			}
-		}
-		Quartznet.refineValues(_instance);
-	}
-	/**
-	 * Serializes a message to binary format using provided binary reader
-	 * @param _instance message instance
-	 * @param _writer binary writer instance
-	 */
-	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.configPath) {
-			_writer.writeString(1, _instance.configPath);
-		}
-		if (_instance.loadType) {
-			_writer.writeString(2, _instance.loadType);
-		}
-		if (_instance.ptFiles) {
-			_writer.writeMessage(3, _instance.ptFiles, PtFiles.serializeBinaryToWriter);
-		}
-		if (_instance.ckptFile) {
-			_writer.writeMessage(4, _instance.ckptFile, CkptFile.serializeBinaryToWriter);
-		}
-		if (_instance.useGpu) {
-			_writer.writeBool(5, _instance.useGpu);
-		}
-	}
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Quartznet to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.configPath = _value.configPath;
-		this.loadType = _value.loadType;
-		this.ptFiles = _value.ptFiles ? new PtFiles(_value.ptFiles) : undefined;
-		this.ckptFile = _value.ckptFile ? new CkptFile(_value.ckptFile) : undefined;
-		this.useGpu = _value.useGpu;
-		Quartznet.refineValues(this);
-	}
-	get configPath() {
-		return this._configPath;
-	}
-	set configPath(value) {
-		this._configPath = value;
-	}
-	get loadType() {
-		return this._loadType;
-	}
-	set loadType(value) {
-		this._loadType = value;
-	}
-	get ptFiles() {
-		return this._ptFiles;
-	}
-	set ptFiles(value) {
-		this._ptFiles = value;
-	}
-	get ckptFile() {
-		return this._ckptFile;
-	}
-	set ckptFile(value) {
-		this._ckptFile = value;
-	}
-	get useGpu() {
-		return this._useGpu;
-	}
-	set useGpu(value) {
-		this._useGpu = value;
-	}
-	/**
-	 * Serialize message to binary data
-	 * @param instance message instance
-	 */
-	serializeBinary() {
-		const writer = new BinaryWriter();
-		Quartznet.serializeBinaryToWriter(this, writer);
-		return writer.getResultBuffer();
-	}
-	/**
-	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-	 */
-	toObject() {
-		return {
-			configPath: this.configPath,
-			loadType: this.loadType,
-			ptFiles: this.ptFiles ? this.ptFiles.toObject() : undefined,
-			ckptFile: this.ckptFile ? this.ckptFile.toObject() : undefined,
-			useGpu: this.useGpu
-		};
-	}
-	/**
-	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-	 */
-	toJSON() {
-		return this.toObject();
-	}
-	/**
-	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-	 */
-	toProtobufJSON(
-		// @ts-ignore
-		options
-	) {
-		return {
-			configPath: this.configPath,
-			loadType: this.loadType,
-			ptFiles: this.ptFiles ? this.ptFiles.toProtobufJSON(options) : null,
-			ckptFile: this.ckptFile ? this.ckptFile.toProtobufJSON(options) : null,
-			useGpu: this.useGpu
+			checkStatusTimeout: this.checkStatusTimeout,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort
 		};
 	}
 }
@@ -4645,141 +4564,6 @@ class CkptFile {
 	) {
 		return {
 			path: this.path
-		};
-	}
-}
-/**
- * Message implementation for ondewo.s2t.QuartznetTriton
- */
-class QuartznetTriton {
-	static {
-		this.id = 'ondewo.s2t.QuartznetTriton';
-	}
-	/**
-	 * Deserialize binary data to message
-	 * @param instance message instance
-	 */
-	static deserializeBinary(bytes) {
-		const instance = new QuartznetTriton();
-		QuartznetTriton.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-		return instance;
-	}
-	/**
-	 * Check all the properties and set default protobuf values if necessary
-	 * @param _instance message instance
-	 */
-	static refineValues(_instance) {
-		_instance.configPath = _instance.configPath || '';
-		_instance.tritonUrl = _instance.tritonUrl || '';
-		_instance.tritonModel = _instance.tritonModel || '';
-	}
-	/**
-	 * Deserializes / reads binary message into message instance using provided binary reader
-	 * @param _instance message instance
-	 * @param _reader binary reader instance
-	 */
-	static deserializeBinaryFromReader(_instance, _reader) {
-		while (_reader.nextField()) {
-			if (_reader.isEndGroup()) break;
-			switch (_reader.getFieldNumber()) {
-				case 1:
-					_instance.configPath = _reader.readString();
-					break;
-				case 2:
-					_instance.tritonUrl = _reader.readString();
-					break;
-				case 3:
-					_instance.tritonModel = _reader.readString();
-					break;
-				default:
-					_reader.skipField();
-			}
-		}
-		QuartznetTriton.refineValues(_instance);
-	}
-	/**
-	 * Serializes a message to binary format using provided binary reader
-	 * @param _instance message instance
-	 * @param _writer binary writer instance
-	 */
-	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.configPath) {
-			_writer.writeString(1, _instance.configPath);
-		}
-		if (_instance.tritonUrl) {
-			_writer.writeString(2, _instance.tritonUrl);
-		}
-		if (_instance.tritonModel) {
-			_writer.writeString(3, _instance.tritonModel);
-		}
-	}
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of QuartznetTriton to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.configPath = _value.configPath;
-		this.tritonUrl = _value.tritonUrl;
-		this.tritonModel = _value.tritonModel;
-		QuartznetTriton.refineValues(this);
-	}
-	get configPath() {
-		return this._configPath;
-	}
-	set configPath(value) {
-		this._configPath = value;
-	}
-	get tritonUrl() {
-		return this._tritonUrl;
-	}
-	set tritonUrl(value) {
-		this._tritonUrl = value;
-	}
-	get tritonModel() {
-		return this._tritonModel;
-	}
-	set tritonModel(value) {
-		this._tritonModel = value;
-	}
-	/**
-	 * Serialize message to binary data
-	 * @param instance message instance
-	 */
-	serializeBinary() {
-		const writer = new BinaryWriter();
-		QuartznetTriton.serializeBinaryToWriter(this, writer);
-		return writer.getResultBuffer();
-	}
-	/**
-	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-	 */
-	toObject() {
-		return {
-			configPath: this.configPath,
-			tritonUrl: this.tritonUrl,
-			tritonModel: this.tritonModel
-		};
-	}
-	/**
-	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-	 */
-	toJSON() {
-		return this.toObject();
-	}
-	/**
-	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-	 */
-	toProtobufJSON(
-		// @ts-ignore
-		options
-	) {
-		return {
-			configPath: this.configPath,
-			tritonUrl: this.tritonUrl,
-			tritonModel: this.tritonModel
 		};
 	}
 }
@@ -5334,7 +5118,6 @@ class VoiceActivityDetection {
 		_instance.active = _instance.active || '';
 		_instance.samplingRate = _instance.samplingRate || '0';
 		_instance.pyannote = _instance.pyannote || undefined;
-		_instance.matchbox = _instance.matchbox || undefined;
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -5354,10 +5137,6 @@ class VoiceActivityDetection {
 				case 3:
 					_instance.pyannote = new Pyannote();
 					_reader.readMessage(_instance.pyannote, Pyannote.deserializeBinaryFromReader);
-					break;
-				case 4:
-					_instance.matchbox = new Matchbox();
-					_reader.readMessage(_instance.matchbox, Matchbox.deserializeBinaryFromReader);
 					break;
 				default:
 					_reader.skipField();
@@ -5380,9 +5159,6 @@ class VoiceActivityDetection {
 		if (_instance.pyannote) {
 			_writer.writeMessage(3, _instance.pyannote, Pyannote.serializeBinaryToWriter);
 		}
-		if (_instance.matchbox) {
-			_writer.writeMessage(4, _instance.matchbox, Matchbox.serializeBinaryToWriter);
-		}
 	}
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -5393,7 +5169,6 @@ class VoiceActivityDetection {
 		this.active = _value.active;
 		this.samplingRate = _value.samplingRate;
 		this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
-		this.matchbox = _value.matchbox ? new Matchbox(_value.matchbox) : undefined;
 		VoiceActivityDetection.refineValues(this);
 	}
 	get active() {
@@ -5414,12 +5189,6 @@ class VoiceActivityDetection {
 	set pyannote(value) {
 		this._pyannote = value;
 	}
-	get matchbox() {
-		return this._matchbox;
-	}
-	set matchbox(value) {
-		this._matchbox = value;
-	}
 	/**
 	 * Serialize message to binary data
 	 * @param instance message instance
@@ -5436,8 +5205,7 @@ class VoiceActivityDetection {
 		return {
 			active: this.active,
 			samplingRate: this.samplingRate,
-			pyannote: this.pyannote ? this.pyannote.toObject() : undefined,
-			matchbox: this.matchbox ? this.matchbox.toObject() : undefined
+			pyannote: this.pyannote ? this.pyannote.toObject() : undefined
 		};
 	}
 	/**
@@ -5458,8 +5226,7 @@ class VoiceActivityDetection {
 		return {
 			active: this.active,
 			samplingRate: this.samplingRate,
-			pyannote: this.pyannote ? this.pyannote.toProtobufJSON(options) : null,
-			matchbox: this.matchbox ? this.matchbox.toProtobufJSON(options) : null
+			pyannote: this.pyannote ? this.pyannote.toProtobufJSON(options) : null
 		};
 	}
 }
@@ -5484,12 +5251,12 @@ class Pyannote {
 	 * @param _instance message instance
 	 */
 	static refineValues(_instance) {
-		_instance.modelPath = _instance.modelPath || '';
+		_instance.modelName = _instance.modelName || '';
 		_instance.minAudioSize = _instance.minAudioSize || '0';
-		_instance.offset = _instance.offset || 0;
-		_instance.onset = _instance.onset || 0;
 		_instance.minDurationOff = _instance.minDurationOff || 0;
 		_instance.minDurationOn = _instance.minDurationOn || 0;
+		_instance.tritonServerHost = _instance.tritonServerHost || '';
+		_instance.tritonServerPort = _instance.tritonServerPort || '0';
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -5501,25 +5268,22 @@ class Pyannote {
 			if (_reader.isEndGroup()) break;
 			switch (_reader.getFieldNumber()) {
 				case 1:
-					_instance.modelPath = _reader.readString();
+					_instance.modelName = _reader.readString();
 					break;
 				case 2:
 					_instance.minAudioSize = _reader.readInt64String();
 					break;
 				case 3:
-					_instance.offset = _reader.readFloat();
-					break;
-				case 4:
-					_instance.onset = _reader.readFloat();
-					break;
-				case 5:
-					_instance.logScale = _reader.readBool();
-					break;
-				case 6:
 					_instance.minDurationOff = _reader.readFloat();
 					break;
-				case 7:
+				case 4:
 					_instance.minDurationOn = _reader.readFloat();
+					break;
+				case 5:
+					_instance.tritonServerHost = _reader.readString();
+					break;
+				case 6:
+					_instance.tritonServerPort = _reader.readInt64String();
 					break;
 				default:
 					_reader.skipField();
@@ -5533,26 +5297,23 @@ class Pyannote {
 	 * @param _writer binary writer instance
 	 */
 	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.modelPath) {
-			_writer.writeString(1, _instance.modelPath);
+		if (_instance.modelName) {
+			_writer.writeString(1, _instance.modelName);
 		}
 		if (_instance.minAudioSize) {
 			_writer.writeInt64String(2, _instance.minAudioSize);
 		}
-		if (_instance.offset) {
-			_writer.writeFloat(3, _instance.offset);
-		}
-		if (_instance.onset) {
-			_writer.writeFloat(4, _instance.onset);
-		}
-		if (_instance.logScale || _instance.logScale === false) {
-			_writer.writeBool(5, _instance.logScale);
-		}
 		if (_instance.minDurationOff) {
-			_writer.writeFloat(6, _instance.minDurationOff);
+			_writer.writeFloat(3, _instance.minDurationOff);
 		}
 		if (_instance.minDurationOn) {
-			_writer.writeFloat(7, _instance.minDurationOn);
+			_writer.writeFloat(4, _instance.minDurationOn);
+		}
+		if (_instance.tritonServerHost) {
+			_writer.writeString(5, _instance.tritonServerHost);
+		}
+		if (_instance.tritonServerPort) {
+			_writer.writeInt64String(6, _instance.tritonServerPort);
 		}
 	}
 	/**
@@ -5560,49 +5321,26 @@ class Pyannote {
 	 * @param _value initial values object or instance of Pyannote to deeply clone from
 	 */
 	constructor(_value) {
-		this._oneofLogScale = Pyannote.OneofLogScaleCase.none;
 		_value = _value || {};
-		this.modelPath = _value.modelPath;
+		this.modelName = _value.modelName;
 		this.minAudioSize = _value.minAudioSize;
-		this.offset = _value.offset;
-		this.onset = _value.onset;
-		this.logScale = _value.logScale;
 		this.minDurationOff = _value.minDurationOff;
 		this.minDurationOn = _value.minDurationOn;
+		this.tritonServerHost = _value.tritonServerHost;
+		this.tritonServerPort = _value.tritonServerPort;
 		Pyannote.refineValues(this);
 	}
-	get modelPath() {
-		return this._modelPath;
+	get modelName() {
+		return this._modelName;
 	}
-	set modelPath(value) {
-		this._modelPath = value;
+	set modelName(value) {
+		this._modelName = value;
 	}
 	get minAudioSize() {
 		return this._minAudioSize;
 	}
 	set minAudioSize(value) {
 		this._minAudioSize = value;
-	}
-	get offset() {
-		return this._offset;
-	}
-	set offset(value) {
-		this._offset = value;
-	}
-	get onset() {
-		return this._onset;
-	}
-	set onset(value) {
-		this._onset = value;
-	}
-	get logScale() {
-		return this._logScale;
-	}
-	set logScale(value) {
-		if (value !== undefined && value !== null) {
-			this._oneofLogScale = Pyannote.OneofLogScaleCase.logScale;
-		}
-		this._logScale = value;
 	}
 	get minDurationOff() {
 		return this._minDurationOff;
@@ -5616,8 +5354,17 @@ class Pyannote {
 	set minDurationOn(value) {
 		this._minDurationOn = value;
 	}
-	get oneofLogScale() {
-		return this._oneofLogScale;
+	get tritonServerHost() {
+		return this._tritonServerHost;
+	}
+	set tritonServerHost(value) {
+		this._tritonServerHost = value;
+	}
+	get tritonServerPort() {
+		return this._tritonServerPort;
+	}
+	set tritonServerPort(value) {
+		this._tritonServerPort = value;
 	}
 	/**
 	 * Serialize message to binary data
@@ -5633,13 +5380,12 @@ class Pyannote {
 	 */
 	toObject() {
 		return {
-			modelPath: this.modelPath,
+			modelName: this.modelName,
 			minAudioSize: this.minAudioSize,
-			offset: this.offset,
-			onset: this.onset,
-			logScale: this.logScale,
 			minDurationOff: this.minDurationOff,
-			minDurationOn: this.minDurationOn
+			minDurationOn: this.minDurationOn,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort
 		};
 	}
 	/**
@@ -5658,155 +5404,12 @@ class Pyannote {
 		options
 	) {
 		return {
-			modelPath: this.modelPath,
+			modelName: this.modelName,
 			minAudioSize: this.minAudioSize,
-			offset: this.offset,
-			onset: this.onset,
-			logScale: this.logScale,
 			minDurationOff: this.minDurationOff,
-			minDurationOn: this.minDurationOn
-		};
-	}
-}
-(function (Pyannote) {
-	let OneofLogScaleCase;
-	(function (OneofLogScaleCase) {
-		OneofLogScaleCase[(OneofLogScaleCase['none'] = 0)] = 'none';
-		OneofLogScaleCase[(OneofLogScaleCase['logScale'] = 1)] = 'logScale';
-	})((OneofLogScaleCase = Pyannote.OneofLogScaleCase || (Pyannote.OneofLogScaleCase = {})));
-})(Pyannote || (Pyannote = {}));
-/**
- * Message implementation for ondewo.s2t.Matchbox
- */
-class Matchbox {
-	static {
-		this.id = 'ondewo.s2t.Matchbox';
-	}
-	/**
-	 * Deserialize binary data to message
-	 * @param instance message instance
-	 */
-	static deserializeBinary(bytes) {
-		const instance = new Matchbox();
-		Matchbox.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-		return instance;
-	}
-	/**
-	 * Check all the properties and set default protobuf values if necessary
-	 * @param _instance message instance
-	 */
-	static refineValues(_instance) {
-		_instance.modelConfig = _instance.modelConfig || '';
-		_instance.encoderPath = _instance.encoderPath || '';
-		_instance.decoderPath = _instance.decoderPath || '';
-	}
-	/**
-	 * Deserializes / reads binary message into message instance using provided binary reader
-	 * @param _instance message instance
-	 * @param _reader binary reader instance
-	 */
-	static deserializeBinaryFromReader(_instance, _reader) {
-		while (_reader.nextField()) {
-			if (_reader.isEndGroup()) break;
-			switch (_reader.getFieldNumber()) {
-				case 1:
-					_instance.modelConfig = _reader.readString();
-					break;
-				case 2:
-					_instance.encoderPath = _reader.readString();
-					break;
-				case 3:
-					_instance.decoderPath = _reader.readString();
-					break;
-				default:
-					_reader.skipField();
-			}
-		}
-		Matchbox.refineValues(_instance);
-	}
-	/**
-	 * Serializes a message to binary format using provided binary reader
-	 * @param _instance message instance
-	 * @param _writer binary writer instance
-	 */
-	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.modelConfig) {
-			_writer.writeString(1, _instance.modelConfig);
-		}
-		if (_instance.encoderPath) {
-			_writer.writeString(2, _instance.encoderPath);
-		}
-		if (_instance.decoderPath) {
-			_writer.writeString(3, _instance.decoderPath);
-		}
-	}
-	/**
-	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-	 * @param _value initial values object or instance of Matchbox to deeply clone from
-	 */
-	constructor(_value) {
-		_value = _value || {};
-		this.modelConfig = _value.modelConfig;
-		this.encoderPath = _value.encoderPath;
-		this.decoderPath = _value.decoderPath;
-		Matchbox.refineValues(this);
-	}
-	get modelConfig() {
-		return this._modelConfig;
-	}
-	set modelConfig(value) {
-		this._modelConfig = value;
-	}
-	get encoderPath() {
-		return this._encoderPath;
-	}
-	set encoderPath(value) {
-		this._encoderPath = value;
-	}
-	get decoderPath() {
-		return this._decoderPath;
-	}
-	set decoderPath(value) {
-		this._decoderPath = value;
-	}
-	/**
-	 * Serialize message to binary data
-	 * @param instance message instance
-	 */
-	serializeBinary() {
-		const writer = new BinaryWriter();
-		Matchbox.serializeBinaryToWriter(this, writer);
-		return writer.getResultBuffer();
-	}
-	/**
-	 * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-	 */
-	toObject() {
-		return {
-			modelConfig: this.modelConfig,
-			encoderPath: this.encoderPath,
-			decoderPath: this.decoderPath
-		};
-	}
-	/**
-	 * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-	 */
-	toJSON() {
-		return this.toObject();
-	}
-	/**
-	 * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-	 * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-	 * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-	 */
-	toProtobufJSON(
-		// @ts-ignore
-		options
-	) {
-		return {
-			modelConfig: this.modelConfig,
-			encoderPath: this.encoderPath,
-			decoderPath: this.decoderPath
+			minDurationOn: this.minDurationOn,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort
 		};
 	}
 }
@@ -7624,7 +7227,7 @@ class Speech2TextClient {
 	static {
 		this.ɵfac = i0.ɵɵngDeclareFactory({
 			minVersion: '12.0.0',
-			version: '16.2.6',
+			version: '16.2.12',
 			ngImport: i0,
 			type: Speech2TextClient,
 			deps: [
@@ -7638,7 +7241,7 @@ class Speech2TextClient {
 	static {
 		this.ɵprov = i0.ɵɵngDeclareInjectable({
 			minVersion: '12.0.0',
-			version: '16.2.6',
+			version: '16.2.12',
 			ngImport: i0,
 			type: Speech2TextClient,
 			providedIn: 'any'
@@ -7647,7 +7250,7 @@ class Speech2TextClient {
 }
 i0.ɵɵngDeclareClassMetadata({
 	minVersion: '12.0.0',
-	version: '16.2.6',
+	version: '16.2.12',
 	ngImport: i0,
 	type: Speech2TextClient,
 	decorators: [
@@ -7708,14 +7311,11 @@ export {
 	ListS2tPipelinesRequest,
 	ListS2tPipelinesResponse,
 	Logging,
-	Matchbox,
 	PostProcessing,
 	PostProcessingOptions,
 	PostProcessors,
 	PtFiles,
 	Pyannote,
-	Quartznet,
-	QuartznetTriton,
 	S2TDescription,
 	S2TGetServiceInfoResponse,
 	S2TInference,
