@@ -282,8 +282,6 @@ export declare class UtteranceDetectionOptions implements GrpcMessage {
 	 */
 	static serializeBinaryToWriter(_instance: UtteranceDetectionOptions, _writer: BinaryWriter): void;
 	private _transcribeNotFinal;
-	private _startOfUtteranceThreshold;
-	private _endOfUtteranceThreshold;
 	private _nextChunkTimeout;
 	private _oneofTranscribeNotFinal;
 	/**
@@ -293,10 +291,6 @@ export declare class UtteranceDetectionOptions implements GrpcMessage {
 	constructor(_value?: RecursivePartial<UtteranceDetectionOptions.AsObject>);
 	get transcribeNotFinal(): boolean;
 	set transcribeNotFinal(value: boolean);
-	get startOfUtteranceThreshold(): number;
-	set startOfUtteranceThreshold(value: number);
-	get endOfUtteranceThreshold(): number;
-	set endOfUtteranceThreshold(value: number);
 	get nextChunkTimeout(): number;
 	set nextChunkTimeout(value: number);
 	get oneofTranscribeNotFinal(): UtteranceDetectionOptions.OneofTranscribeNotFinalCase;
@@ -326,8 +320,6 @@ export declare module UtteranceDetectionOptions {
 	 */
 	interface AsObject {
 		transcribeNotFinal: boolean;
-		startOfUtteranceThreshold: number;
-		endOfUtteranceThreshold: number;
 		nextChunkTimeout: number;
 	}
 	/**
@@ -335,8 +327,6 @@ export declare module UtteranceDetectionOptions {
 	 */
 	interface AsProtobufJSON {
 		transcribeNotFinal: boolean;
-		startOfUtteranceThreshold: number;
-		endOfUtteranceThreshold: number;
 		nextChunkTimeout: number;
 	}
 	enum OneofTranscribeNotFinalCase {
@@ -2732,8 +2722,6 @@ export declare class StreamingSpeechRecognition implements GrpcMessage {
 	private _decodingMethod;
 	private _samplingRate;
 	private _minAudioChunkSize;
-	private _startOfUtteranceThreshold;
-	private _endOfUtteranceThreshold;
 	private _nextChunkTimeout;
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -2748,10 +2736,6 @@ export declare class StreamingSpeechRecognition implements GrpcMessage {
 	set samplingRate(value: string);
 	get minAudioChunkSize(): string;
 	set minAudioChunkSize(value: string);
-	get startOfUtteranceThreshold(): number;
-	set startOfUtteranceThreshold(value: number);
-	get endOfUtteranceThreshold(): number;
-	set endOfUtteranceThreshold(value: number);
 	get nextChunkTimeout(): number;
 	set nextChunkTimeout(value: number);
 	/**
@@ -2783,8 +2767,6 @@ export declare module StreamingSpeechRecognition {
 		decodingMethod: string;
 		samplingRate: string;
 		minAudioChunkSize: string;
-		startOfUtteranceThreshold: number;
-		endOfUtteranceThreshold: number;
 		nextChunkTimeout: number;
 	}
 	/**
@@ -2795,8 +2777,6 @@ export declare module StreamingSpeechRecognition {
 		decodingMethod: string;
 		samplingRate: string;
 		minAudioChunkSize: string;
-		startOfUtteranceThreshold: number;
-		endOfUtteranceThreshold: number;
 		nextChunkTimeout: number;
 	}
 }

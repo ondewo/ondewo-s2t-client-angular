@@ -583,8 +583,6 @@ class UtteranceDetectionOptions {
 	 * @param _instance message instance
 	 */
 	static refineValues(_instance) {
-		_instance.startOfUtteranceThreshold = _instance.startOfUtteranceThreshold || 0;
-		_instance.endOfUtteranceThreshold = _instance.endOfUtteranceThreshold || 0;
 		_instance.nextChunkTimeout = _instance.nextChunkTimeout || 0;
 	}
 	/**
@@ -600,12 +598,6 @@ class UtteranceDetectionOptions {
 					_instance.transcribeNotFinal = _reader.readBool();
 					break;
 				case 2:
-					_instance.startOfUtteranceThreshold = _reader.readFloat();
-					break;
-				case 3:
-					_instance.endOfUtteranceThreshold = _reader.readFloat();
-					break;
-				case 4:
 					_instance.nextChunkTimeout = _reader.readFloat();
 					break;
 				default:
@@ -623,14 +615,8 @@ class UtteranceDetectionOptions {
 		if (_instance.transcribeNotFinal || _instance.transcribeNotFinal === false) {
 			_writer.writeBool(1, _instance.transcribeNotFinal);
 		}
-		if (_instance.startOfUtteranceThreshold) {
-			_writer.writeFloat(2, _instance.startOfUtteranceThreshold);
-		}
-		if (_instance.endOfUtteranceThreshold) {
-			_writer.writeFloat(3, _instance.endOfUtteranceThreshold);
-		}
 		if (_instance.nextChunkTimeout) {
-			_writer.writeFloat(4, _instance.nextChunkTimeout);
+			_writer.writeFloat(2, _instance.nextChunkTimeout);
 		}
 	}
 	/**
@@ -641,8 +627,6 @@ class UtteranceDetectionOptions {
 		this._oneofTranscribeNotFinal = UtteranceDetectionOptions.OneofTranscribeNotFinalCase.none;
 		_value = _value || {};
 		this.transcribeNotFinal = _value.transcribeNotFinal;
-		this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
-		this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
 		this.nextChunkTimeout = _value.nextChunkTimeout;
 		UtteranceDetectionOptions.refineValues(this);
 	}
@@ -654,18 +638,6 @@ class UtteranceDetectionOptions {
 			this._oneofTranscribeNotFinal = UtteranceDetectionOptions.OneofTranscribeNotFinalCase.transcribeNotFinal;
 		}
 		this._transcribeNotFinal = value;
-	}
-	get startOfUtteranceThreshold() {
-		return this._startOfUtteranceThreshold;
-	}
-	set startOfUtteranceThreshold(value) {
-		this._startOfUtteranceThreshold = value;
-	}
-	get endOfUtteranceThreshold() {
-		return this._endOfUtteranceThreshold;
-	}
-	set endOfUtteranceThreshold(value) {
-		this._endOfUtteranceThreshold = value;
 	}
 	get nextChunkTimeout() {
 		return this._nextChunkTimeout;
@@ -691,8 +663,6 @@ class UtteranceDetectionOptions {
 	toObject() {
 		return {
 			transcribeNotFinal: this.transcribeNotFinal,
-			startOfUtteranceThreshold: this.startOfUtteranceThreshold,
-			endOfUtteranceThreshold: this.endOfUtteranceThreshold,
 			nextChunkTimeout: this.nextChunkTimeout
 		};
 	}
@@ -713,8 +683,6 @@ class UtteranceDetectionOptions {
 	) {
 		return {
 			transcribeNotFinal: this.transcribeNotFinal,
-			startOfUtteranceThreshold: this.startOfUtteranceThreshold,
-			endOfUtteranceThreshold: this.endOfUtteranceThreshold,
 			nextChunkTimeout: this.nextChunkTimeout
 		};
 	}
@@ -4920,8 +4888,6 @@ class StreamingSpeechRecognition {
 		_instance.decodingMethod = _instance.decodingMethod || '';
 		_instance.samplingRate = _instance.samplingRate || '0';
 		_instance.minAudioChunkSize = _instance.minAudioChunkSize || '0';
-		_instance.startOfUtteranceThreshold = _instance.startOfUtteranceThreshold || 0;
-		_instance.endOfUtteranceThreshold = _instance.endOfUtteranceThreshold || 0;
 		_instance.nextChunkTimeout = _instance.nextChunkTimeout || 0;
 	}
 	/**
@@ -4946,12 +4912,6 @@ class StreamingSpeechRecognition {
 					_instance.minAudioChunkSize = _reader.readInt64String();
 					break;
 				case 5:
-					_instance.startOfUtteranceThreshold = _reader.readFloat();
-					break;
-				case 6:
-					_instance.endOfUtteranceThreshold = _reader.readFloat();
-					break;
-				case 7:
 					_instance.nextChunkTimeout = _reader.readFloat();
 					break;
 				default:
@@ -4978,14 +4938,8 @@ class StreamingSpeechRecognition {
 		if (_instance.minAudioChunkSize) {
 			_writer.writeInt64String(4, _instance.minAudioChunkSize);
 		}
-		if (_instance.startOfUtteranceThreshold) {
-			_writer.writeFloat(5, _instance.startOfUtteranceThreshold);
-		}
-		if (_instance.endOfUtteranceThreshold) {
-			_writer.writeFloat(6, _instance.endOfUtteranceThreshold);
-		}
 		if (_instance.nextChunkTimeout) {
-			_writer.writeFloat(7, _instance.nextChunkTimeout);
+			_writer.writeFloat(5, _instance.nextChunkTimeout);
 		}
 	}
 	/**
@@ -4998,8 +4952,6 @@ class StreamingSpeechRecognition {
 		this.decodingMethod = _value.decodingMethod;
 		this.samplingRate = _value.samplingRate;
 		this.minAudioChunkSize = _value.minAudioChunkSize;
-		this.startOfUtteranceThreshold = _value.startOfUtteranceThreshold;
-		this.endOfUtteranceThreshold = _value.endOfUtteranceThreshold;
 		this.nextChunkTimeout = _value.nextChunkTimeout;
 		StreamingSpeechRecognition.refineValues(this);
 	}
@@ -5027,18 +4979,6 @@ class StreamingSpeechRecognition {
 	set minAudioChunkSize(value) {
 		this._minAudioChunkSize = value;
 	}
-	get startOfUtteranceThreshold() {
-		return this._startOfUtteranceThreshold;
-	}
-	set startOfUtteranceThreshold(value) {
-		this._startOfUtteranceThreshold = value;
-	}
-	get endOfUtteranceThreshold() {
-		return this._endOfUtteranceThreshold;
-	}
-	set endOfUtteranceThreshold(value) {
-		this._endOfUtteranceThreshold = value;
-	}
 	get nextChunkTimeout() {
 		return this._nextChunkTimeout;
 	}
@@ -5063,8 +5003,6 @@ class StreamingSpeechRecognition {
 			decodingMethod: this.decodingMethod,
 			samplingRate: this.samplingRate,
 			minAudioChunkSize: this.minAudioChunkSize,
-			startOfUtteranceThreshold: this.startOfUtteranceThreshold,
-			endOfUtteranceThreshold: this.endOfUtteranceThreshold,
 			nextChunkTimeout: this.nextChunkTimeout
 		};
 	}
@@ -5088,8 +5026,6 @@ class StreamingSpeechRecognition {
 			decodingMethod: this.decodingMethod,
 			samplingRate: this.samplingRate,
 			minAudioChunkSize: this.minAudioChunkSize,
-			startOfUtteranceThreshold: this.startOfUtteranceThreshold,
-			endOfUtteranceThreshold: this.endOfUtteranceThreshold,
 			nextChunkTimeout: this.nextChunkTimeout
 		};
 	}
