@@ -12,18 +12,6 @@ import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
 //
 // THIS IS A GENERATED FILE
 // DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
-/**
- * Specific GrpcClientSettings for Speech2Text.
- * Use it only if your default settings are not set or the service requires other settings.
- */
-const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
-
-/* tslint:disable */
-/* eslint-disable */
-// @ts-nocheck
-//
-// THIS IS A GENERATED FILE
-// DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
 var Decoding;
 (function (Decoding) {
 	Decoding[(Decoding['DEFAULT'] = 0)] = 'DEFAULT';
@@ -5747,6 +5735,7 @@ class S2TNormalization {
 	 */
 	static refineValues(_instance) {
 		_instance.language = _instance.language || '';
+		_instance.pipeline = _instance.pipeline || [];
 	}
 	/**
 	 * Deserializes / reads binary message into message instance using provided binary reader
@@ -5759,6 +5748,9 @@ class S2TNormalization {
 			switch (_reader.getFieldNumber()) {
 				case 1:
 					_instance.language = _reader.readString();
+					break;
+				case 2:
+					(_instance.pipeline = _instance.pipeline || []).push(_reader.readString());
 					break;
 				default:
 					_reader.skipField();
@@ -5775,6 +5767,9 @@ class S2TNormalization {
 		if (_instance.language) {
 			_writer.writeString(1, _instance.language);
 		}
+		if (_instance.pipeline && _instance.pipeline.length) {
+			_writer.writeRepeatedString(2, _instance.pipeline);
+		}
 	}
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -5783,6 +5778,7 @@ class S2TNormalization {
 	constructor(_value) {
 		_value = _value || {};
 		this.language = _value.language;
+		this.pipeline = (_value.pipeline || []).slice();
 		S2TNormalization.refineValues(this);
 	}
 	get language() {
@@ -5790,6 +5786,12 @@ class S2TNormalization {
 	}
 	set language(value) {
 		this._language = value;
+	}
+	get pipeline() {
+		return this._pipeline;
+	}
+	set pipeline(value) {
+		this._pipeline = value;
 	}
 	/**
 	 * Serialize message to binary data
@@ -5805,7 +5807,8 @@ class S2TNormalization {
 	 */
 	toObject() {
 		return {
-			language: this.language
+			language: this.language,
+			pipeline: (this.pipeline || []).slice()
 		};
 	}
 	/**
@@ -5824,7 +5827,8 @@ class S2TNormalization {
 		options
 	) {
 		return {
-			language: this.language
+			language: this.language,
+			pipeline: (this.pipeline || []).slice()
 		};
 	}
 }
@@ -6718,6 +6722,18 @@ class TrainUserLanguageModelRequest {
 		};
 	}
 }
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+//
+// THIS IS A GENERATED FILE
+// DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
+/**
+ * Specific GrpcClientSettings for Speech2Text.
+ * Use it only if your default settings are not set or the service requires other settings.
+ */
+const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
 
 /* tslint:disable */
 /* eslint-disable */

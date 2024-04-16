@@ -3208,6 +3208,7 @@ export declare class S2TNormalization implements GrpcMessage {
 	 */
 	static serializeBinaryToWriter(_instance: S2TNormalization, _writer: BinaryWriter): void;
 	private _language;
+	private _pipeline;
 	/**
 	 * Message constructor. Initializes the properties and applies default Protobuf values if necessary
 	 * @param _value initial values object or instance of S2TNormalization to deeply clone from
@@ -3215,6 +3216,8 @@ export declare class S2TNormalization implements GrpcMessage {
 	constructor(_value?: RecursivePartial<S2TNormalization.AsObject>);
 	get language(): string;
 	set language(value: string);
+	get pipeline(): string[];
+	set pipeline(value: string[]);
 	/**
 	 * Serialize message to binary data
 	 * @param instance message instance
@@ -3241,12 +3244,14 @@ export declare module S2TNormalization {
 	 */
 	interface AsObject {
 		language: string;
+		pipeline: string[];
 	}
 	/**
 	 * Protobuf JSON representation for S2TNormalization
 	 */
 	interface AsProtobufJSON {
 		language: string;
+		pipeline: string[];
 	}
 }
 /**
