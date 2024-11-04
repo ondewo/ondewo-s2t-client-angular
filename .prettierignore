@@ -8,4 +8,9 @@ npm
 RELEASE.md
 src/
 
+ondewo-proto-compiler
+
 ondewo-s2t-api
+ondewo-s2t-client-angular.d.ts
+ondewo-s2t-client-angular.d.ts.map
+ondewo-s2t-client-angular.metadata.json
