@@ -1,6 +1,6 @@
 import * as i0 from '@angular/core';
-import { InjectionToken, Injectable, Optional, Inject } from '@angular/core';
-import { uint8ArrayToBase64, GrpcCallType, GrpcMetadata } from '@ngx-grpc/common';
+import { InjectionToken, Optional, Inject, Injectable } from '@angular/core';
+import { uint8ArrayToBase64, GrpcMetadata, GrpcCallType } from '@ngx-grpc/common';
 import * as i1 from '@ngx-grpc/core';
 import { throwStatusErrors, takeMessages, GRPC_CLIENT_FACTORY } from '@ngx-grpc/core';
 import { BinaryReader, BinaryWriter } from 'google-protobuf';
@@ -1444,6 +1444,10 @@ class UtteranceDetectionOptions {
                 case 2:
                     _instance.nextChunkTimeout = _reader.readFloat();
                     break;
+                case 3:
+                    _instance.turnDetection = new TurnDetectionOptions();
+                    _reader.readMessage(_instance.turnDetection, TurnDetectionOptions.deserializeBinaryFromReader);
+                    break;
                 default:
                     _reader.skipField();
             }
@@ -1463,6 +1467,9 @@ class UtteranceDetectionOptions {
         if (_instance.nextChunkTimeout) {
             _writer.writeFloat(2, _instance.nextChunkTimeout);
         }
+        if (_instance.turnDetection) {
+            _writer.writeMessage(3, _instance.turnDetection, TurnDetectionOptions.serializeBinaryToWriter);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -1470,9 +1477,13 @@ class UtteranceDetectionOptions {
      */
     constructor(_value) {
         this._oneofTranscribeNotFinal = UtteranceDetectionOptions.OneofTranscribeNotFinalCase.none;
+        this._oneofTurnDetection = UtteranceDetectionOptions.OneofTurnDetectionCase.none;
         _value = _value || {};
         this.transcribeNotFinal = _value.transcribeNotFinal;
         this.nextChunkTimeout = _value.nextChunkTimeout;
+        this.turnDetection = _value.turnDetection
+            ? new TurnDetectionOptions(_value.turnDetection)
+            : undefined;
         UtteranceDetectionOptions.refineValues(this);
     }
     get transcribeNotFinal() {
@@ -1491,8 +1502,21 @@ class UtteranceDetectionOptions {
     set nextChunkTimeout(value) {
         this._nextChunkTimeout = value;
     }
+    get turnDetection() {
+        return this._turnDetection;
+    }
+    set turnDetection(value) {
+        if (value !== undefined && value !== null) {
+            this._oneofTurnDetection =
+                UtteranceDetectionOptions.OneofTurnDetectionCase.turnDetection;
+        }
+        this._turnDetection = value;
+    }
     get oneofTranscribeNotFinal() {
         return this._oneofTranscribeNotFinal;
+    }
+    get oneofTurnDetection() {
+        return this._oneofTurnDetection;
     }
     /**
      * Serialize message to binary data
@@ -1509,7 +1533,10 @@ class UtteranceDetectionOptions {
     toObject() {
         return {
             transcribeNotFinal: this.transcribeNotFinal,
-            nextChunkTimeout: this.nextChunkTimeout
+            nextChunkTimeout: this.nextChunkTimeout,
+            turnDetection: this.turnDetection
+                ? this.turnDetection.toObject()
+                : undefined
         };
     }
     /**
@@ -1528,7 +1555,10 @@ class UtteranceDetectionOptions {
     options) {
         return {
             transcribeNotFinal: this.transcribeNotFinal,
-            nextChunkTimeout: this.nextChunkTimeout
+            nextChunkTimeout: this.nextChunkTimeout,
+            turnDetection: this.turnDetection
+                ? this.turnDetection.toProtobufJSON(options)
+                : null
         };
     }
 }
@@ -1538,6 +1568,11 @@ class UtteranceDetectionOptions {
         OneofTranscribeNotFinalCase[OneofTranscribeNotFinalCase["none"] = 0] = "none";
         OneofTranscribeNotFinalCase[OneofTranscribeNotFinalCase["transcribeNotFinal"] = 1] = "transcribeNotFinal";
     })(OneofTranscribeNotFinalCase = UtteranceDetectionOptions.OneofTranscribeNotFinalCase || (UtteranceDetectionOptions.OneofTranscribeNotFinalCase = {}));
+    let OneofTurnDetectionCase;
+    (function (OneofTurnDetectionCase) {
+        OneofTurnDetectionCase[OneofTurnDetectionCase["none"] = 0] = "none";
+        OneofTurnDetectionCase[OneofTurnDetectionCase["turnDetection"] = 1] = "turnDetection";
+    })(OneofTurnDetectionCase = UtteranceDetectionOptions.OneofTurnDetectionCase || (UtteranceDetectionOptions.OneofTurnDetectionCase = {}));
 })(UtteranceDetectionOptions || (UtteranceDetectionOptions = {}));
 /**
  * Message implementation for ondewo.s2t.PostProcessingOptions
@@ -1561,6 +1596,7 @@ class PostProcessingOptions {
         _instance.spellingCorrection = _instance.spellingCorrection || false;
         _instance.normalize = _instance.normalize || false;
         _instance.config = _instance.config || undefined;
+        _instance.llmPostProcessing = _instance.llmPostProcessing || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -1581,6 +1617,9 @@ class PostProcessingOptions {
                 case 3:
                     _instance.config = new PostProcessing();
                     _reader.readMessage(_instance.config, PostProcessing.deserializeBinaryFromReader);
+                    break;
+                case 4:
+                    _instance.llmPostProcessing = _reader.readBool();
                     break;
                 default:
                     _reader.skipField();
@@ -1603,6 +1642,9 @@ class PostProcessingOptions {
         if (_instance.config) {
             _writer.writeMessage(3, _instance.config, PostProcessing.serializeBinaryToWriter);
         }
+        if (_instance.llmPostProcessing) {
+            _writer.writeBool(4, _instance.llmPostProcessing);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -1613,6 +1655,7 @@ class PostProcessingOptions {
         this.spellingCorrection = _value.spellingCorrection;
         this.normalize = _value.normalize;
         this.config = _value.config ? new PostProcessing(_value.config) : undefined;
+        this.llmPostProcessing = _value.llmPostProcessing;
         PostProcessingOptions.refineValues(this);
     }
     get spellingCorrection() {
@@ -1633,6 +1676,12 @@ class PostProcessingOptions {
     set config(value) {
         this._config = value;
     }
+    get llmPostProcessing() {
+        return this._llmPostProcessing;
+    }
+    set llmPostProcessing(value) {
+        this._llmPostProcessing = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -1649,7 +1698,8 @@ class PostProcessingOptions {
         return {
             spellingCorrection: this.spellingCorrection,
             normalize: this.normalize,
-            config: this.config ? this.config.toObject() : undefined
+            config: this.config ? this.config.toObject() : undefined,
+            llmPostProcessing: this.llmPostProcessing
         };
     }
     /**
@@ -1669,7 +1719,8 @@ class PostProcessingOptions {
         return {
             spellingCorrection: this.spellingCorrection,
             normalize: this.normalize,
-            config: this.config ? this.config.toProtobufJSON(options) : null
+            config: this.config ? this.config.toProtobufJSON(options) : null,
+            llmPostProcessing: this.llmPostProcessing
         };
     }
 }
@@ -3675,17 +3726,17 @@ class ListS2tDomainsResponse {
     }
 }
 /**
- * Message implementation for ondewo.s2t.S2TGetServiceInfoResponse
+ * Message implementation for ondewo.s2t.S2tGetServiceInfoResponse
  */
-class S2TGetServiceInfoResponse {
-    static { this.id = 'ondewo.s2t.S2TGetServiceInfoResponse'; }
+class S2tGetServiceInfoResponse {
+    static { this.id = 'ondewo.s2t.S2tGetServiceInfoResponse'; }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new S2TGetServiceInfoResponse();
-        S2TGetServiceInfoResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2tGetServiceInfoResponse();
+        S2tGetServiceInfoResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -3712,7 +3763,7 @@ class S2TGetServiceInfoResponse {
                     _reader.skipField();
             }
         }
-        S2TGetServiceInfoResponse.refineValues(_instance);
+        S2tGetServiceInfoResponse.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -3726,12 +3777,12 @@ class S2TGetServiceInfoResponse {
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2TGetServiceInfoResponse to deeply clone from
+     * @param _value initial values object or instance of S2tGetServiceInfoResponse to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
         this.version = _value.version;
-        S2TGetServiceInfoResponse.refineValues(this);
+        S2tGetServiceInfoResponse.refineValues(this);
     }
     get version() {
         return this._version;
@@ -3745,7 +3796,7 @@ class S2TGetServiceInfoResponse {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        S2TGetServiceInfoResponse.serializeBinaryToWriter(this, writer);
+        S2tGetServiceInfoResponse.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -3818,15 +3869,15 @@ class Speech2TextConfig {
                     _instance.id = _reader.readString();
                     break;
                 case 2:
-                    _instance.description = new S2TDescription();
-                    _reader.readMessage(_instance.description, S2TDescription.deserializeBinaryFromReader);
+                    _instance.description = new S2tDescription();
+                    _reader.readMessage(_instance.description, S2tDescription.deserializeBinaryFromReader);
                     break;
                 case 3:
                     _instance.active = _reader.readBool();
                     break;
                 case 4:
-                    _instance.inference = new S2TInference();
-                    _reader.readMessage(_instance.inference, S2TInference.deserializeBinaryFromReader);
+                    _instance.inference = new S2tInference();
+                    _reader.readMessage(_instance.inference, S2tInference.deserializeBinaryFromReader);
                     break;
                 case 5:
                     _instance.streamingServer = new StreamingServer();
@@ -3860,13 +3911,13 @@ class Speech2TextConfig {
             _writer.writeString(1, _instance.id);
         }
         if (_instance.description) {
-            _writer.writeMessage(2, _instance.description, S2TDescription.serializeBinaryToWriter);
+            _writer.writeMessage(2, _instance.description, S2tDescription.serializeBinaryToWriter);
         }
         if (_instance.active) {
             _writer.writeBool(3, _instance.active);
         }
         if (_instance.inference) {
-            _writer.writeMessage(4, _instance.inference, S2TInference.serializeBinaryToWriter);
+            _writer.writeMessage(4, _instance.inference, S2tInference.serializeBinaryToWriter);
         }
         if (_instance.streamingServer) {
             _writer.writeMessage(5, _instance.streamingServer, StreamingServer.serializeBinaryToWriter);
@@ -3889,11 +3940,11 @@ class Speech2TextConfig {
         _value = _value || {};
         this.id = _value.id;
         this.description = _value.description
-            ? new S2TDescription(_value.description)
+            ? new S2tDescription(_value.description)
             : undefined;
         this.active = _value.active;
         this.inference = _value.inference
-            ? new S2TInference(_value.inference)
+            ? new S2tInference(_value.inference)
             : undefined;
         this.streamingServer = _value.streamingServer
             ? new StreamingServer(_value.streamingServer)
@@ -4020,17 +4071,17 @@ class Speech2TextConfig {
     }
 }
 /**
- * Message implementation for ondewo.s2t.S2TDescription
+ * Message implementation for ondewo.s2t.S2tDescription
  */
-class S2TDescription {
-    static { this.id = 'ondewo.s2t.S2TDescription'; }
+class S2tDescription {
+    static { this.id = 'ondewo.s2t.S2tDescription'; }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new S2TDescription();
-        S2TDescription.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2tDescription();
+        S2tDescription.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -4069,7 +4120,7 @@ class S2TDescription {
                     _reader.skipField();
             }
         }
-        S2TDescription.refineValues(_instance);
+        S2tDescription.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -4092,7 +4143,7 @@ class S2TDescription {
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2TDescription to deeply clone from
+     * @param _value initial values object or instance of S2tDescription to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
@@ -4100,7 +4151,7 @@ class S2TDescription {
         this.pipelineOwner = _value.pipelineOwner;
         this.domain = _value.domain;
         this.comments = _value.comments;
-        S2TDescription.refineValues(this);
+        S2tDescription.refineValues(this);
     }
     get language() {
         return this._language;
@@ -4132,7 +4183,7 @@ class S2TDescription {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        S2TDescription.serializeBinaryToWriter(this, writer);
+        S2tDescription.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -4169,17 +4220,17 @@ class S2TDescription {
     }
 }
 /**
- * Message implementation for ondewo.s2t.S2TInference
+ * Message implementation for ondewo.s2t.S2tInference
  */
-class S2TInference {
-    static { this.id = 'ondewo.s2t.S2TInference'; }
+class S2tInference {
+    static { this.id = 'ondewo.s2t.S2tInference'; }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new S2TInference();
-        S2TInference.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2tInference();
+        S2tInference.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -4216,7 +4267,7 @@ class S2TInference {
                     _reader.skipField();
             }
         }
-        S2TInference.refineValues(_instance);
+        S2tInference.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -4236,7 +4287,7 @@ class S2TInference {
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2TInference to deeply clone from
+     * @param _value initial values object or instance of S2tInference to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
@@ -4247,7 +4298,7 @@ class S2TInference {
             ? new LanguageModels(_value.languageModels)
             : undefined;
         this.inferenceBackend = _value.inferenceBackend;
-        S2TInference.refineValues(this);
+        S2tInference.refineValues(this);
     }
     get acousticModels() {
         return this._acousticModels;
@@ -4273,7 +4324,7 @@ class S2TInference {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        S2TInference.serializeBinaryToWriter(this, writer);
+        S2tInference.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -6532,6 +6583,7 @@ class StreamingSpeechRecognition {
         _instance.samplingRate = _instance.samplingRate || '0';
         _instance.minAudioChunkSize = _instance.minAudioChunkSize || '0';
         _instance.nextChunkTimeout = _instance.nextChunkTimeout || 0;
+        _instance.turnDetection = _instance.turnDetection || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -6557,6 +6609,10 @@ class StreamingSpeechRecognition {
                     break;
                 case 5:
                     _instance.nextChunkTimeout = _reader.readFloat();
+                    break;
+                case 6:
+                    _instance.turnDetection = new TurnDetectionOptions();
+                    _reader.readMessage(_instance.turnDetection, TurnDetectionOptions.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -6585,6 +6641,9 @@ class StreamingSpeechRecognition {
         if (_instance.nextChunkTimeout) {
             _writer.writeFloat(5, _instance.nextChunkTimeout);
         }
+        if (_instance.turnDetection) {
+            _writer.writeMessage(6, _instance.turnDetection, TurnDetectionOptions.serializeBinaryToWriter);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -6597,6 +6656,9 @@ class StreamingSpeechRecognition {
         this.samplingRate = _value.samplingRate;
         this.minAudioChunkSize = _value.minAudioChunkSize;
         this.nextChunkTimeout = _value.nextChunkTimeout;
+        this.turnDetection = _value.turnDetection
+            ? new TurnDetectionOptions(_value.turnDetection)
+            : undefined;
         StreamingSpeechRecognition.refineValues(this);
     }
     get transcribeNotFinal() {
@@ -6629,6 +6691,12 @@ class StreamingSpeechRecognition {
     set nextChunkTimeout(value) {
         this._nextChunkTimeout = value;
     }
+    get turnDetection() {
+        return this._turnDetection;
+    }
+    set turnDetection(value) {
+        this._turnDetection = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -6647,7 +6715,10 @@ class StreamingSpeechRecognition {
             decodingMethod: this.decodingMethod,
             samplingRate: this.samplingRate,
             minAudioChunkSize: this.minAudioChunkSize,
-            nextChunkTimeout: this.nextChunkTimeout
+            nextChunkTimeout: this.nextChunkTimeout,
+            turnDetection: this.turnDetection
+                ? this.turnDetection.toObject()
+                : undefined
         };
     }
     /**
@@ -6669,7 +6740,176 @@ class StreamingSpeechRecognition {
             decodingMethod: this.decodingMethod,
             samplingRate: this.samplingRate,
             minAudioChunkSize: this.minAudioChunkSize,
-            nextChunkTimeout: this.nextChunkTimeout
+            nextChunkTimeout: this.nextChunkTimeout,
+            turnDetection: this.turnDetection
+                ? this.turnDetection.toProtobufJSON(options)
+                : null
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionOptions
+ */
+class TurnDetectionOptions {
+    static { this.id = 'ondewo.s2t.TurnDetectionOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new TurnDetectionOptions();
+        TurnDetectionOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.fullUtteranceDeployment =
+            _instance.fullUtteranceDeployment || false;
+        _instance.llmHost = _instance.llmHost || '';
+        _instance.llmPort = _instance.llmPort || 0;
+        _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.fullUtteranceDeployment = _reader.readBool();
+                    break;
+                case 3:
+                    _instance.llmHost = _reader.readString();
+                    break;
+                case 4:
+                    _instance.llmPort = _reader.readInt32();
+                    break;
+                case 5:
+                    _instance.llmRequestTimeout = _reader.readFloat();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        TurnDetectionOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.fullUtteranceDeployment) {
+            _writer.writeBool(2, _instance.fullUtteranceDeployment);
+        }
+        if (_instance.llmHost) {
+            _writer.writeString(3, _instance.llmHost);
+        }
+        if (_instance.llmPort) {
+            _writer.writeInt32(4, _instance.llmPort);
+        }
+        if (_instance.llmRequestTimeout) {
+            _writer.writeFloat(5, _instance.llmRequestTimeout);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TurnDetectionOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.fullUtteranceDeployment = _value.fullUtteranceDeployment;
+        this.llmHost = _value.llmHost;
+        this.llmPort = _value.llmPort;
+        this.llmRequestTimeout = _value.llmRequestTimeout;
+        TurnDetectionOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get fullUtteranceDeployment() {
+        return this._fullUtteranceDeployment;
+    }
+    set fullUtteranceDeployment(value) {
+        this._fullUtteranceDeployment = value;
+    }
+    get llmHost() {
+        return this._llmHost;
+    }
+    set llmHost(value) {
+        this._llmHost = value;
+    }
+    get llmPort() {
+        return this._llmPort;
+    }
+    set llmPort(value) {
+        this._llmPort = value;
+    }
+    get llmRequestTimeout() {
+        return this._llmRequestTimeout;
+    }
+    set llmRequestTimeout(value) {
+        this._llmRequestTimeout = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        TurnDetectionOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            fullUtteranceDeployment: this.fullUtteranceDeployment,
+            llmHost: this.llmHost,
+            llmPort: this.llmPort,
+            llmRequestTimeout: this.llmRequestTimeout
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            fullUtteranceDeployment: this.fullUtteranceDeployment,
+            llmHost: this.llmHost,
+            llmPort: this.llmPort,
+            llmRequestTimeout: this.llmRequestTimeout
         };
     }
 }
@@ -7133,6 +7373,7 @@ class PostProcessors {
     static refineValues(_instance) {
         _instance.symSpell = _instance.symSpell || undefined;
         _instance.normalization = _instance.normalization || undefined;
+        _instance.llmPostProcessing = _instance.llmPostProcessing || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -7149,8 +7390,12 @@ class PostProcessors {
                     _reader.readMessage(_instance.symSpell, SymSpell.deserializeBinaryFromReader);
                     break;
                 case 2:
-                    _instance.normalization = new S2TNormalization();
-                    _reader.readMessage(_instance.normalization, S2TNormalization.deserializeBinaryFromReader);
+                    _instance.normalization = new S2tNormalization();
+                    _reader.readMessage(_instance.normalization, S2tNormalization.deserializeBinaryFromReader);
+                    break;
+                case 3:
+                    _instance.llmPostProcessing = new S2tLlmPostProcessing();
+                    _reader.readMessage(_instance.llmPostProcessing, S2tLlmPostProcessing.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -7168,7 +7413,10 @@ class PostProcessors {
             _writer.writeMessage(1, _instance.symSpell, SymSpell.serializeBinaryToWriter);
         }
         if (_instance.normalization) {
-            _writer.writeMessage(2, _instance.normalization, S2TNormalization.serializeBinaryToWriter);
+            _writer.writeMessage(2, _instance.normalization, S2tNormalization.serializeBinaryToWriter);
+        }
+        if (_instance.llmPostProcessing) {
+            _writer.writeMessage(3, _instance.llmPostProcessing, S2tLlmPostProcessing.serializeBinaryToWriter);
         }
     }
     /**
@@ -7179,7 +7427,10 @@ class PostProcessors {
         _value = _value || {};
         this.symSpell = _value.symSpell ? new SymSpell(_value.symSpell) : undefined;
         this.normalization = _value.normalization
-            ? new S2TNormalization(_value.normalization)
+            ? new S2tNormalization(_value.normalization)
+            : undefined;
+        this.llmPostProcessing = _value.llmPostProcessing
+            ? new S2tLlmPostProcessing(_value.llmPostProcessing)
             : undefined;
         PostProcessors.refineValues(this);
     }
@@ -7194,6 +7445,12 @@ class PostProcessors {
     }
     set normalization(value) {
         this._normalization = value;
+    }
+    get llmPostProcessing() {
+        return this._llmPostProcessing;
+    }
+    set llmPostProcessing(value) {
+        this._llmPostProcessing = value;
     }
     /**
      * Serialize message to binary data
@@ -7212,6 +7469,9 @@ class PostProcessors {
             symSpell: this.symSpell ? this.symSpell.toObject() : undefined,
             normalization: this.normalization
                 ? this.normalization.toObject()
+                : undefined,
+            llmPostProcessing: this.llmPostProcessing
+                ? this.llmPostProcessing.toObject()
                 : undefined
         };
     }
@@ -7233,6 +7493,9 @@ class PostProcessors {
             symSpell: this.symSpell ? this.symSpell.toProtobufJSON(options) : null,
             normalization: this.normalization
                 ? this.normalization.toProtobufJSON(options)
+                : null,
+            llmPostProcessing: this.llmPostProcessing
+                ? this.llmPostProcessing.toProtobufJSON(options)
                 : null
         };
     }
@@ -7372,17 +7635,17 @@ class SymSpell {
     }
 }
 /**
- * Message implementation for ondewo.s2t.S2TNormalization
+ * Message implementation for ondewo.s2t.S2tNormalization
  */
-class S2TNormalization {
-    static { this.id = 'ondewo.s2t.S2TNormalization'; }
+class S2tNormalization {
+    static { this.id = 'ondewo.s2t.S2tNormalization'; }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new S2TNormalization();
-        S2TNormalization.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2tNormalization();
+        S2tNormalization.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -7413,7 +7676,7 @@ class S2TNormalization {
                     _reader.skipField();
             }
         }
-        S2TNormalization.refineValues(_instance);
+        S2tNormalization.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -7430,13 +7693,13 @@ class S2TNormalization {
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2TNormalization to deeply clone from
+     * @param _value initial values object or instance of S2tNormalization to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
         this.language = _value.language;
         this.pipeline = (_value.pipeline || []).slice();
-        S2TNormalization.refineValues(this);
+        S2tNormalization.refineValues(this);
     }
     get language() {
         return this._language;
@@ -7456,7 +7719,7 @@ class S2TNormalization {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        S2TNormalization.serializeBinaryToWriter(this, writer);
+        S2tNormalization.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -7485,6 +7748,1536 @@ class S2TNormalization {
         return {
             language: this.language,
             pipeline: (this.pipeline || []).slice()
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessing
+ */
+class S2tLlmPostProcessing {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessing'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessing();
+        S2tLlmPostProcessing.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.llmHost = _instance.llmHost || '';
+        _instance.llmPort = _instance.llmPort || 0;
+        _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
+        _instance.s2tLlmPostProcessingCasingOptions =
+            _instance.s2tLlmPostProcessingCasingOptions || undefined;
+        _instance.s2tLlmPostProcessingPunctuationOptions =
+            _instance.s2tLlmPostProcessingPunctuationOptions || undefined;
+        _instance.s2tLlmPostProcessingSpellingCorrectionOptions =
+            _instance.s2tLlmPostProcessingSpellingCorrectionOptions || undefined;
+        _instance.s2tLlmPostProcessingSemanticCorrectionOptions =
+            _instance.s2tLlmPostProcessingSemanticCorrectionOptions || undefined;
+        _instance.s2tLlmPostProcessingTranslationOptions =
+            _instance.s2tLlmPostProcessingTranslationOptions || undefined;
+        _instance.s2tLlmPostProcessingInverseNormalizationOptions =
+            _instance.s2tLlmPostProcessingInverseNormalizationOptions || undefined;
+        _instance.s2tLlmPostProcessingNormalizationOptions =
+            _instance.s2tLlmPostProcessingNormalizationOptions || undefined;
+        _instance.s2tLlmPostProcessingSummarizationOptions =
+            _instance.s2tLlmPostProcessingSummarizationOptions || undefined;
+        _instance.s2tLlmPostProcessingUserPromptOptions =
+            _instance.s2tLlmPostProcessingUserPromptOptions || undefined;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.llmHost = _reader.readString();
+                    break;
+                case 2:
+                    _instance.llmPort = _reader.readInt32();
+                    break;
+                case 3:
+                    _instance.llmRequestTimeout = _reader.readFloat();
+                    break;
+                case 4:
+                    _instance.s2tLlmPostProcessingCasingOptions = new S2tLlmPostProcessingCasingOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingCasingOptions.deserializeBinaryFromReader);
+                    break;
+                case 5:
+                    _instance.s2tLlmPostProcessingPunctuationOptions = new S2tLlmPostProcessingPunctuationOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingPunctuationOptions.deserializeBinaryFromReader);
+                    break;
+                case 6:
+                    _instance.s2tLlmPostProcessingSpellingCorrectionOptions = new S2tLlmPostProcessingSpellCorrectionOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingSpellingCorrectionOptions, S2tLlmPostProcessingSpellCorrectionOptions.deserializeBinaryFromReader);
+                    break;
+                case 7:
+                    _instance.s2tLlmPostProcessingSemanticCorrectionOptions = new S2tLlmPostProcessingSemanticCorrectionOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSemanticCorrectionOptions.deserializeBinaryFromReader);
+                    break;
+                case 8:
+                    _instance.s2tLlmPostProcessingTranslationOptions = new S2tLlmPostProcessingTranslationOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingTranslationOptions, S2tLlmPostProcessingTranslationOptions.deserializeBinaryFromReader);
+                    break;
+                case 9:
+                    _instance.s2tLlmPostProcessingInverseNormalizationOptions = new S2tLlmPostProcessingInverseNormalizationOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingInverseNormalizationOptions.deserializeBinaryFromReader);
+                    break;
+                case 10:
+                    _instance.s2tLlmPostProcessingNormalizationOptions = new S2tLlmPostProcessingNormalizationOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingNormalizationOptions.deserializeBinaryFromReader);
+                    break;
+                case 11:
+                    _instance.s2tLlmPostProcessingSummarizationOptions = new S2tLlmPostProcessingSummarizationOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingSummarizationOptions.deserializeBinaryFromReader);
+                    break;
+                case 12:
+                    _instance.s2tLlmPostProcessingUserPromptOptions = new S2tLlmPostProcessingUserPromptOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader);
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessing.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.llmHost) {
+            _writer.writeString(1, _instance.llmHost);
+        }
+        if (_instance.llmPort) {
+            _writer.writeInt32(2, _instance.llmPort);
+        }
+        if (_instance.llmRequestTimeout) {
+            _writer.writeFloat(3, _instance.llmRequestTimeout);
+        }
+        if (_instance.s2tLlmPostProcessingCasingOptions) {
+            _writer.writeMessage(4, _instance.s2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingCasingOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingPunctuationOptions) {
+            _writer.writeMessage(5, _instance.s2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingPunctuationOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingSpellingCorrectionOptions) {
+            _writer.writeMessage(6, _instance.s2tLlmPostProcessingSpellingCorrectionOptions, S2tLlmPostProcessingSpellCorrectionOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingSemanticCorrectionOptions) {
+            _writer.writeMessage(7, _instance.s2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSemanticCorrectionOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingTranslationOptions) {
+            _writer.writeMessage(8, _instance.s2tLlmPostProcessingTranslationOptions, S2tLlmPostProcessingTranslationOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingInverseNormalizationOptions) {
+            _writer.writeMessage(9, _instance.s2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingInverseNormalizationOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingNormalizationOptions) {
+            _writer.writeMessage(10, _instance.s2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingNormalizationOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingSummarizationOptions) {
+            _writer.writeMessage(11, _instance.s2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingSummarizationOptions.serializeBinaryToWriter);
+        }
+        if (_instance.s2tLlmPostProcessingUserPromptOptions) {
+            _writer.writeMessage(12, _instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessing to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.llmHost = _value.llmHost;
+        this.llmPort = _value.llmPort;
+        this.llmRequestTimeout = _value.llmRequestTimeout;
+        this.s2tLlmPostProcessingCasingOptions = _value.s2tLlmPostProcessingCasingOptions
+            ? new S2tLlmPostProcessingCasingOptions(_value.s2tLlmPostProcessingCasingOptions)
+            : undefined;
+        this.s2tLlmPostProcessingPunctuationOptions = _value.s2tLlmPostProcessingPunctuationOptions
+            ? new S2tLlmPostProcessingPunctuationOptions(_value.s2tLlmPostProcessingPunctuationOptions)
+            : undefined;
+        this.s2tLlmPostProcessingSpellingCorrectionOptions = _value.s2tLlmPostProcessingSpellingCorrectionOptions
+            ? new S2tLlmPostProcessingSpellCorrectionOptions(_value.s2tLlmPostProcessingSpellingCorrectionOptions)
+            : undefined;
+        this.s2tLlmPostProcessingSemanticCorrectionOptions = _value.s2tLlmPostProcessingSemanticCorrectionOptions
+            ? new S2tLlmPostProcessingSemanticCorrectionOptions(_value.s2tLlmPostProcessingSemanticCorrectionOptions)
+            : undefined;
+        this.s2tLlmPostProcessingTranslationOptions = _value.s2tLlmPostProcessingTranslationOptions
+            ? new S2tLlmPostProcessingTranslationOptions(_value.s2tLlmPostProcessingTranslationOptions)
+            : undefined;
+        this.s2tLlmPostProcessingInverseNormalizationOptions = _value.s2tLlmPostProcessingInverseNormalizationOptions
+            ? new S2tLlmPostProcessingInverseNormalizationOptions(_value.s2tLlmPostProcessingInverseNormalizationOptions)
+            : undefined;
+        this.s2tLlmPostProcessingNormalizationOptions = _value.s2tLlmPostProcessingNormalizationOptions
+            ? new S2tLlmPostProcessingNormalizationOptions(_value.s2tLlmPostProcessingNormalizationOptions)
+            : undefined;
+        this.s2tLlmPostProcessingSummarizationOptions = _value.s2tLlmPostProcessingSummarizationOptions
+            ? new S2tLlmPostProcessingSummarizationOptions(_value.s2tLlmPostProcessingSummarizationOptions)
+            : undefined;
+        this.s2tLlmPostProcessingUserPromptOptions = _value.s2tLlmPostProcessingUserPromptOptions
+            ? new S2tLlmPostProcessingUserPromptOptions(_value.s2tLlmPostProcessingUserPromptOptions)
+            : undefined;
+        S2tLlmPostProcessing.refineValues(this);
+    }
+    get llmHost() {
+        return this._llmHost;
+    }
+    set llmHost(value) {
+        this._llmHost = value;
+    }
+    get llmPort() {
+        return this._llmPort;
+    }
+    set llmPort(value) {
+        this._llmPort = value;
+    }
+    get llmRequestTimeout() {
+        return this._llmRequestTimeout;
+    }
+    set llmRequestTimeout(value) {
+        this._llmRequestTimeout = value;
+    }
+    get s2tLlmPostProcessingCasingOptions() {
+        return this._s2tLlmPostProcessingCasingOptions;
+    }
+    set s2tLlmPostProcessingCasingOptions(value) {
+        this._s2tLlmPostProcessingCasingOptions = value;
+    }
+    get s2tLlmPostProcessingPunctuationOptions() {
+        return this._s2tLlmPostProcessingPunctuationOptions;
+    }
+    set s2tLlmPostProcessingPunctuationOptions(value) {
+        this._s2tLlmPostProcessingPunctuationOptions = value;
+    }
+    get s2tLlmPostProcessingSpellingCorrectionOptions() {
+        return this._s2tLlmPostProcessingSpellingCorrectionOptions;
+    }
+    set s2tLlmPostProcessingSpellingCorrectionOptions(value) {
+        this._s2tLlmPostProcessingSpellingCorrectionOptions = value;
+    }
+    get s2tLlmPostProcessingSemanticCorrectionOptions() {
+        return this._s2tLlmPostProcessingSemanticCorrectionOptions;
+    }
+    set s2tLlmPostProcessingSemanticCorrectionOptions(value) {
+        this._s2tLlmPostProcessingSemanticCorrectionOptions = value;
+    }
+    get s2tLlmPostProcessingTranslationOptions() {
+        return this._s2tLlmPostProcessingTranslationOptions;
+    }
+    set s2tLlmPostProcessingTranslationOptions(value) {
+        this._s2tLlmPostProcessingTranslationOptions = value;
+    }
+    get s2tLlmPostProcessingInverseNormalizationOptions() {
+        return this._s2tLlmPostProcessingInverseNormalizationOptions;
+    }
+    set s2tLlmPostProcessingInverseNormalizationOptions(value) {
+        this._s2tLlmPostProcessingInverseNormalizationOptions = value;
+    }
+    get s2tLlmPostProcessingNormalizationOptions() {
+        return this._s2tLlmPostProcessingNormalizationOptions;
+    }
+    set s2tLlmPostProcessingNormalizationOptions(value) {
+        this._s2tLlmPostProcessingNormalizationOptions = value;
+    }
+    get s2tLlmPostProcessingSummarizationOptions() {
+        return this._s2tLlmPostProcessingSummarizationOptions;
+    }
+    set s2tLlmPostProcessingSummarizationOptions(value) {
+        this._s2tLlmPostProcessingSummarizationOptions = value;
+    }
+    get s2tLlmPostProcessingUserPromptOptions() {
+        return this._s2tLlmPostProcessingUserPromptOptions;
+    }
+    set s2tLlmPostProcessingUserPromptOptions(value) {
+        this._s2tLlmPostProcessingUserPromptOptions = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessing.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            llmHost: this.llmHost,
+            llmPort: this.llmPort,
+            llmRequestTimeout: this.llmRequestTimeout,
+            s2tLlmPostProcessingCasingOptions: this.s2tLlmPostProcessingCasingOptions
+                ? this.s2tLlmPostProcessingCasingOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingPunctuationOptions: this
+                .s2tLlmPostProcessingPunctuationOptions
+                ? this.s2tLlmPostProcessingPunctuationOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingSpellingCorrectionOptions: this
+                .s2tLlmPostProcessingSpellingCorrectionOptions
+                ? this.s2tLlmPostProcessingSpellingCorrectionOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingSemanticCorrectionOptions: this
+                .s2tLlmPostProcessingSemanticCorrectionOptions
+                ? this.s2tLlmPostProcessingSemanticCorrectionOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingTranslationOptions: this
+                .s2tLlmPostProcessingTranslationOptions
+                ? this.s2tLlmPostProcessingTranslationOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingInverseNormalizationOptions: this
+                .s2tLlmPostProcessingInverseNormalizationOptions
+                ? this.s2tLlmPostProcessingInverseNormalizationOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingNormalizationOptions: this
+                .s2tLlmPostProcessingNormalizationOptions
+                ? this.s2tLlmPostProcessingNormalizationOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingSummarizationOptions: this
+                .s2tLlmPostProcessingSummarizationOptions
+                ? this.s2tLlmPostProcessingSummarizationOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingUserPromptOptions: this
+                .s2tLlmPostProcessingUserPromptOptions
+                ? this.s2tLlmPostProcessingUserPromptOptions.toObject()
+                : undefined
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            llmHost: this.llmHost,
+            llmPort: this.llmPort,
+            llmRequestTimeout: this.llmRequestTimeout,
+            s2tLlmPostProcessingCasingOptions: this.s2tLlmPostProcessingCasingOptions
+                ? this.s2tLlmPostProcessingCasingOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingPunctuationOptions: this
+                .s2tLlmPostProcessingPunctuationOptions
+                ? this.s2tLlmPostProcessingPunctuationOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingSpellingCorrectionOptions: this
+                .s2tLlmPostProcessingSpellingCorrectionOptions
+                ? this.s2tLlmPostProcessingSpellingCorrectionOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingSemanticCorrectionOptions: this
+                .s2tLlmPostProcessingSemanticCorrectionOptions
+                ? this.s2tLlmPostProcessingSemanticCorrectionOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingTranslationOptions: this
+                .s2tLlmPostProcessingTranslationOptions
+                ? this.s2tLlmPostProcessingTranslationOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingInverseNormalizationOptions: this
+                .s2tLlmPostProcessingInverseNormalizationOptions
+                ? this.s2tLlmPostProcessingInverseNormalizationOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingNormalizationOptions: this
+                .s2tLlmPostProcessingNormalizationOptions
+                ? this.s2tLlmPostProcessingNormalizationOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingSummarizationOptions: this
+                .s2tLlmPostProcessingSummarizationOptions
+                ? this.s2tLlmPostProcessingSummarizationOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingUserPromptOptions: this
+                .s2tLlmPostProcessingUserPromptOptions
+                ? this.s2tLlmPostProcessingUserPromptOptions.toProtobufJSON(options)
+                : null
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingCasingOptions
+ */
+class S2tLlmPostProcessingCasingOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingCasingOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingCasingOptions();
+        S2tLlmPostProcessingCasingOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingCasingOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingCasingOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        S2tLlmPostProcessingCasingOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingCasingOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingPunctuationOptions
+ */
+class S2tLlmPostProcessingPunctuationOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingPunctuationOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingPunctuationOptions();
+        S2tLlmPostProcessingPunctuationOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingPunctuationOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingPunctuationOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        S2tLlmPostProcessingPunctuationOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingPunctuationOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingSpellCorrectionOptions
+ */
+class S2tLlmPostProcessingSpellCorrectionOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingSpellCorrectionOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingSpellCorrectionOptions();
+        S2tLlmPostProcessingSpellCorrectionOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingSpellCorrectionOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingSpellCorrectionOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        S2tLlmPostProcessingSpellCorrectionOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingSpellCorrectionOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingSemanticCorrectionOptions
+ */
+class S2tLlmPostProcessingSemanticCorrectionOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingSemanticCorrectionOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingSemanticCorrectionOptions();
+        S2tLlmPostProcessingSemanticCorrectionOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingSemanticCorrectionOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingSemanticCorrectionOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        S2tLlmPostProcessingSemanticCorrectionOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingSemanticCorrectionOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingTranslationOptions
+ */
+class S2tLlmPostProcessingTranslationOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingTranslationOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingTranslationOptions();
+        S2tLlmPostProcessingTranslationOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.language = _instance.language || '';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.language = _reader.readString();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingTranslationOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.language) {
+            _writer.writeString(2, _instance.language);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingTranslationOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.language = _value.language;
+        S2tLlmPostProcessingTranslationOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get language() {
+        return this._language;
+    }
+    set language(value) {
+        this._language = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingTranslationOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            language: this.language
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            language: this.language
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingInverseNormalizationOptions
+ */
+class S2tLlmPostProcessingInverseNormalizationOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingInverseNormalizationOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingInverseNormalizationOptions();
+        S2tLlmPostProcessingInverseNormalizationOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.email = _instance.email || false;
+        _instance.phoneNumber = _instance.phoneNumber || false;
+        _instance.dateAndTime = _instance.dateAndTime || false;
+        _instance.creditCardNumber = _instance.creditCardNumber || false;
+        _instance.socialSecurityNumber = _instance.socialSecurityNumber || false;
+        _instance.timeZone = _instance.timeZone || false;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.email = _reader.readBool();
+                    break;
+                case 3:
+                    _instance.phoneNumber = _reader.readBool();
+                    break;
+                case 4:
+                    _instance.dateAndTime = _reader.readBool();
+                    break;
+                case 5:
+                    _instance.creditCardNumber = _reader.readBool();
+                    break;
+                case 6:
+                    _instance.socialSecurityNumber = _reader.readBool();
+                    break;
+                case 7:
+                    _instance.timeZone = _reader.readBool();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingInverseNormalizationOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.email) {
+            _writer.writeBool(2, _instance.email);
+        }
+        if (_instance.phoneNumber) {
+            _writer.writeBool(3, _instance.phoneNumber);
+        }
+        if (_instance.dateAndTime) {
+            _writer.writeBool(4, _instance.dateAndTime);
+        }
+        if (_instance.creditCardNumber) {
+            _writer.writeBool(5, _instance.creditCardNumber);
+        }
+        if (_instance.socialSecurityNumber) {
+            _writer.writeBool(6, _instance.socialSecurityNumber);
+        }
+        if (_instance.timeZone) {
+            _writer.writeBool(7, _instance.timeZone);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingInverseNormalizationOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.email = _value.email;
+        this.phoneNumber = _value.phoneNumber;
+        this.dateAndTime = _value.dateAndTime;
+        this.creditCardNumber = _value.creditCardNumber;
+        this.socialSecurityNumber = _value.socialSecurityNumber;
+        this.timeZone = _value.timeZone;
+        S2tLlmPostProcessingInverseNormalizationOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get email() {
+        return this._email;
+    }
+    set email(value) {
+        this._email = value;
+    }
+    get phoneNumber() {
+        return this._phoneNumber;
+    }
+    set phoneNumber(value) {
+        this._phoneNumber = value;
+    }
+    get dateAndTime() {
+        return this._dateAndTime;
+    }
+    set dateAndTime(value) {
+        this._dateAndTime = value;
+    }
+    get creditCardNumber() {
+        return this._creditCardNumber;
+    }
+    set creditCardNumber(value) {
+        this._creditCardNumber = value;
+    }
+    get socialSecurityNumber() {
+        return this._socialSecurityNumber;
+    }
+    set socialSecurityNumber(value) {
+        this._socialSecurityNumber = value;
+    }
+    get timeZone() {
+        return this._timeZone;
+    }
+    set timeZone(value) {
+        this._timeZone = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingInverseNormalizationOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            email: this.email,
+            phoneNumber: this.phoneNumber,
+            dateAndTime: this.dateAndTime,
+            creditCardNumber: this.creditCardNumber,
+            socialSecurityNumber: this.socialSecurityNumber,
+            timeZone: this.timeZone
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            email: this.email,
+            phoneNumber: this.phoneNumber,
+            dateAndTime: this.dateAndTime,
+            creditCardNumber: this.creditCardNumber,
+            socialSecurityNumber: this.socialSecurityNumber,
+            timeZone: this.timeZone
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingNormalizationOptions
+ */
+class S2tLlmPostProcessingNormalizationOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingNormalizationOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingNormalizationOptions();
+        S2tLlmPostProcessingNormalizationOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.email = _instance.email || false;
+        _instance.phoneNumber = _instance.phoneNumber || false;
+        _instance.dateAndTime = _instance.dateAndTime || false;
+        _instance.creditCardNumber = _instance.creditCardNumber || false;
+        _instance.socialSecurityNumber = _instance.socialSecurityNumber || false;
+        _instance.timeZone = _instance.timeZone || false;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.email = _reader.readBool();
+                    break;
+                case 3:
+                    _instance.phoneNumber = _reader.readBool();
+                    break;
+                case 4:
+                    _instance.dateAndTime = _reader.readBool();
+                    break;
+                case 5:
+                    _instance.creditCardNumber = _reader.readBool();
+                    break;
+                case 6:
+                    _instance.socialSecurityNumber = _reader.readBool();
+                    break;
+                case 7:
+                    _instance.timeZone = _reader.readBool();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingNormalizationOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.email) {
+            _writer.writeBool(2, _instance.email);
+        }
+        if (_instance.phoneNumber) {
+            _writer.writeBool(3, _instance.phoneNumber);
+        }
+        if (_instance.dateAndTime) {
+            _writer.writeBool(4, _instance.dateAndTime);
+        }
+        if (_instance.creditCardNumber) {
+            _writer.writeBool(5, _instance.creditCardNumber);
+        }
+        if (_instance.socialSecurityNumber) {
+            _writer.writeBool(6, _instance.socialSecurityNumber);
+        }
+        if (_instance.timeZone) {
+            _writer.writeBool(7, _instance.timeZone);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingNormalizationOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.email = _value.email;
+        this.phoneNumber = _value.phoneNumber;
+        this.dateAndTime = _value.dateAndTime;
+        this.creditCardNumber = _value.creditCardNumber;
+        this.socialSecurityNumber = _value.socialSecurityNumber;
+        this.timeZone = _value.timeZone;
+        S2tLlmPostProcessingNormalizationOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get email() {
+        return this._email;
+    }
+    set email(value) {
+        this._email = value;
+    }
+    get phoneNumber() {
+        return this._phoneNumber;
+    }
+    set phoneNumber(value) {
+        this._phoneNumber = value;
+    }
+    get dateAndTime() {
+        return this._dateAndTime;
+    }
+    set dateAndTime(value) {
+        this._dateAndTime = value;
+    }
+    get creditCardNumber() {
+        return this._creditCardNumber;
+    }
+    set creditCardNumber(value) {
+        this._creditCardNumber = value;
+    }
+    get socialSecurityNumber() {
+        return this._socialSecurityNumber;
+    }
+    set socialSecurityNumber(value) {
+        this._socialSecurityNumber = value;
+    }
+    get timeZone() {
+        return this._timeZone;
+    }
+    set timeZone(value) {
+        this._timeZone = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingNormalizationOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            email: this.email,
+            phoneNumber: this.phoneNumber,
+            dateAndTime: this.dateAndTime,
+            creditCardNumber: this.creditCardNumber,
+            socialSecurityNumber: this.socialSecurityNumber,
+            timeZone: this.timeZone
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            email: this.email,
+            phoneNumber: this.phoneNumber,
+            dateAndTime: this.dateAndTime,
+            creditCardNumber: this.creditCardNumber,
+            socialSecurityNumber: this.socialSecurityNumber,
+            timeZone: this.timeZone
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingSummarizationOptions
+ */
+class S2tLlmPostProcessingSummarizationOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingSummarizationOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingSummarizationOptions();
+        S2tLlmPostProcessingSummarizationOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.minChars = _instance.minChars || 0;
+        _instance.maxChars = _instance.maxChars || 0;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.minChars = _reader.readInt32();
+                    break;
+                case 3:
+                    _instance.maxChars = _reader.readInt32();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingSummarizationOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.minChars) {
+            _writer.writeInt32(2, _instance.minChars);
+        }
+        if (_instance.maxChars) {
+            _writer.writeInt32(3, _instance.maxChars);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingSummarizationOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.minChars = _value.minChars;
+        this.maxChars = _value.maxChars;
+        S2tLlmPostProcessingSummarizationOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get minChars() {
+        return this._minChars;
+    }
+    set minChars(value) {
+        this._minChars = value;
+    }
+    get maxChars() {
+        return this._maxChars;
+    }
+    set maxChars(value) {
+        this._maxChars = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingSummarizationOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            minChars: this.minChars,
+            maxChars: this.maxChars
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            minChars: this.minChars,
+            maxChars: this.maxChars
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingUserPromptOptions
+ */
+class S2tLlmPostProcessingUserPromptOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingUserPromptOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new S2tLlmPostProcessingUserPromptOptions();
+        S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.prompt = _instance.prompt || '';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.prompt = _reader.readString();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        S2tLlmPostProcessingUserPromptOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.prompt) {
+            _writer.writeString(2, _instance.prompt);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of S2tLlmPostProcessingUserPromptOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.prompt = _value.prompt;
+        S2tLlmPostProcessingUserPromptOptions.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get prompt() {
+        return this._prompt;
+    }
+    set prompt(value) {
+        this._prompt = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            prompt: this.prompt
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            prompt: this.prompt
         };
     }
 }
@@ -8364,6 +10157,211 @@ class TrainUserLanguageModelRequest {
         };
     }
 }
+/**
+ * Message implementation for ondewo.s2t.ListS2tNormalizationPipelinesRequest
+ */
+class ListS2tNormalizationPipelinesRequest {
+    static { this.id = 'ondewo.s2t.ListS2tNormalizationPipelinesRequest'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new ListS2tNormalizationPipelinesRequest();
+        ListS2tNormalizationPipelinesRequest.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.language = _instance.language || '';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.language = _reader.readString();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        ListS2tNormalizationPipelinesRequest.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.language) {
+            _writer.writeString(1, _instance.language);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of ListS2tNormalizationPipelinesRequest to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.language = _value.language;
+        ListS2tNormalizationPipelinesRequest.refineValues(this);
+    }
+    get language() {
+        return this._language;
+    }
+    set language(value) {
+        this._language = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        ListS2tNormalizationPipelinesRequest.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            language: this.language
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            language: this.language
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.ListS2tNormalizationPipelinesResponse
+ */
+class ListS2tNormalizationPipelinesResponse {
+    static { this.id = 'ondewo.s2t.ListS2tNormalizationPipelinesResponse'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new ListS2tNormalizationPipelinesResponse();
+        ListS2tNormalizationPipelinesResponse.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.s2tNormalizationPipelines =
+            _instance.s2tNormalizationPipelines || [];
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    (_instance.s2tNormalizationPipelines =
+                        _instance.s2tNormalizationPipelines || []).push(_reader.readString());
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        ListS2tNormalizationPipelinesResponse.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.s2tNormalizationPipelines &&
+            _instance.s2tNormalizationPipelines.length) {
+            _writer.writeRepeatedString(1, _instance.s2tNormalizationPipelines);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of ListS2tNormalizationPipelinesResponse to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.s2tNormalizationPipelines = (_value.s2tNormalizationPipelines || []).slice();
+        ListS2tNormalizationPipelinesResponse.refineValues(this);
+    }
+    get s2tNormalizationPipelines() {
+        return this._s2tNormalizationPipelines;
+    }
+    set s2tNormalizationPipelines(value) {
+        this._s2tNormalizationPipelines = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        ListS2tNormalizationPipelinesResponse.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            s2tNormalizationPipelines: (this.s2tNormalizationPipelines || []).slice()
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            s2tNormalizationPipelines: (this.s2tNormalizationPipelines || []).slice()
+        };
+    }
+}
 
 /* tslint:disable */
 /* eslint-disable */
@@ -8550,7 +10548,7 @@ class Speech2TextClient {
              *
              * @param requestMessage Request message
              * @param requestMetadata Request metadata
-             * @returns Observable<GrpcEvent<thisProto.S2TGetServiceInfoResponse>>
+             * @returns Observable<GrpcEvent<thisProto.S2tGetServiceInfoResponse>>
              */
             getServiceInfo: (requestData, requestMetadata = new GrpcMetadata()) => {
                 return this.handler.handle({
@@ -8560,7 +10558,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: googleProtobuf000.Empty,
-                    responseClass: S2TGetServiceInfoResponse
+                    responseClass: S2tGetServiceInfoResponse
                 });
             },
             /**
@@ -8651,6 +10649,24 @@ class Speech2TextClient {
                     requestMetadata,
                     requestClass: TrainUserLanguageModelRequest,
                     responseClass: googleProtobuf000.Empty
+                });
+            },
+            /**
+             * Unary call: /ondewo.s2t.Speech2Text/ListS2tNormalizationPipelines
+             *
+             * @param requestMessage Request message
+             * @param requestMetadata Request metadata
+             * @returns Observable<GrpcEvent<thisProto.ListS2tNormalizationPipelinesResponse>>
+             */
+            listS2tNormalizationPipelines: (requestData, requestMetadata = new GrpcMetadata()) => {
+                return this.handler.handle({
+                    type: GrpcCallType.unary,
+                    client: this.client,
+                    path: '/ondewo.s2t.Speech2Text/ListS2tNormalizationPipelines',
+                    requestData,
+                    requestMetadata,
+                    requestClass: ListS2tNormalizationPipelinesRequest,
+                    responseClass: ListS2tNormalizationPipelinesResponse
                 });
             }
         };
@@ -8769,7 +10785,7 @@ class Speech2TextClient {
      *
      * @param requestMessage Request message
      * @param requestMetadata Request metadata
-     * @returns Observable<thisProto.S2TGetServiceInfoResponse>
+     * @returns Observable<thisProto.S2tGetServiceInfoResponse>
      */
     getServiceInfo(requestData, requestMetadata = new GrpcMetadata()) {
         return this.$raw
@@ -8836,10 +10852,22 @@ class Speech2TextClient {
             .trainUserLanguageModel(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "18.2.12", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "18.2.12", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
+    /**
+     * Unary call @/ondewo.s2t.Speech2Text/ListS2tNormalizationPipelines
+     *
+     * @param requestMessage Request message
+     * @param requestMetadata Request metadata
+     * @returns Observable<thisProto.ListS2tNormalizationPipelinesResponse>
+     */
+    listS2tNormalizationPipelines(requestData, requestMetadata = new GrpcMetadata()) {
+        return this.$raw
+            .listS2tNormalizationPipelines(requestData, requestMetadata)
+            .pipe(throwStatusErrors(), takeMessages());
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.2.1", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.2.1", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.2.12", ngImport: i0, type: Speech2TextClient, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.2.1", ngImport: i0, type: Speech2TextClient, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'any' }]
         }], ctorParameters: () => [{ type: undefined, decorators: [{
@@ -8856,5 +10884,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.2.12", ngImpo
  * Generated bundle index. Do not edit.
  */
 
-export { AcousticModels, AddDataToUserLanguageModelRequest, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, S2TDescription, S2TGetServiceInfoResponse, S2TInference, S2TNormalization, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail };
+export { AcousticModels, AddDataToUserLanguageModelRequest, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSpellCorrectionOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tLlmPostProcessingUserPromptOptions, S2tNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TurnDetectionOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
