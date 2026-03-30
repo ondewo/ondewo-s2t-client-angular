@@ -4,19 +4,7 @@ import { uint8ArrayToBase64, GrpcMetadata, GrpcCallType } from '@ngx-grpc/common
 import * as i1 from '@ngx-grpc/core';
 import { throwStatusErrors, takeMessages, GRPC_CLIENT_FACTORY } from '@ngx-grpc/core';
 import { BinaryReader, BinaryWriter } from 'google-protobuf';
-import * as googleProtobuf000 from '@ngx-grpc/well-known-types';
-
-/* tslint:disable */
-/* eslint-disable */
-// @ts-nocheck
-//
-// THIS IS A GENERATED FILE
-// DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
-/**
- * Specific GrpcClientSettings for Speech2Text.
- * Use it only if your default settings are not set or the service requires other settings.
- */
-const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
+import * as googleProtobuf001 from '@ngx-grpc/well-known-types';
 
 /* tslint:disable */
 /* eslint-disable */
@@ -110,8 +98,8 @@ class TranscribeRequestConfig {
                     _instance.task = _reader.readString();
                     break;
                 case 11:
-                    _instance.s2tServiceConfig = new googleProtobuf000.Struct();
-                    _reader.readMessage(_instance.s2tServiceConfig, googleProtobuf000.Struct.deserializeBinaryFromReader);
+                    _instance.s2tServiceConfig = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.s2tServiceConfig, googleProtobuf001.Struct.deserializeBinaryFromReader);
                     break;
                 case 12:
                     _instance.s2tCloudProviderConfig = new S2tCloudProviderConfig();
@@ -157,7 +145,7 @@ class TranscribeRequestConfig {
             _writer.writeString(10, _instance.task);
         }
         if (_instance.s2tServiceConfig) {
-            _writer.writeMessage(11, _instance.s2tServiceConfig, googleProtobuf000.Struct.serializeBinaryToWriter);
+            _writer.writeMessage(11, _instance.s2tServiceConfig, googleProtobuf001.Struct.serializeBinaryToWriter);
         }
         if (_instance.s2tCloudProviderConfig) {
             _writer.writeMessage(12, _instance.s2tCloudProviderConfig, S2tCloudProviderConfig.serializeBinaryToWriter);
@@ -190,7 +178,7 @@ class TranscribeRequestConfig {
         this.language = _value.language;
         this.task = _value.task;
         this.s2tServiceConfig = _value.s2tServiceConfig
-            ? new googleProtobuf000.Struct(_value.s2tServiceConfig)
+            ? new googleProtobuf001.Struct(_value.s2tServiceConfig)
             : undefined;
         this.s2tCloudProviderConfig = _value.s2tCloudProviderConfig
             ? new S2tCloudProviderConfig(_value.s2tCloudProviderConfig)
@@ -6772,6 +6760,8 @@ class TurnDetectionOptions {
         _instance.llmHost = _instance.llmHost || '';
         _instance.llmPort = _instance.llmPort || 0;
         _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
+        _instance.llmModelName = _instance.llmModelName || '';
+        _instance.llmHeaders = _instance.llmHeaders || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -6797,6 +6787,13 @@ class TurnDetectionOptions {
                     break;
                 case 5:
                     _instance.llmRequestTimeout = _reader.readFloat();
+                    break;
+                case 6:
+                    _instance.llmModelName = _reader.readString();
+                    break;
+                case 7:
+                    _instance.llmHeaders = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.llmHeaders, googleProtobuf001.Struct.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -6825,6 +6822,12 @@ class TurnDetectionOptions {
         if (_instance.llmRequestTimeout) {
             _writer.writeFloat(5, _instance.llmRequestTimeout);
         }
+        if (_instance.llmModelName) {
+            _writer.writeString(6, _instance.llmModelName);
+        }
+        if (_instance.llmHeaders) {
+            _writer.writeMessage(7, _instance.llmHeaders, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -6837,6 +6840,10 @@ class TurnDetectionOptions {
         this.llmHost = _value.llmHost;
         this.llmPort = _value.llmPort;
         this.llmRequestTimeout = _value.llmRequestTimeout;
+        this.llmModelName = _value.llmModelName;
+        this.llmHeaders = _value.llmHeaders
+            ? new googleProtobuf001.Struct(_value.llmHeaders)
+            : undefined;
         TurnDetectionOptions.refineValues(this);
     }
     get active() {
@@ -6869,6 +6876,18 @@ class TurnDetectionOptions {
     set llmRequestTimeout(value) {
         this._llmRequestTimeout = value;
     }
+    get llmModelName() {
+        return this._llmModelName;
+    }
+    set llmModelName(value) {
+        this._llmModelName = value;
+    }
+    get llmHeaders() {
+        return this._llmHeaders;
+    }
+    set llmHeaders(value) {
+        this._llmHeaders = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -6887,7 +6906,9 @@ class TurnDetectionOptions {
             fullUtteranceDeployment: this.fullUtteranceDeployment,
             llmHost: this.llmHost,
             llmPort: this.llmPort,
-            llmRequestTimeout: this.llmRequestTimeout
+            llmRequestTimeout: this.llmRequestTimeout,
+            llmModelName: this.llmModelName,
+            llmHeaders: this.llmHeaders ? this.llmHeaders.toObject() : undefined
         };
     }
     /**
@@ -6909,7 +6930,11 @@ class TurnDetectionOptions {
             fullUtteranceDeployment: this.fullUtteranceDeployment,
             llmHost: this.llmHost,
             llmPort: this.llmPort,
-            llmRequestTimeout: this.llmRequestTimeout
+            llmRequestTimeout: this.llmRequestTimeout,
+            llmModelName: this.llmModelName,
+            llmHeaders: this.llmHeaders
+                ? this.llmHeaders.toProtobufJSON(options)
+                : null
         };
     }
 }
@@ -7791,6 +7816,8 @@ class S2tLlmPostProcessing {
             _instance.s2tLlmPostProcessingSummarizationOptions || undefined;
         _instance.s2tLlmPostProcessingUserPromptOptions =
             _instance.s2tLlmPostProcessingUserPromptOptions || undefined;
+        _instance.llmModelName = _instance.llmModelName || '';
+        _instance.llmHeaders = _instance.llmHeaders || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -7847,6 +7874,13 @@ class S2tLlmPostProcessing {
                     _instance.s2tLlmPostProcessingUserPromptOptions = new S2tLlmPostProcessingUserPromptOptions();
                     _reader.readMessage(_instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader);
                     break;
+                case 13:
+                    _instance.llmModelName = _reader.readString();
+                    break;
+                case 14:
+                    _instance.llmHeaders = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.llmHeaders, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    break;
                 default:
                     _reader.skipField();
             }
@@ -7895,6 +7929,12 @@ class S2tLlmPostProcessing {
         if (_instance.s2tLlmPostProcessingUserPromptOptions) {
             _writer.writeMessage(12, _instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter);
         }
+        if (_instance.llmModelName) {
+            _writer.writeString(13, _instance.llmModelName);
+        }
+        if (_instance.llmHeaders) {
+            _writer.writeMessage(14, _instance.llmHeaders, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -7931,6 +7971,10 @@ class S2tLlmPostProcessing {
             : undefined;
         this.s2tLlmPostProcessingUserPromptOptions = _value.s2tLlmPostProcessingUserPromptOptions
             ? new S2tLlmPostProcessingUserPromptOptions(_value.s2tLlmPostProcessingUserPromptOptions)
+            : undefined;
+        this.llmModelName = _value.llmModelName;
+        this.llmHeaders = _value.llmHeaders
+            ? new googleProtobuf001.Struct(_value.llmHeaders)
             : undefined;
         S2tLlmPostProcessing.refineValues(this);
     }
@@ -8006,6 +8050,18 @@ class S2tLlmPostProcessing {
     set s2tLlmPostProcessingUserPromptOptions(value) {
         this._s2tLlmPostProcessingUserPromptOptions = value;
     }
+    get llmModelName() {
+        return this._llmModelName;
+    }
+    set llmModelName(value) {
+        this._llmModelName = value;
+    }
+    get llmHeaders() {
+        return this._llmHeaders;
+    }
+    set llmHeaders(value) {
+        this._llmHeaders = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -8057,7 +8113,9 @@ class S2tLlmPostProcessing {
             s2tLlmPostProcessingUserPromptOptions: this
                 .s2tLlmPostProcessingUserPromptOptions
                 ? this.s2tLlmPostProcessingUserPromptOptions.toObject()
-                : undefined
+                : undefined,
+            llmModelName: this.llmModelName,
+            llmHeaders: this.llmHeaders ? this.llmHeaders.toObject() : undefined
         };
     }
     /**
@@ -8112,6 +8170,10 @@ class S2tLlmPostProcessing {
             s2tLlmPostProcessingUserPromptOptions: this
                 .s2tLlmPostProcessingUserPromptOptions
                 ? this.s2tLlmPostProcessingUserPromptOptions.toProtobufJSON(options)
+                : null,
+            llmModelName: this.llmModelName,
+            llmHeaders: this.llmHeaders
+                ? this.llmHeaders.toProtobufJSON(options)
                 : null
         };
     }
@@ -10370,6 +10432,18 @@ class ListS2tNormalizationPipelinesResponse {
 // THIS IS A GENERATED FILE
 // DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
 /**
+ * Specific GrpcClientSettings for Speech2Text.
+ * Use it only if your default settings are not set or the service requires other settings.
+ */
+const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+//
+// THIS IS A GENERATED FILE
+// DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
+/**
  * Service client implementation for ondewo.s2t.Speech2Text
  */
 class Speech2TextClient {
@@ -10468,7 +10542,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: S2tPipelineId,
-                    responseClass: googleProtobuf000.Empty
+                    responseClass: googleProtobuf001.Empty
                 });
             },
             /**
@@ -10486,7 +10560,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: Speech2TextConfig,
-                    responseClass: googleProtobuf000.Empty
+                    responseClass: googleProtobuf001.Empty
                 });
             },
             /**
@@ -10557,7 +10631,7 @@ class Speech2TextClient {
                     path: '/ondewo.s2t.Speech2Text/GetServiceInfo',
                     requestData,
                     requestMetadata,
-                    requestClass: googleProtobuf000.Empty,
+                    requestClass: googleProtobuf001.Empty,
                     responseClass: S2tGetServiceInfoResponse
                 });
             },
@@ -10594,7 +10668,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: CreateUserLanguageModelRequest,
-                    responseClass: googleProtobuf000.Empty
+                    responseClass: googleProtobuf001.Empty
                 });
             },
             /**
@@ -10612,7 +10686,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: DeleteUserLanguageModelRequest,
-                    responseClass: googleProtobuf000.Empty
+                    responseClass: googleProtobuf001.Empty
                 });
             },
             /**
@@ -10630,7 +10704,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: AddDataToUserLanguageModelRequest,
-                    responseClass: googleProtobuf000.Empty
+                    responseClass: googleProtobuf001.Empty
                 });
             },
             /**
@@ -10648,7 +10722,7 @@ class Speech2TextClient {
                     requestData,
                     requestMetadata,
                     requestClass: TrainUserLanguageModelRequest,
-                    responseClass: googleProtobuf000.Empty
+                    responseClass: googleProtobuf001.Empty
                 });
             },
             /**
@@ -10864,10 +10938,10 @@ class Speech2TextClient {
             .listS2tNormalizationPipelines(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.2.1", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.2.1", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.2.1", ngImport: i0, type: Speech2TextClient, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: Speech2TextClient, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'any' }]
         }], ctorParameters: () => [{ type: undefined, decorators: [{
