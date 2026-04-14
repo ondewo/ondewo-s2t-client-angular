@@ -28,6 +28,27 @@ export enum InferenceBackend {
   INFERENCE_BACKEND_CLOUD_SERVICE_GOOGLE = 5,
   INFERENCE_BACKEND_CLOUD_SERVICE_MICROSOFT = 6
 }
+export enum ServiceTier {
+  SERVICE_TIER_UNSPECIFIED = 0,
+  SERVICE_TIER_AUTO = 1,
+  SERVICE_TIER_DEFAULT = 2,
+  SERVICE_TIER_FLEX = 3,
+  SERVICE_TIER_SCALE = 4,
+  SERVICE_TIER_PRIORITY = 5
+}
+export enum Verbosity {
+  VERBOSITY_UNSPECIFIED = 0,
+  VERBOSITY_LOW = 1,
+  VERBOSITY_MEDIUM = 2,
+  VERBOSITY_HIGH = 3
+}
+export enum ReasoningEffort {
+  REASONING_EFFORT_UNSPECIFIED = 0,
+  REASONING_EFFORT_MINIMAL = 1,
+  REASONING_EFFORT_LOW = 2,
+  REASONING_EFFORT_MEDIUM = 3,
+  REASONING_EFFORT_HIGH = 4
+}
 /**
  * Message implementation for ondewo.s2t.TranscribeRequestConfig
  */
@@ -9084,11 +9105,11 @@ export class TurnDetectionOptions implements GrpcMessage {
     _instance.active = _instance.active || false;
     _instance.fullUtteranceDeployment =
       _instance.fullUtteranceDeployment || false;
-    _instance.llmHost = _instance.llmHost || '';
-    _instance.llmPort = _instance.llmPort || 0;
-    _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
-    _instance.llmModelName = _instance.llmModelName || '';
-    _instance.llmHeaders = _instance.llmHeaders || undefined;
+    _instance.turnDetectionSystemPrompt =
+      _instance.turnDetectionSystemPrompt || '';
+    _instance.turnDetectionUserPrompt = _instance.turnDetectionUserPrompt || '';
+    _instance.turnDetectionLlmOpenaiOptions =
+      _instance.turnDetectionLlmOpenaiOptions || undefined;
   }
 
   /**
@@ -9111,22 +9132,16 @@ export class TurnDetectionOptions implements GrpcMessage {
           _instance.fullUtteranceDeployment = _reader.readBool();
           break;
         case 3:
-          _instance.llmHost = _reader.readString();
+          _instance.turnDetectionSystemPrompt = _reader.readString();
           break;
         case 4:
-          _instance.llmPort = _reader.readInt32();
+          _instance.turnDetectionUserPrompt = _reader.readString();
           break;
         case 5:
-          _instance.llmRequestTimeout = _reader.readFloat();
-          break;
-        case 6:
-          _instance.llmModelName = _reader.readString();
-          break;
-        case 7:
-          _instance.llmHeaders = new googleProtobuf001.Struct();
+          _instance.turnDetectionLlmOpenaiOptions = new OpenaiLlmOptions();
           _reader.readMessage(
-            _instance.llmHeaders,
-            googleProtobuf001.Struct.deserializeBinaryFromReader
+            _instance.turnDetectionLlmOpenaiOptions,
+            OpenaiLlmOptions.deserializeBinaryFromReader
           );
           break;
         default:
@@ -9152,34 +9167,26 @@ export class TurnDetectionOptions implements GrpcMessage {
     if (_instance.fullUtteranceDeployment) {
       _writer.writeBool(2, _instance.fullUtteranceDeployment);
     }
-    if (_instance.llmHost) {
-      _writer.writeString(3, _instance.llmHost);
+    if (_instance.turnDetectionSystemPrompt) {
+      _writer.writeString(3, _instance.turnDetectionSystemPrompt);
     }
-    if (_instance.llmPort) {
-      _writer.writeInt32(4, _instance.llmPort);
+    if (_instance.turnDetectionUserPrompt) {
+      _writer.writeString(4, _instance.turnDetectionUserPrompt);
     }
-    if (_instance.llmRequestTimeout) {
-      _writer.writeFloat(5, _instance.llmRequestTimeout);
-    }
-    if (_instance.llmModelName) {
-      _writer.writeString(6, _instance.llmModelName);
-    }
-    if (_instance.llmHeaders) {
+    if (_instance.turnDetectionLlmOpenaiOptions) {
       _writer.writeMessage(
-        7,
-        _instance.llmHeaders as any,
-        googleProtobuf001.Struct.serializeBinaryToWriter
+        5,
+        _instance.turnDetectionLlmOpenaiOptions as any,
+        OpenaiLlmOptions.serializeBinaryToWriter
       );
     }
   }
 
   private _active: boolean;
   private _fullUtteranceDeployment: boolean;
-  private _llmHost: string;
-  private _llmPort: number;
-  private _llmRequestTimeout: number;
-  private _llmModelName: string;
-  private _llmHeaders?: googleProtobuf001.Struct;
+  private _turnDetectionSystemPrompt: string;
+  private _turnDetectionUserPrompt: string;
+  private _turnDetectionLlmOpenaiOptions?: OpenaiLlmOptions;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -9189,12 +9196,10 @@ export class TurnDetectionOptions implements GrpcMessage {
     _value = _value || {};
     this.active = _value.active;
     this.fullUtteranceDeployment = _value.fullUtteranceDeployment;
-    this.llmHost = _value.llmHost;
-    this.llmPort = _value.llmPort;
-    this.llmRequestTimeout = _value.llmRequestTimeout;
-    this.llmModelName = _value.llmModelName;
-    this.llmHeaders = _value.llmHeaders
-      ? new googleProtobuf001.Struct(_value.llmHeaders)
+    this.turnDetectionSystemPrompt = _value.turnDetectionSystemPrompt;
+    this.turnDetectionUserPrompt = _value.turnDetectionUserPrompt;
+    this.turnDetectionLlmOpenaiOptions = _value.turnDetectionLlmOpenaiOptions
+      ? new OpenaiLlmOptions(_value.turnDetectionLlmOpenaiOptions)
       : undefined;
     TurnDetectionOptions.refineValues(this);
   }
@@ -9210,35 +9215,23 @@ export class TurnDetectionOptions implements GrpcMessage {
   set fullUtteranceDeployment(value: boolean) {
     this._fullUtteranceDeployment = value;
   }
-  get llmHost(): string {
-    return this._llmHost;
+  get turnDetectionSystemPrompt(): string {
+    return this._turnDetectionSystemPrompt;
   }
-  set llmHost(value: string) {
-    this._llmHost = value;
+  set turnDetectionSystemPrompt(value: string) {
+    this._turnDetectionSystemPrompt = value;
   }
-  get llmPort(): number {
-    return this._llmPort;
+  get turnDetectionUserPrompt(): string {
+    return this._turnDetectionUserPrompt;
   }
-  set llmPort(value: number) {
-    this._llmPort = value;
+  set turnDetectionUserPrompt(value: string) {
+    this._turnDetectionUserPrompt = value;
   }
-  get llmRequestTimeout(): number {
-    return this._llmRequestTimeout;
+  get turnDetectionLlmOpenaiOptions(): OpenaiLlmOptions | undefined {
+    return this._turnDetectionLlmOpenaiOptions;
   }
-  set llmRequestTimeout(value: number) {
-    this._llmRequestTimeout = value;
-  }
-  get llmModelName(): string {
-    return this._llmModelName;
-  }
-  set llmModelName(value: string) {
-    this._llmModelName = value;
-  }
-  get llmHeaders(): googleProtobuf001.Struct | undefined {
-    return this._llmHeaders;
-  }
-  set llmHeaders(value: googleProtobuf001.Struct | undefined) {
-    this._llmHeaders = value;
+  set turnDetectionLlmOpenaiOptions(value: OpenaiLlmOptions | undefined) {
+    this._turnDetectionLlmOpenaiOptions = value;
   }
 
   /**
@@ -9258,11 +9251,11 @@ export class TurnDetectionOptions implements GrpcMessage {
     return {
       active: this.active,
       fullUtteranceDeployment: this.fullUtteranceDeployment,
-      llmHost: this.llmHost,
-      llmPort: this.llmPort,
-      llmRequestTimeout: this.llmRequestTimeout,
-      llmModelName: this.llmModelName,
-      llmHeaders: this.llmHeaders ? this.llmHeaders.toObject() : undefined
+      turnDetectionSystemPrompt: this.turnDetectionSystemPrompt,
+      turnDetectionUserPrompt: this.turnDetectionUserPrompt,
+      turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions
+        ? this.turnDetectionLlmOpenaiOptions.toObject()
+        : undefined
     };
   }
 
@@ -9285,12 +9278,10 @@ export class TurnDetectionOptions implements GrpcMessage {
     return {
       active: this.active,
       fullUtteranceDeployment: this.fullUtteranceDeployment,
-      llmHost: this.llmHost,
-      llmPort: this.llmPort,
-      llmRequestTimeout: this.llmRequestTimeout,
-      llmModelName: this.llmModelName,
-      llmHeaders: this.llmHeaders
-        ? this.llmHeaders.toProtobufJSON(options)
+      turnDetectionSystemPrompt: this.turnDetectionSystemPrompt,
+      turnDetectionUserPrompt: this.turnDetectionUserPrompt,
+      turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions
+        ? this.turnDetectionLlmOpenaiOptions.toProtobufJSON(options)
         : null
     };
   }
@@ -9302,11 +9293,9 @@ export module TurnDetectionOptions {
   export interface AsObject {
     active: boolean;
     fullUtteranceDeployment: boolean;
-    llmHost: string;
-    llmPort: number;
-    llmRequestTimeout: number;
-    llmModelName: string;
-    llmHeaders?: googleProtobuf001.Struct.AsObject;
+    turnDetectionSystemPrompt: string;
+    turnDetectionUserPrompt: string;
+    turnDetectionLlmOpenaiOptions?: OpenaiLlmOptions.AsObject;
   }
 
   /**
@@ -9315,11 +9304,1236 @@ export module TurnDetectionOptions {
   export interface AsProtobufJSON {
     active: boolean;
     fullUtteranceDeployment: boolean;
-    llmHost: string;
-    llmPort: number;
-    llmRequestTimeout: number;
-    llmModelName: string;
-    llmHeaders: googleProtobuf001.Struct.AsProtobufJSON | null;
+    turnDetectionSystemPrompt: string;
+    turnDetectionUserPrompt: string;
+    turnDetectionLlmOpenaiOptions: OpenaiLlmOptions.AsProtobufJSON | null;
+  }
+}
+
+/**
+ * Message implementation for ondewo.s2t.OpenaiLlmOptions
+ */
+export class OpenaiLlmOptions implements GrpcMessage {
+  static id = 'ondewo.s2t.OpenaiLlmOptions';
+
+  /**
+   * Deserialize binary data to message
+   * @param instance message instance
+   */
+  static deserializeBinary(bytes: ByteSource) {
+    const instance = new OpenaiLlmOptions();
+    OpenaiLlmOptions.deserializeBinaryFromReader(
+      instance,
+      new BinaryReader(bytes)
+    );
+    return instance;
+  }
+
+  /**
+   * Check all the properties and set default protobuf values if necessary
+   * @param _instance message instance
+   */
+  static refineValues(_instance: OpenaiLlmOptions) {
+    _instance.apiKey = _instance.apiKey || '';
+    _instance.organization = _instance.organization || '';
+    _instance.project = _instance.project || '';
+    _instance.webhookSecret = _instance.webhookSecret || '';
+    _instance.baseUrl = _instance.baseUrl || '';
+    _instance.websocketBaseUrl = _instance.websocketBaseUrl || '';
+    _instance.timeout = _instance.timeout || 0;
+    _instance.maxRetries = _instance.maxRetries || 0;
+    _instance.defaultHeaders = _instance.defaultHeaders || {};
+    _instance.defaultQuery = _instance.defaultQuery || undefined;
+    _instance.strictResponseValidation =
+      _instance.strictResponseValidation || false;
+    _instance.model = _instance.model || '';
+    _instance.frequencyPenalty = _instance.frequencyPenalty || 0;
+    _instance.logitBias = _instance.logitBias || {};
+    _instance.logprobs = _instance.logprobs || false;
+    _instance.maxCompletionTokens = _instance.maxCompletionTokens || 0;
+    _instance.maxTokens = _instance.maxTokens || 0;
+    _instance.metadata = _instance.metadata || undefined;
+    _instance.n = _instance.n || 0;
+    _instance.presencePenalty = _instance.presencePenalty || 0;
+    _instance.promptCacheKey = _instance.promptCacheKey || '';
+    _instance.reasoningEffort = _instance.reasoningEffort || 0;
+    _instance.seed = _instance.seed || '0';
+    _instance.serviceTier = _instance.serviceTier || 0;
+    _instance.stop = _instance.stop || [];
+    _instance.store = _instance.store || false;
+    _instance.temperature = _instance.temperature || 0;
+    _instance.topLogprobs = _instance.topLogprobs || 0;
+    _instance.topP = _instance.topP || 0;
+    _instance.user = _instance.user || '';
+    _instance.verbosity = _instance.verbosity || 0;
+    _instance.extraHeaders = _instance.extraHeaders || undefined;
+    _instance.extraQuery = _instance.extraQuery || undefined;
+    _instance.extraBody = _instance.extraBody || undefined;
+  }
+
+  /**
+   * Deserializes / reads binary message into message instance using provided binary reader
+   * @param _instance message instance
+   * @param _reader binary reader instance
+   */
+  static deserializeBinaryFromReader(
+    _instance: OpenaiLlmOptions,
+    _reader: BinaryReader
+  ) {
+    while (_reader.nextField()) {
+      if (_reader.isEndGroup()) break;
+
+      switch (_reader.getFieldNumber()) {
+        case 1:
+          _instance.apiKey = _reader.readString();
+          break;
+        case 2:
+          _instance.organization = _reader.readString();
+          break;
+        case 3:
+          _instance.project = _reader.readString();
+          break;
+        case 4:
+          _instance.webhookSecret = _reader.readString();
+          break;
+        case 5:
+          _instance.baseUrl = _reader.readString();
+          break;
+        case 6:
+          _instance.websocketBaseUrl = _reader.readString();
+          break;
+        case 7:
+          _instance.timeout = _reader.readFloat();
+          break;
+        case 8:
+          _instance.maxRetries = _reader.readInt32();
+          break;
+        case 9:
+          const msg_9 = {} as any;
+          _reader.readMessage(
+            msg_9,
+            OpenaiLlmOptions.DefaultHeadersEntry.deserializeBinaryFromReader
+          );
+          _instance.defaultHeaders = _instance.defaultHeaders || {};
+          _instance.defaultHeaders[msg_9.key] = msg_9.value;
+          break;
+        case 10:
+          _instance.defaultQuery = new googleProtobuf001.Struct();
+          _reader.readMessage(
+            _instance.defaultQuery,
+            googleProtobuf001.Struct.deserializeBinaryFromReader
+          );
+          break;
+        case 11:
+          _instance.strictResponseValidation = _reader.readBool();
+          break;
+        case 12:
+          _instance.model = _reader.readString();
+          break;
+        case 13:
+          _instance.frequencyPenalty = _reader.readFloat();
+          break;
+        case 14:
+          const msg_14 = {} as any;
+          _reader.readMessage(
+            msg_14,
+            OpenaiLlmOptions.LogitBiasEntry.deserializeBinaryFromReader
+          );
+          _instance.logitBias = _instance.logitBias || {};
+          _instance.logitBias[msg_14.key] = msg_14.value;
+          break;
+        case 15:
+          _instance.logprobs = _reader.readBool();
+          break;
+        case 16:
+          _instance.maxCompletionTokens = _reader.readInt32();
+          break;
+        case 17:
+          _instance.maxTokens = _reader.readInt32();
+          break;
+        case 18:
+          _instance.metadata = new googleProtobuf001.Struct();
+          _reader.readMessage(
+            _instance.metadata,
+            googleProtobuf001.Struct.deserializeBinaryFromReader
+          );
+          break;
+        case 19:
+          _instance.n = _reader.readInt32();
+          break;
+        case 20:
+          _instance.presencePenalty = _reader.readFloat();
+          break;
+        case 21:
+          _instance.promptCacheKey = _reader.readString();
+          break;
+        case 22:
+          _instance.reasoningEffort = _reader.readEnum();
+          break;
+        case 23:
+          _instance.seed = _reader.readInt64String();
+          break;
+        case 24:
+          _instance.serviceTier = _reader.readEnum();
+          break;
+        case 25:
+          (_instance.stop = _instance.stop || []).push(_reader.readString());
+          break;
+        case 26:
+          _instance.store = _reader.readBool();
+          break;
+        case 27:
+          _instance.temperature = _reader.readFloat();
+          break;
+        case 28:
+          _instance.topLogprobs = _reader.readInt32();
+          break;
+        case 29:
+          _instance.topP = _reader.readFloat();
+          break;
+        case 30:
+          _instance.user = _reader.readString();
+          break;
+        case 31:
+          _instance.verbosity = _reader.readEnum();
+          break;
+        case 32:
+          _instance.extraHeaders = new googleProtobuf001.Struct();
+          _reader.readMessage(
+            _instance.extraHeaders,
+            googleProtobuf001.Struct.deserializeBinaryFromReader
+          );
+          break;
+        case 33:
+          _instance.extraQuery = new googleProtobuf001.Struct();
+          _reader.readMessage(
+            _instance.extraQuery,
+            googleProtobuf001.Struct.deserializeBinaryFromReader
+          );
+          break;
+        case 34:
+          _instance.extraBody = new googleProtobuf001.Struct();
+          _reader.readMessage(
+            _instance.extraBody,
+            googleProtobuf001.Struct.deserializeBinaryFromReader
+          );
+          break;
+        default:
+          _reader.skipField();
+      }
+    }
+
+    OpenaiLlmOptions.refineValues(_instance);
+  }
+
+  /**
+   * Serializes a message to binary format using provided binary reader
+   * @param _instance message instance
+   * @param _writer binary writer instance
+   */
+  static serializeBinaryToWriter(
+    _instance: OpenaiLlmOptions,
+    _writer: BinaryWriter
+  ) {
+    if (_instance.apiKey) {
+      _writer.writeString(1, _instance.apiKey);
+    }
+    if (_instance.organization) {
+      _writer.writeString(2, _instance.organization);
+    }
+    if (_instance.project) {
+      _writer.writeString(3, _instance.project);
+    }
+    if (_instance.webhookSecret) {
+      _writer.writeString(4, _instance.webhookSecret);
+    }
+    if (_instance.baseUrl) {
+      _writer.writeString(5, _instance.baseUrl);
+    }
+    if (_instance.websocketBaseUrl) {
+      _writer.writeString(6, _instance.websocketBaseUrl);
+    }
+    if (_instance.timeout) {
+      _writer.writeFloat(7, _instance.timeout);
+    }
+    if (_instance.maxRetries) {
+      _writer.writeInt32(8, _instance.maxRetries);
+    }
+    if (!!_instance.defaultHeaders) {
+      const keys_9 = Object.keys(_instance.defaultHeaders as any);
+
+      if (keys_9.length) {
+        const repeated_9 = keys_9
+          .map(key => ({
+            key: key,
+            value: (_instance.defaultHeaders as any)[key]
+          }))
+          .reduce((r, v) => [...r, v], [] as any[]);
+
+        _writer.writeRepeatedMessage(
+          9,
+          repeated_9,
+          OpenaiLlmOptions.DefaultHeadersEntry.serializeBinaryToWriter
+        );
+      }
+    }
+    if (_instance.defaultQuery) {
+      _writer.writeMessage(
+        10,
+        _instance.defaultQuery as any,
+        googleProtobuf001.Struct.serializeBinaryToWriter
+      );
+    }
+    if (_instance.strictResponseValidation) {
+      _writer.writeBool(11, _instance.strictResponseValidation);
+    }
+    if (_instance.model) {
+      _writer.writeString(12, _instance.model);
+    }
+    if (_instance.frequencyPenalty) {
+      _writer.writeFloat(13, _instance.frequencyPenalty);
+    }
+    if (!!_instance.logitBias) {
+      const keys_14 = Object.keys(_instance.logitBias as any);
+
+      if (keys_14.length) {
+        const repeated_14 = keys_14
+          .map(key => ({ key: key, value: (_instance.logitBias as any)[key] }))
+          .reduce((r, v) => [...r, v], [] as any[]);
+
+        _writer.writeRepeatedMessage(
+          14,
+          repeated_14,
+          OpenaiLlmOptions.LogitBiasEntry.serializeBinaryToWriter
+        );
+      }
+    }
+    if (_instance.logprobs) {
+      _writer.writeBool(15, _instance.logprobs);
+    }
+    if (_instance.maxCompletionTokens) {
+      _writer.writeInt32(16, _instance.maxCompletionTokens);
+    }
+    if (_instance.maxTokens) {
+      _writer.writeInt32(17, _instance.maxTokens);
+    }
+    if (_instance.metadata) {
+      _writer.writeMessage(
+        18,
+        _instance.metadata as any,
+        googleProtobuf001.Struct.serializeBinaryToWriter
+      );
+    }
+    if (_instance.n) {
+      _writer.writeInt32(19, _instance.n);
+    }
+    if (_instance.presencePenalty) {
+      _writer.writeFloat(20, _instance.presencePenalty);
+    }
+    if (_instance.promptCacheKey) {
+      _writer.writeString(21, _instance.promptCacheKey);
+    }
+    if (_instance.reasoningEffort) {
+      _writer.writeEnum(22, _instance.reasoningEffort);
+    }
+    if (_instance.seed) {
+      _writer.writeInt64String(23, _instance.seed);
+    }
+    if (_instance.serviceTier) {
+      _writer.writeEnum(24, _instance.serviceTier);
+    }
+    if (_instance.stop && _instance.stop.length) {
+      _writer.writeRepeatedString(25, _instance.stop);
+    }
+    if (_instance.store) {
+      _writer.writeBool(26, _instance.store);
+    }
+    if (_instance.temperature) {
+      _writer.writeFloat(27, _instance.temperature);
+    }
+    if (_instance.topLogprobs) {
+      _writer.writeInt32(28, _instance.topLogprobs);
+    }
+    if (_instance.topP) {
+      _writer.writeFloat(29, _instance.topP);
+    }
+    if (_instance.user) {
+      _writer.writeString(30, _instance.user);
+    }
+    if (_instance.verbosity) {
+      _writer.writeEnum(31, _instance.verbosity);
+    }
+    if (_instance.extraHeaders) {
+      _writer.writeMessage(
+        32,
+        _instance.extraHeaders as any,
+        googleProtobuf001.Struct.serializeBinaryToWriter
+      );
+    }
+    if (_instance.extraQuery) {
+      _writer.writeMessage(
+        33,
+        _instance.extraQuery as any,
+        googleProtobuf001.Struct.serializeBinaryToWriter
+      );
+    }
+    if (_instance.extraBody) {
+      _writer.writeMessage(
+        34,
+        _instance.extraBody as any,
+        googleProtobuf001.Struct.serializeBinaryToWriter
+      );
+    }
+  }
+
+  private _apiKey: string;
+  private _organization: string;
+  private _project: string;
+  private _webhookSecret: string;
+  private _baseUrl: string;
+  private _websocketBaseUrl: string;
+  private _timeout: number;
+  private _maxRetries: number;
+  private _defaultHeaders: { [prop: string]: string };
+  private _defaultQuery?: googleProtobuf001.Struct;
+  private _strictResponseValidation: boolean;
+  private _model: string;
+  private _frequencyPenalty: number;
+  private _logitBias: { [prop: string]: number };
+  private _logprobs: boolean;
+  private _maxCompletionTokens: number;
+  private _maxTokens: number;
+  private _metadata?: googleProtobuf001.Struct;
+  private _n: number;
+  private _presencePenalty: number;
+  private _promptCacheKey: string;
+  private _reasoningEffort: ReasoningEffort;
+  private _seed: string;
+  private _serviceTier: ServiceTier;
+  private _stop: string[];
+  private _store: boolean;
+  private _temperature: number;
+  private _topLogprobs: number;
+  private _topP: number;
+  private _user: string;
+  private _verbosity: Verbosity;
+  private _extraHeaders?: googleProtobuf001.Struct;
+  private _extraQuery?: googleProtobuf001.Struct;
+  private _extraBody?: googleProtobuf001.Struct;
+
+  /**
+   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+   * @param _value initial values object or instance of OpenaiLlmOptions to deeply clone from
+   */
+  constructor(_value?: RecursivePartial<OpenaiLlmOptions.AsObject>) {
+    _value = _value || {};
+    this.apiKey = _value.apiKey;
+    this.organization = _value.organization;
+    this.project = _value.project;
+    this.webhookSecret = _value.webhookSecret;
+    this.baseUrl = _value.baseUrl;
+    this.websocketBaseUrl = _value.websocketBaseUrl;
+    this.timeout = _value.timeout;
+    this.maxRetries = _value.maxRetries;
+    (this.defaultHeaders = _value!.defaultHeaders
+      ? Object.keys(_value!.defaultHeaders).reduce(
+          (r, k) => ({ ...r, [k]: _value!.defaultHeaders![k] }),
+          {}
+        )
+      : {}),
+      (this.defaultQuery = _value.defaultQuery
+        ? new googleProtobuf001.Struct(_value.defaultQuery)
+        : undefined);
+    this.strictResponseValidation = _value.strictResponseValidation;
+    this.model = _value.model;
+    this.frequencyPenalty = _value.frequencyPenalty;
+    (this.logitBias = _value!.logitBias
+      ? Object.keys(_value!.logitBias).reduce(
+          (r, k) => ({ ...r, [k]: _value!.logitBias![k] }),
+          {}
+        )
+      : {}),
+      (this.logprobs = _value.logprobs);
+    this.maxCompletionTokens = _value.maxCompletionTokens;
+    this.maxTokens = _value.maxTokens;
+    this.metadata = _value.metadata
+      ? new googleProtobuf001.Struct(_value.metadata)
+      : undefined;
+    this.n = _value.n;
+    this.presencePenalty = _value.presencePenalty;
+    this.promptCacheKey = _value.promptCacheKey;
+    this.reasoningEffort = _value.reasoningEffort;
+    this.seed = _value.seed;
+    this.serviceTier = _value.serviceTier;
+    this.stop = (_value.stop || []).slice();
+    this.store = _value.store;
+    this.temperature = _value.temperature;
+    this.topLogprobs = _value.topLogprobs;
+    this.topP = _value.topP;
+    this.user = _value.user;
+    this.verbosity = _value.verbosity;
+    this.extraHeaders = _value.extraHeaders
+      ? new googleProtobuf001.Struct(_value.extraHeaders)
+      : undefined;
+    this.extraQuery = _value.extraQuery
+      ? new googleProtobuf001.Struct(_value.extraQuery)
+      : undefined;
+    this.extraBody = _value.extraBody
+      ? new googleProtobuf001.Struct(_value.extraBody)
+      : undefined;
+    OpenaiLlmOptions.refineValues(this);
+  }
+  get apiKey(): string {
+    return this._apiKey;
+  }
+  set apiKey(value: string) {
+    this._apiKey = value;
+  }
+  get organization(): string {
+    return this._organization;
+  }
+  set organization(value: string) {
+    this._organization = value;
+  }
+  get project(): string {
+    return this._project;
+  }
+  set project(value: string) {
+    this._project = value;
+  }
+  get webhookSecret(): string {
+    return this._webhookSecret;
+  }
+  set webhookSecret(value: string) {
+    this._webhookSecret = value;
+  }
+  get baseUrl(): string {
+    return this._baseUrl;
+  }
+  set baseUrl(value: string) {
+    this._baseUrl = value;
+  }
+  get websocketBaseUrl(): string {
+    return this._websocketBaseUrl;
+  }
+  set websocketBaseUrl(value: string) {
+    this._websocketBaseUrl = value;
+  }
+  get timeout(): number {
+    return this._timeout;
+  }
+  set timeout(value: number) {
+    this._timeout = value;
+  }
+  get maxRetries(): number {
+    return this._maxRetries;
+  }
+  set maxRetries(value: number) {
+    this._maxRetries = value;
+  }
+  get defaultHeaders(): { [prop: string]: string } {
+    return this._defaultHeaders;
+  }
+  set defaultHeaders(value: { [prop: string]: string }) {
+    this._defaultHeaders = value;
+  }
+  get defaultQuery(): googleProtobuf001.Struct | undefined {
+    return this._defaultQuery;
+  }
+  set defaultQuery(value: googleProtobuf001.Struct | undefined) {
+    this._defaultQuery = value;
+  }
+  get strictResponseValidation(): boolean {
+    return this._strictResponseValidation;
+  }
+  set strictResponseValidation(value: boolean) {
+    this._strictResponseValidation = value;
+  }
+  get model(): string {
+    return this._model;
+  }
+  set model(value: string) {
+    this._model = value;
+  }
+  get frequencyPenalty(): number {
+    return this._frequencyPenalty;
+  }
+  set frequencyPenalty(value: number) {
+    this._frequencyPenalty = value;
+  }
+  get logitBias(): { [prop: string]: number } {
+    return this._logitBias;
+  }
+  set logitBias(value: { [prop: string]: number }) {
+    this._logitBias = value;
+  }
+  get logprobs(): boolean {
+    return this._logprobs;
+  }
+  set logprobs(value: boolean) {
+    this._logprobs = value;
+  }
+  get maxCompletionTokens(): number {
+    return this._maxCompletionTokens;
+  }
+  set maxCompletionTokens(value: number) {
+    this._maxCompletionTokens = value;
+  }
+  get maxTokens(): number {
+    return this._maxTokens;
+  }
+  set maxTokens(value: number) {
+    this._maxTokens = value;
+  }
+  get metadata(): googleProtobuf001.Struct | undefined {
+    return this._metadata;
+  }
+  set metadata(value: googleProtobuf001.Struct | undefined) {
+    this._metadata = value;
+  }
+  get n(): number {
+    return this._n;
+  }
+  set n(value: number) {
+    this._n = value;
+  }
+  get presencePenalty(): number {
+    return this._presencePenalty;
+  }
+  set presencePenalty(value: number) {
+    this._presencePenalty = value;
+  }
+  get promptCacheKey(): string {
+    return this._promptCacheKey;
+  }
+  set promptCacheKey(value: string) {
+    this._promptCacheKey = value;
+  }
+  get reasoningEffort(): ReasoningEffort {
+    return this._reasoningEffort;
+  }
+  set reasoningEffort(value: ReasoningEffort) {
+    this._reasoningEffort = value;
+  }
+  get seed(): string {
+    return this._seed;
+  }
+  set seed(value: string) {
+    this._seed = value;
+  }
+  get serviceTier(): ServiceTier {
+    return this._serviceTier;
+  }
+  set serviceTier(value: ServiceTier) {
+    this._serviceTier = value;
+  }
+  get stop(): string[] {
+    return this._stop;
+  }
+  set stop(value: string[]) {
+    this._stop = value;
+  }
+  get store(): boolean {
+    return this._store;
+  }
+  set store(value: boolean) {
+    this._store = value;
+  }
+  get temperature(): number {
+    return this._temperature;
+  }
+  set temperature(value: number) {
+    this._temperature = value;
+  }
+  get topLogprobs(): number {
+    return this._topLogprobs;
+  }
+  set topLogprobs(value: number) {
+    this._topLogprobs = value;
+  }
+  get topP(): number {
+    return this._topP;
+  }
+  set topP(value: number) {
+    this._topP = value;
+  }
+  get user(): string {
+    return this._user;
+  }
+  set user(value: string) {
+    this._user = value;
+  }
+  get verbosity(): Verbosity {
+    return this._verbosity;
+  }
+  set verbosity(value: Verbosity) {
+    this._verbosity = value;
+  }
+  get extraHeaders(): googleProtobuf001.Struct | undefined {
+    return this._extraHeaders;
+  }
+  set extraHeaders(value: googleProtobuf001.Struct | undefined) {
+    this._extraHeaders = value;
+  }
+  get extraQuery(): googleProtobuf001.Struct | undefined {
+    return this._extraQuery;
+  }
+  set extraQuery(value: googleProtobuf001.Struct | undefined) {
+    this._extraQuery = value;
+  }
+  get extraBody(): googleProtobuf001.Struct | undefined {
+    return this._extraBody;
+  }
+  set extraBody(value: googleProtobuf001.Struct | undefined) {
+    this._extraBody = value;
+  }
+
+  /**
+   * Serialize message to binary data
+   * @param instance message instance
+   */
+  serializeBinary() {
+    const writer = new BinaryWriter();
+    OpenaiLlmOptions.serializeBinaryToWriter(this, writer);
+    return writer.getResultBuffer();
+  }
+
+  /**
+   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+   */
+  toObject(): OpenaiLlmOptions.AsObject {
+    return {
+      apiKey: this.apiKey,
+      organization: this.organization,
+      project: this.project,
+      webhookSecret: this.webhookSecret,
+      baseUrl: this.baseUrl,
+      websocketBaseUrl: this.websocketBaseUrl,
+      timeout: this.timeout,
+      maxRetries: this.maxRetries,
+      defaultHeaders: this.defaultHeaders
+        ? Object.keys(this.defaultHeaders).reduce(
+            (r, k) => ({ ...r, [k]: this.defaultHeaders![k] }),
+            {}
+          )
+        : {},
+      defaultQuery: this.defaultQuery
+        ? this.defaultQuery.toObject()
+        : undefined,
+      strictResponseValidation: this.strictResponseValidation,
+      model: this.model,
+      frequencyPenalty: this.frequencyPenalty,
+      logitBias: this.logitBias
+        ? Object.keys(this.logitBias).reduce(
+            (r, k) => ({ ...r, [k]: this.logitBias![k] }),
+            {}
+          )
+        : {},
+      logprobs: this.logprobs,
+      maxCompletionTokens: this.maxCompletionTokens,
+      maxTokens: this.maxTokens,
+      metadata: this.metadata ? this.metadata.toObject() : undefined,
+      n: this.n,
+      presencePenalty: this.presencePenalty,
+      promptCacheKey: this.promptCacheKey,
+      reasoningEffort: this.reasoningEffort,
+      seed: this.seed,
+      serviceTier: this.serviceTier,
+      stop: (this.stop || []).slice(),
+      store: this.store,
+      temperature: this.temperature,
+      topLogprobs: this.topLogprobs,
+      topP: this.topP,
+      user: this.user,
+      verbosity: this.verbosity,
+      extraHeaders: this.extraHeaders
+        ? this.extraHeaders.toObject()
+        : undefined,
+      extraQuery: this.extraQuery ? this.extraQuery.toObject() : undefined,
+      extraBody: this.extraBody ? this.extraBody.toObject() : undefined
+    };
+  }
+
+  /**
+   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+   */
+  toJSON() {
+    return this.toObject();
+  }
+
+  /**
+   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+   */
+  toProtobufJSON(
+    // @ts-ignore
+    options?: ToProtobufJSONOptions
+  ): OpenaiLlmOptions.AsProtobufJSON {
+    return {
+      apiKey: this.apiKey,
+      organization: this.organization,
+      project: this.project,
+      webhookSecret: this.webhookSecret,
+      baseUrl: this.baseUrl,
+      websocketBaseUrl: this.websocketBaseUrl,
+      timeout: this.timeout,
+      maxRetries: this.maxRetries,
+      defaultHeaders: this.defaultHeaders
+        ? Object.keys(this.defaultHeaders).reduce(
+            (r, k) => ({ ...r, [k]: this.defaultHeaders![k] }),
+            {}
+          )
+        : {},
+      defaultQuery: this.defaultQuery
+        ? this.defaultQuery.toProtobufJSON(options)
+        : null,
+      strictResponseValidation: this.strictResponseValidation,
+      model: this.model,
+      frequencyPenalty: this.frequencyPenalty,
+      logitBias: this.logitBias
+        ? Object.keys(this.logitBias).reduce(
+            (r, k) => ({ ...r, [k]: this.logitBias![k] }),
+            {}
+          )
+        : {},
+      logprobs: this.logprobs,
+      maxCompletionTokens: this.maxCompletionTokens,
+      maxTokens: this.maxTokens,
+      metadata: this.metadata ? this.metadata.toProtobufJSON(options) : null,
+      n: this.n,
+      presencePenalty: this.presencePenalty,
+      promptCacheKey: this.promptCacheKey,
+      reasoningEffort:
+        ReasoningEffort[
+          this.reasoningEffort === null || this.reasoningEffort === undefined
+            ? 0
+            : this.reasoningEffort
+        ],
+      seed: this.seed,
+      serviceTier:
+        ServiceTier[
+          this.serviceTier === null || this.serviceTier === undefined
+            ? 0
+            : this.serviceTier
+        ],
+      stop: (this.stop || []).slice(),
+      store: this.store,
+      temperature: this.temperature,
+      topLogprobs: this.topLogprobs,
+      topP: this.topP,
+      user: this.user,
+      verbosity:
+        Verbosity[
+          this.verbosity === null || this.verbosity === undefined
+            ? 0
+            : this.verbosity
+        ],
+      extraHeaders: this.extraHeaders
+        ? this.extraHeaders.toProtobufJSON(options)
+        : null,
+      extraQuery: this.extraQuery
+        ? this.extraQuery.toProtobufJSON(options)
+        : null,
+      extraBody: this.extraBody ? this.extraBody.toProtobufJSON(options) : null
+    };
+  }
+}
+export module OpenaiLlmOptions {
+  /**
+   * Standard JavaScript object representation for OpenaiLlmOptions
+   */
+  export interface AsObject {
+    apiKey: string;
+    organization: string;
+    project: string;
+    webhookSecret: string;
+    baseUrl: string;
+    websocketBaseUrl: string;
+    timeout: number;
+    maxRetries: number;
+    defaultHeaders: { [prop: string]: string };
+    defaultQuery?: googleProtobuf001.Struct.AsObject;
+    strictResponseValidation: boolean;
+    model: string;
+    frequencyPenalty: number;
+    logitBias: { [prop: string]: number };
+    logprobs: boolean;
+    maxCompletionTokens: number;
+    maxTokens: number;
+    metadata?: googleProtobuf001.Struct.AsObject;
+    n: number;
+    presencePenalty: number;
+    promptCacheKey: string;
+    reasoningEffort: ReasoningEffort;
+    seed: string;
+    serviceTier: ServiceTier;
+    stop: string[];
+    store: boolean;
+    temperature: number;
+    topLogprobs: number;
+    topP: number;
+    user: string;
+    verbosity: Verbosity;
+    extraHeaders?: googleProtobuf001.Struct.AsObject;
+    extraQuery?: googleProtobuf001.Struct.AsObject;
+    extraBody?: googleProtobuf001.Struct.AsObject;
+  }
+
+  /**
+   * Protobuf JSON representation for OpenaiLlmOptions
+   */
+  export interface AsProtobufJSON {
+    apiKey: string;
+    organization: string;
+    project: string;
+    webhookSecret: string;
+    baseUrl: string;
+    websocketBaseUrl: string;
+    timeout: number;
+    maxRetries: number;
+    defaultHeaders: { [prop: string]: string };
+    defaultQuery: googleProtobuf001.Struct.AsProtobufJSON | null;
+    strictResponseValidation: boolean;
+    model: string;
+    frequencyPenalty: number;
+    logitBias: { [prop: string]: number };
+    logprobs: boolean;
+    maxCompletionTokens: number;
+    maxTokens: number;
+    metadata: googleProtobuf001.Struct.AsProtobufJSON | null;
+    n: number;
+    presencePenalty: number;
+    promptCacheKey: string;
+    reasoningEffort: string;
+    seed: string;
+    serviceTier: string;
+    stop: string[];
+    store: boolean;
+    temperature: number;
+    topLogprobs: number;
+    topP: number;
+    user: string;
+    verbosity: string;
+    extraHeaders: googleProtobuf001.Struct.AsProtobufJSON | null;
+    extraQuery: googleProtobuf001.Struct.AsProtobufJSON | null;
+    extraBody: googleProtobuf001.Struct.AsProtobufJSON | null;
+  }
+
+  /**
+   * Message implementation for ondewo.s2t.OpenaiLlmOptions.DefaultHeadersEntry
+   */
+  export class DefaultHeadersEntry implements GrpcMessage {
+    static id = 'ondewo.s2t.OpenaiLlmOptions.DefaultHeadersEntry';
+
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource) {
+      const instance = new DefaultHeadersEntry();
+      DefaultHeadersEntry.deserializeBinaryFromReader(
+        instance,
+        new BinaryReader(bytes)
+      );
+      return instance;
+    }
+
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: DefaultHeadersEntry) {
+      _instance.key = _instance.key || '';
+      _instance.value = _instance.value || '';
+    }
+
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(
+      _instance: DefaultHeadersEntry,
+      _reader: BinaryReader
+    ) {
+      while (_reader.nextField()) {
+        if (_reader.isEndGroup()) break;
+
+        switch (_reader.getFieldNumber()) {
+          case 1:
+            _instance.key = _reader.readString();
+            break;
+          case 2:
+            _instance.value = _reader.readString();
+            break;
+          default:
+            _reader.skipField();
+        }
+      }
+
+      DefaultHeadersEntry.refineValues(_instance);
+    }
+
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(
+      _instance: DefaultHeadersEntry,
+      _writer: BinaryWriter
+    ) {
+      if (_instance.key) {
+        _writer.writeString(1, _instance.key);
+      }
+      if (_instance.value) {
+        _writer.writeString(2, _instance.value);
+      }
+    }
+
+    private _key: string;
+    private _value: string;
+
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of DefaultHeadersEntry to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<DefaultHeadersEntry.AsObject>) {
+      _value = _value || {};
+      this.key = _value.key;
+      this.value = _value.value;
+      DefaultHeadersEntry.refineValues(this);
+    }
+    get key(): string {
+      return this._key;
+    }
+    set key(value: string) {
+      this._key = value;
+    }
+    get value(): string {
+      return this._value;
+    }
+    set value(value: string) {
+      this._value = value;
+    }
+
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+      const writer = new BinaryWriter();
+      DefaultHeadersEntry.serializeBinaryToWriter(this, writer);
+      return writer.getResultBuffer();
+    }
+
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): DefaultHeadersEntry.AsObject {
+      return {
+        key: this.key,
+        value: this.value
+      };
+    }
+
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+      return this.toObject();
+    }
+
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+      // @ts-ignore
+      options?: ToProtobufJSONOptions
+    ): DefaultHeadersEntry.AsProtobufJSON {
+      return {
+        key: this.key,
+        value: this.value
+      };
+    }
+  }
+  export module DefaultHeadersEntry {
+    /**
+     * Standard JavaScript object representation for DefaultHeadersEntry
+     */
+    export interface AsObject {
+      key: string;
+      value: string;
+    }
+
+    /**
+     * Protobuf JSON representation for DefaultHeadersEntry
+     */
+    export interface AsProtobufJSON {
+      key: string;
+      value: string;
+    }
+  }
+
+  /**
+   * Message implementation for ondewo.s2t.OpenaiLlmOptions.LogitBiasEntry
+   */
+  export class LogitBiasEntry implements GrpcMessage {
+    static id = 'ondewo.s2t.OpenaiLlmOptions.LogitBiasEntry';
+
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource) {
+      const instance = new LogitBiasEntry();
+      LogitBiasEntry.deserializeBinaryFromReader(
+        instance,
+        new BinaryReader(bytes)
+      );
+      return instance;
+    }
+
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: LogitBiasEntry) {
+      _instance.key = _instance.key || '';
+      _instance.value = _instance.value || 0;
+    }
+
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(
+      _instance: LogitBiasEntry,
+      _reader: BinaryReader
+    ) {
+      while (_reader.nextField()) {
+        if (_reader.isEndGroup()) break;
+
+        switch (_reader.getFieldNumber()) {
+          case 1:
+            _instance.key = _reader.readString();
+            break;
+          case 2:
+            _instance.value = _reader.readInt32();
+            break;
+          default:
+            _reader.skipField();
+        }
+      }
+
+      LogitBiasEntry.refineValues(_instance);
+    }
+
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(
+      _instance: LogitBiasEntry,
+      _writer: BinaryWriter
+    ) {
+      if (_instance.key) {
+        _writer.writeString(1, _instance.key);
+      }
+      if (_instance.value) {
+        _writer.writeInt32(2, _instance.value);
+      }
+    }
+
+    private _key: string;
+    private _value: number;
+
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of LogitBiasEntry to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<LogitBiasEntry.AsObject>) {
+      _value = _value || {};
+      this.key = _value.key;
+      this.value = _value.value;
+      LogitBiasEntry.refineValues(this);
+    }
+    get key(): string {
+      return this._key;
+    }
+    set key(value: string) {
+      this._key = value;
+    }
+    get value(): number {
+      return this._value;
+    }
+    set value(value: number) {
+      this._value = value;
+    }
+
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+      const writer = new BinaryWriter();
+      LogitBiasEntry.serializeBinaryToWriter(this, writer);
+      return writer.getResultBuffer();
+    }
+
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): LogitBiasEntry.AsObject {
+      return {
+        key: this.key,
+        value: this.value
+      };
+    }
+
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+      return this.toObject();
+    }
+
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+      // @ts-ignore
+      options?: ToProtobufJSONOptions
+    ): LogitBiasEntry.AsProtobufJSON {
+      return {
+        key: this.key,
+        value: this.value
+      };
+    }
+  }
+  export module LogitBiasEntry {
+    /**
+     * Standard JavaScript object representation for LogitBiasEntry
+     */
+    export interface AsObject {
+      key: string;
+      value: number;
+    }
+
+    /**
+     * Protobuf JSON representation for LogitBiasEntry
+     */
+    export interface AsProtobufJSON {
+      key: string;
+      value: number;
+    }
   }
 }
 
@@ -10479,9 +11693,12 @@ export class S2tLlmPostProcessing implements GrpcMessage {
    * @param _instance message instance
    */
   static refineValues(_instance: S2tLlmPostProcessing) {
-    _instance.llmHost = _instance.llmHost || '';
-    _instance.llmPort = _instance.llmPort || 0;
-    _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
+    _instance.s2tLlmPostProcessingOpenaiOptions =
+      _instance.s2tLlmPostProcessingOpenaiOptions || undefined;
+    _instance.s2tLlmPostProcessingSystemPrompt =
+      _instance.s2tLlmPostProcessingSystemPrompt || '';
+    _instance.s2tLlmPostProcessingEndingPrompt =
+      _instance.s2tLlmPostProcessingEndingPrompt || '';
     _instance.s2tLlmPostProcessingCasingOptions =
       _instance.s2tLlmPostProcessingCasingOptions || undefined;
     _instance.s2tLlmPostProcessingPunctuationOptions =
@@ -10500,8 +11717,6 @@ export class S2tLlmPostProcessing implements GrpcMessage {
       _instance.s2tLlmPostProcessingSummarizationOptions || undefined;
     _instance.s2tLlmPostProcessingUserPromptOptions =
       _instance.s2tLlmPostProcessingUserPromptOptions || undefined;
-    _instance.llmModelName = _instance.llmModelName || '';
-    _instance.llmHeaders = _instance.llmHeaders || undefined;
   }
 
   /**
@@ -10518,40 +11733,44 @@ export class S2tLlmPostProcessing implements GrpcMessage {
 
       switch (_reader.getFieldNumber()) {
         case 1:
-          _instance.llmHost = _reader.readString();
+          _instance.s2tLlmPostProcessingOpenaiOptions = new OpenaiLlmOptions();
+          _reader.readMessage(
+            _instance.s2tLlmPostProcessingOpenaiOptions,
+            OpenaiLlmOptions.deserializeBinaryFromReader
+          );
           break;
         case 2:
-          _instance.llmPort = _reader.readInt32();
+          _instance.s2tLlmPostProcessingSystemPrompt = _reader.readString();
           break;
         case 3:
-          _instance.llmRequestTimeout = _reader.readFloat();
+          _instance.s2tLlmPostProcessingEndingPrompt = _reader.readString();
           break;
         case 4:
-          _instance.s2tLlmPostProcessingCasingOptions = new S2tLlmPostProcessingCasingOptions();
+          _instance.s2tLlmPostProcessingCasingOptions = new S2tLlmPostProcessingSubTaskOptions();
           _reader.readMessage(
             _instance.s2tLlmPostProcessingCasingOptions,
-            S2tLlmPostProcessingCasingOptions.deserializeBinaryFromReader
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
           );
           break;
         case 5:
-          _instance.s2tLlmPostProcessingPunctuationOptions = new S2tLlmPostProcessingPunctuationOptions();
+          _instance.s2tLlmPostProcessingPunctuationOptions = new S2tLlmPostProcessingSubTaskOptions();
           _reader.readMessage(
             _instance.s2tLlmPostProcessingPunctuationOptions,
-            S2tLlmPostProcessingPunctuationOptions.deserializeBinaryFromReader
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
           );
           break;
         case 6:
-          _instance.s2tLlmPostProcessingSpellingCorrectionOptions = new S2tLlmPostProcessingSpellCorrectionOptions();
+          _instance.s2tLlmPostProcessingSpellingCorrectionOptions = new S2tLlmPostProcessingSubTaskOptions();
           _reader.readMessage(
             _instance.s2tLlmPostProcessingSpellingCorrectionOptions,
-            S2tLlmPostProcessingSpellCorrectionOptions.deserializeBinaryFromReader
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
           );
           break;
         case 7:
-          _instance.s2tLlmPostProcessingSemanticCorrectionOptions = new S2tLlmPostProcessingSemanticCorrectionOptions();
+          _instance.s2tLlmPostProcessingSemanticCorrectionOptions = new S2tLlmPostProcessingSubTaskOptions();
           _reader.readMessage(
             _instance.s2tLlmPostProcessingSemanticCorrectionOptions,
-            S2tLlmPostProcessingSemanticCorrectionOptions.deserializeBinaryFromReader
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
           );
           break;
         case 8:
@@ -10583,20 +11802,10 @@ export class S2tLlmPostProcessing implements GrpcMessage {
           );
           break;
         case 12:
-          _instance.s2tLlmPostProcessingUserPromptOptions = new S2tLlmPostProcessingUserPromptOptions();
+          _instance.s2tLlmPostProcessingUserPromptOptions = new S2tLlmPostProcessingSubTaskOptions();
           _reader.readMessage(
             _instance.s2tLlmPostProcessingUserPromptOptions,
-            S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader
-          );
-          break;
-        case 13:
-          _instance.llmModelName = _reader.readString();
-          break;
-        case 14:
-          _instance.llmHeaders = new googleProtobuf001.Struct();
-          _reader.readMessage(
-            _instance.llmHeaders,
-            googleProtobuf001.Struct.deserializeBinaryFromReader
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
           );
           break;
         default:
@@ -10616,41 +11825,45 @@ export class S2tLlmPostProcessing implements GrpcMessage {
     _instance: S2tLlmPostProcessing,
     _writer: BinaryWriter
   ) {
-    if (_instance.llmHost) {
-      _writer.writeString(1, _instance.llmHost);
+    if (_instance.s2tLlmPostProcessingOpenaiOptions) {
+      _writer.writeMessage(
+        1,
+        _instance.s2tLlmPostProcessingOpenaiOptions as any,
+        OpenaiLlmOptions.serializeBinaryToWriter
+      );
     }
-    if (_instance.llmPort) {
-      _writer.writeInt32(2, _instance.llmPort);
+    if (_instance.s2tLlmPostProcessingSystemPrompt) {
+      _writer.writeString(2, _instance.s2tLlmPostProcessingSystemPrompt);
     }
-    if (_instance.llmRequestTimeout) {
-      _writer.writeFloat(3, _instance.llmRequestTimeout);
+    if (_instance.s2tLlmPostProcessingEndingPrompt) {
+      _writer.writeString(3, _instance.s2tLlmPostProcessingEndingPrompt);
     }
     if (_instance.s2tLlmPostProcessingCasingOptions) {
       _writer.writeMessage(
         4,
         _instance.s2tLlmPostProcessingCasingOptions as any,
-        S2tLlmPostProcessingCasingOptions.serializeBinaryToWriter
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
       );
     }
     if (_instance.s2tLlmPostProcessingPunctuationOptions) {
       _writer.writeMessage(
         5,
         _instance.s2tLlmPostProcessingPunctuationOptions as any,
-        S2tLlmPostProcessingPunctuationOptions.serializeBinaryToWriter
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
       );
     }
     if (_instance.s2tLlmPostProcessingSpellingCorrectionOptions) {
       _writer.writeMessage(
         6,
         _instance.s2tLlmPostProcessingSpellingCorrectionOptions as any,
-        S2tLlmPostProcessingSpellCorrectionOptions.serializeBinaryToWriter
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
       );
     }
     if (_instance.s2tLlmPostProcessingSemanticCorrectionOptions) {
       _writer.writeMessage(
         7,
         _instance.s2tLlmPostProcessingSemanticCorrectionOptions as any,
-        S2tLlmPostProcessingSemanticCorrectionOptions.serializeBinaryToWriter
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
       );
     }
     if (_instance.s2tLlmPostProcessingTranslationOptions) {
@@ -10685,35 +11898,23 @@ export class S2tLlmPostProcessing implements GrpcMessage {
       _writer.writeMessage(
         12,
         _instance.s2tLlmPostProcessingUserPromptOptions as any,
-        S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter
-      );
-    }
-    if (_instance.llmModelName) {
-      _writer.writeString(13, _instance.llmModelName);
-    }
-    if (_instance.llmHeaders) {
-      _writer.writeMessage(
-        14,
-        _instance.llmHeaders as any,
-        googleProtobuf001.Struct.serializeBinaryToWriter
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
       );
     }
   }
 
-  private _llmHost: string;
-  private _llmPort: number;
-  private _llmRequestTimeout: number;
-  private _s2tLlmPostProcessingCasingOptions?: S2tLlmPostProcessingCasingOptions;
-  private _s2tLlmPostProcessingPunctuationOptions?: S2tLlmPostProcessingPunctuationOptions;
-  private _s2tLlmPostProcessingSpellingCorrectionOptions?: S2tLlmPostProcessingSpellCorrectionOptions;
-  private _s2tLlmPostProcessingSemanticCorrectionOptions?: S2tLlmPostProcessingSemanticCorrectionOptions;
+  private _s2tLlmPostProcessingOpenaiOptions?: OpenaiLlmOptions;
+  private _s2tLlmPostProcessingSystemPrompt: string;
+  private _s2tLlmPostProcessingEndingPrompt: string;
+  private _s2tLlmPostProcessingCasingOptions?: S2tLlmPostProcessingSubTaskOptions;
+  private _s2tLlmPostProcessingPunctuationOptions?: S2tLlmPostProcessingSubTaskOptions;
+  private _s2tLlmPostProcessingSpellingCorrectionOptions?: S2tLlmPostProcessingSubTaskOptions;
+  private _s2tLlmPostProcessingSemanticCorrectionOptions?: S2tLlmPostProcessingSubTaskOptions;
   private _s2tLlmPostProcessingTranslationOptions?: S2tLlmPostProcessingTranslationOptions;
   private _s2tLlmPostProcessingInverseNormalizationOptions?: S2tLlmPostProcessingInverseNormalizationOptions;
   private _s2tLlmPostProcessingNormalizationOptions?: S2tLlmPostProcessingNormalizationOptions;
   private _s2tLlmPostProcessingSummarizationOptions?: S2tLlmPostProcessingSummarizationOptions;
-  private _s2tLlmPostProcessingUserPromptOptions?: S2tLlmPostProcessingUserPromptOptions;
-  private _llmModelName: string;
-  private _llmHeaders?: googleProtobuf001.Struct;
+  private _s2tLlmPostProcessingUserPromptOptions?: S2tLlmPostProcessingSubTaskOptions;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -10721,26 +11922,30 @@ export class S2tLlmPostProcessing implements GrpcMessage {
    */
   constructor(_value?: RecursivePartial<S2tLlmPostProcessing.AsObject>) {
     _value = _value || {};
-    this.llmHost = _value.llmHost;
-    this.llmPort = _value.llmPort;
-    this.llmRequestTimeout = _value.llmRequestTimeout;
+    this.s2tLlmPostProcessingOpenaiOptions = _value.s2tLlmPostProcessingOpenaiOptions
+      ? new OpenaiLlmOptions(_value.s2tLlmPostProcessingOpenaiOptions)
+      : undefined;
+    this.s2tLlmPostProcessingSystemPrompt =
+      _value.s2tLlmPostProcessingSystemPrompt;
+    this.s2tLlmPostProcessingEndingPrompt =
+      _value.s2tLlmPostProcessingEndingPrompt;
     this.s2tLlmPostProcessingCasingOptions = _value.s2tLlmPostProcessingCasingOptions
-      ? new S2tLlmPostProcessingCasingOptions(
+      ? new S2tLlmPostProcessingSubTaskOptions(
           _value.s2tLlmPostProcessingCasingOptions
         )
       : undefined;
     this.s2tLlmPostProcessingPunctuationOptions = _value.s2tLlmPostProcessingPunctuationOptions
-      ? new S2tLlmPostProcessingPunctuationOptions(
+      ? new S2tLlmPostProcessingSubTaskOptions(
           _value.s2tLlmPostProcessingPunctuationOptions
         )
       : undefined;
     this.s2tLlmPostProcessingSpellingCorrectionOptions = _value.s2tLlmPostProcessingSpellingCorrectionOptions
-      ? new S2tLlmPostProcessingSpellCorrectionOptions(
+      ? new S2tLlmPostProcessingSubTaskOptions(
           _value.s2tLlmPostProcessingSpellingCorrectionOptions
         )
       : undefined;
     this.s2tLlmPostProcessingSemanticCorrectionOptions = _value.s2tLlmPostProcessingSemanticCorrectionOptions
-      ? new S2tLlmPostProcessingSemanticCorrectionOptions(
+      ? new S2tLlmPostProcessingSubTaskOptions(
           _value.s2tLlmPostProcessingSemanticCorrectionOptions
         )
       : undefined;
@@ -10765,71 +11970,67 @@ export class S2tLlmPostProcessing implements GrpcMessage {
         )
       : undefined;
     this.s2tLlmPostProcessingUserPromptOptions = _value.s2tLlmPostProcessingUserPromptOptions
-      ? new S2tLlmPostProcessingUserPromptOptions(
+      ? new S2tLlmPostProcessingSubTaskOptions(
           _value.s2tLlmPostProcessingUserPromptOptions
         )
       : undefined;
-    this.llmModelName = _value.llmModelName;
-    this.llmHeaders = _value.llmHeaders
-      ? new googleProtobuf001.Struct(_value.llmHeaders)
-      : undefined;
     S2tLlmPostProcessing.refineValues(this);
   }
-  get llmHost(): string {
-    return this._llmHost;
+  get s2tLlmPostProcessingOpenaiOptions(): OpenaiLlmOptions | undefined {
+    return this._s2tLlmPostProcessingOpenaiOptions;
   }
-  set llmHost(value: string) {
-    this._llmHost = value;
+  set s2tLlmPostProcessingOpenaiOptions(value: OpenaiLlmOptions | undefined) {
+    this._s2tLlmPostProcessingOpenaiOptions = value;
   }
-  get llmPort(): number {
-    return this._llmPort;
+  get s2tLlmPostProcessingSystemPrompt(): string {
+    return this._s2tLlmPostProcessingSystemPrompt;
   }
-  set llmPort(value: number) {
-    this._llmPort = value;
+  set s2tLlmPostProcessingSystemPrompt(value: string) {
+    this._s2tLlmPostProcessingSystemPrompt = value;
   }
-  get llmRequestTimeout(): number {
-    return this._llmRequestTimeout;
+  get s2tLlmPostProcessingEndingPrompt(): string {
+    return this._s2tLlmPostProcessingEndingPrompt;
   }
-  set llmRequestTimeout(value: number) {
-    this._llmRequestTimeout = value;
+  set s2tLlmPostProcessingEndingPrompt(value: string) {
+    this._s2tLlmPostProcessingEndingPrompt = value;
   }
   get s2tLlmPostProcessingCasingOptions():
-    | S2tLlmPostProcessingCasingOptions
+    | S2tLlmPostProcessingSubTaskOptions
     | undefined {
     return this._s2tLlmPostProcessingCasingOptions;
   }
   set s2tLlmPostProcessingCasingOptions(
-    value: S2tLlmPostProcessingCasingOptions | undefined
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
   ) {
     this._s2tLlmPostProcessingCasingOptions = value;
   }
   get s2tLlmPostProcessingPunctuationOptions():
-    | S2tLlmPostProcessingPunctuationOptions
+    | S2tLlmPostProcessingSubTaskOptions
     | undefined {
     return this._s2tLlmPostProcessingPunctuationOptions;
   }
   set s2tLlmPostProcessingPunctuationOptions(
-    value: S2tLlmPostProcessingPunctuationOptions | undefined
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
   ) {
     this._s2tLlmPostProcessingPunctuationOptions = value;
   }
   get s2tLlmPostProcessingSpellingCorrectionOptions():
-    | S2tLlmPostProcessingSpellCorrectionOptions
+    | S2tLlmPostProcessingSubTaskOptions
     | undefined {
     return this._s2tLlmPostProcessingSpellingCorrectionOptions;
   }
   set s2tLlmPostProcessingSpellingCorrectionOptions(
-    value: S2tLlmPostProcessingSpellCorrectionOptions | undefined
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
   ) {
     this._s2tLlmPostProcessingSpellingCorrectionOptions = value;
   }
   get s2tLlmPostProcessingSemanticCorrectionOptions():
-    | S2tLlmPostProcessingSemanticCorrectionOptions
+    | S2tLlmPostProcessingSubTaskOptions
     | undefined {
     return this._s2tLlmPostProcessingSemanticCorrectionOptions;
   }
   set s2tLlmPostProcessingSemanticCorrectionOptions(
-    value: S2tLlmPostProcessingSemanticCorrectionOptions | undefined
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
   ) {
     this._s2tLlmPostProcessingSemanticCorrectionOptions = value;
   }
@@ -10874,26 +12075,14 @@ export class S2tLlmPostProcessing implements GrpcMessage {
     this._s2tLlmPostProcessingSummarizationOptions = value;
   }
   get s2tLlmPostProcessingUserPromptOptions():
-    | S2tLlmPostProcessingUserPromptOptions
+    | S2tLlmPostProcessingSubTaskOptions
     | undefined {
     return this._s2tLlmPostProcessingUserPromptOptions;
   }
   set s2tLlmPostProcessingUserPromptOptions(
-    value: S2tLlmPostProcessingUserPromptOptions | undefined
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
   ) {
     this._s2tLlmPostProcessingUserPromptOptions = value;
-  }
-  get llmModelName(): string {
-    return this._llmModelName;
-  }
-  set llmModelName(value: string) {
-    this._llmModelName = value;
-  }
-  get llmHeaders(): googleProtobuf001.Struct | undefined {
-    return this._llmHeaders;
-  }
-  set llmHeaders(value: googleProtobuf001.Struct | undefined) {
-    this._llmHeaders = value;
   }
 
   /**
@@ -10911,9 +12100,11 @@ export class S2tLlmPostProcessing implements GrpcMessage {
    */
   toObject(): S2tLlmPostProcessing.AsObject {
     return {
-      llmHost: this.llmHost,
-      llmPort: this.llmPort,
-      llmRequestTimeout: this.llmRequestTimeout,
+      s2tLlmPostProcessingOpenaiOptions: this.s2tLlmPostProcessingOpenaiOptions
+        ? this.s2tLlmPostProcessingOpenaiOptions.toObject()
+        : undefined,
+      s2tLlmPostProcessingSystemPrompt: this.s2tLlmPostProcessingSystemPrompt,
+      s2tLlmPostProcessingEndingPrompt: this.s2tLlmPostProcessingEndingPrompt,
       s2tLlmPostProcessingCasingOptions: this.s2tLlmPostProcessingCasingOptions
         ? this.s2tLlmPostProcessingCasingOptions.toObject()
         : undefined,
@@ -10948,9 +12139,7 @@ export class S2tLlmPostProcessing implements GrpcMessage {
       s2tLlmPostProcessingUserPromptOptions: this
         .s2tLlmPostProcessingUserPromptOptions
         ? this.s2tLlmPostProcessingUserPromptOptions.toObject()
-        : undefined,
-      llmModelName: this.llmModelName,
-      llmHeaders: this.llmHeaders ? this.llmHeaders.toObject() : undefined
+        : undefined
     };
   }
 
@@ -10971,9 +12160,11 @@ export class S2tLlmPostProcessing implements GrpcMessage {
     options?: ToProtobufJSONOptions
   ): S2tLlmPostProcessing.AsProtobufJSON {
     return {
-      llmHost: this.llmHost,
-      llmPort: this.llmPort,
-      llmRequestTimeout: this.llmRequestTimeout,
+      s2tLlmPostProcessingOpenaiOptions: this.s2tLlmPostProcessingOpenaiOptions
+        ? this.s2tLlmPostProcessingOpenaiOptions.toProtobufJSON(options)
+        : null,
+      s2tLlmPostProcessingSystemPrompt: this.s2tLlmPostProcessingSystemPrompt,
+      s2tLlmPostProcessingEndingPrompt: this.s2tLlmPostProcessingEndingPrompt,
       s2tLlmPostProcessingCasingOptions: this.s2tLlmPostProcessingCasingOptions
         ? this.s2tLlmPostProcessingCasingOptions.toProtobufJSON(options)
         : null,
@@ -11014,10 +12205,6 @@ export class S2tLlmPostProcessing implements GrpcMessage {
       s2tLlmPostProcessingUserPromptOptions: this
         .s2tLlmPostProcessingUserPromptOptions
         ? this.s2tLlmPostProcessingUserPromptOptions.toProtobufJSON(options)
-        : null,
-      llmModelName: this.llmModelName,
-      llmHeaders: this.llmHeaders
-        ? this.llmHeaders.toProtobufJSON(options)
         : null
     };
   }
@@ -11027,620 +12214,36 @@ export module S2tLlmPostProcessing {
    * Standard JavaScript object representation for S2tLlmPostProcessing
    */
   export interface AsObject {
-    llmHost: string;
-    llmPort: number;
-    llmRequestTimeout: number;
-    s2tLlmPostProcessingCasingOptions?: S2tLlmPostProcessingCasingOptions.AsObject;
-    s2tLlmPostProcessingPunctuationOptions?: S2tLlmPostProcessingPunctuationOptions.AsObject;
-    s2tLlmPostProcessingSpellingCorrectionOptions?: S2tLlmPostProcessingSpellCorrectionOptions.AsObject;
-    s2tLlmPostProcessingSemanticCorrectionOptions?: S2tLlmPostProcessingSemanticCorrectionOptions.AsObject;
+    s2tLlmPostProcessingOpenaiOptions?: OpenaiLlmOptions.AsObject;
+    s2tLlmPostProcessingSystemPrompt: string;
+    s2tLlmPostProcessingEndingPrompt: string;
+    s2tLlmPostProcessingCasingOptions?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    s2tLlmPostProcessingPunctuationOptions?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    s2tLlmPostProcessingSpellingCorrectionOptions?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    s2tLlmPostProcessingSemanticCorrectionOptions?: S2tLlmPostProcessingSubTaskOptions.AsObject;
     s2tLlmPostProcessingTranslationOptions?: S2tLlmPostProcessingTranslationOptions.AsObject;
     s2tLlmPostProcessingInverseNormalizationOptions?: S2tLlmPostProcessingInverseNormalizationOptions.AsObject;
     s2tLlmPostProcessingNormalizationOptions?: S2tLlmPostProcessingNormalizationOptions.AsObject;
     s2tLlmPostProcessingSummarizationOptions?: S2tLlmPostProcessingSummarizationOptions.AsObject;
-    s2tLlmPostProcessingUserPromptOptions?: S2tLlmPostProcessingUserPromptOptions.AsObject;
-    llmModelName: string;
-    llmHeaders?: googleProtobuf001.Struct.AsObject;
+    s2tLlmPostProcessingUserPromptOptions?: S2tLlmPostProcessingSubTaskOptions.AsObject;
   }
 
   /**
    * Protobuf JSON representation for S2tLlmPostProcessing
    */
   export interface AsProtobufJSON {
-    llmHost: string;
-    llmPort: number;
-    llmRequestTimeout: number;
-    s2tLlmPostProcessingCasingOptions: S2tLlmPostProcessingCasingOptions.AsProtobufJSON | null;
-    s2tLlmPostProcessingPunctuationOptions: S2tLlmPostProcessingPunctuationOptions.AsProtobufJSON | null;
-    s2tLlmPostProcessingSpellingCorrectionOptions: S2tLlmPostProcessingSpellCorrectionOptions.AsProtobufJSON | null;
-    s2tLlmPostProcessingSemanticCorrectionOptions: S2tLlmPostProcessingSemanticCorrectionOptions.AsProtobufJSON | null;
+    s2tLlmPostProcessingOpenaiOptions: OpenaiLlmOptions.AsProtobufJSON | null;
+    s2tLlmPostProcessingSystemPrompt: string;
+    s2tLlmPostProcessingEndingPrompt: string;
+    s2tLlmPostProcessingCasingOptions: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    s2tLlmPostProcessingPunctuationOptions: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    s2tLlmPostProcessingSpellingCorrectionOptions: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    s2tLlmPostProcessingSemanticCorrectionOptions: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
     s2tLlmPostProcessingTranslationOptions: S2tLlmPostProcessingTranslationOptions.AsProtobufJSON | null;
     s2tLlmPostProcessingInverseNormalizationOptions: S2tLlmPostProcessingInverseNormalizationOptions.AsProtobufJSON | null;
     s2tLlmPostProcessingNormalizationOptions: S2tLlmPostProcessingNormalizationOptions.AsProtobufJSON | null;
     s2tLlmPostProcessingSummarizationOptions: S2tLlmPostProcessingSummarizationOptions.AsProtobufJSON | null;
-    s2tLlmPostProcessingUserPromptOptions: S2tLlmPostProcessingUserPromptOptions.AsProtobufJSON | null;
-    llmModelName: string;
-    llmHeaders: googleProtobuf001.Struct.AsProtobufJSON | null;
-  }
-}
-
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingCasingOptions
- */
-export class S2tLlmPostProcessingCasingOptions implements GrpcMessage {
-  static id = 'ondewo.s2t.S2tLlmPostProcessingCasingOptions';
-
-  /**
-   * Deserialize binary data to message
-   * @param instance message instance
-   */
-  static deserializeBinary(bytes: ByteSource) {
-    const instance = new S2tLlmPostProcessingCasingOptions();
-    S2tLlmPostProcessingCasingOptions.deserializeBinaryFromReader(
-      instance,
-      new BinaryReader(bytes)
-    );
-    return instance;
-  }
-
-  /**
-   * Check all the properties and set default protobuf values if necessary
-   * @param _instance message instance
-   */
-  static refineValues(_instance: S2tLlmPostProcessingCasingOptions) {
-    _instance.active = _instance.active || false;
-  }
-
-  /**
-   * Deserializes / reads binary message into message instance using provided binary reader
-   * @param _instance message instance
-   * @param _reader binary reader instance
-   */
-  static deserializeBinaryFromReader(
-    _instance: S2tLlmPostProcessingCasingOptions,
-    _reader: BinaryReader
-  ) {
-    while (_reader.nextField()) {
-      if (_reader.isEndGroup()) break;
-
-      switch (_reader.getFieldNumber()) {
-        case 1:
-          _instance.active = _reader.readBool();
-          break;
-        default:
-          _reader.skipField();
-      }
-    }
-
-    S2tLlmPostProcessingCasingOptions.refineValues(_instance);
-  }
-
-  /**
-   * Serializes a message to binary format using provided binary reader
-   * @param _instance message instance
-   * @param _writer binary writer instance
-   */
-  static serializeBinaryToWriter(
-    _instance: S2tLlmPostProcessingCasingOptions,
-    _writer: BinaryWriter
-  ) {
-    if (_instance.active) {
-      _writer.writeBool(1, _instance.active);
-    }
-  }
-
-  private _active: boolean;
-
-  /**
-   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-   * @param _value initial values object or instance of S2tLlmPostProcessingCasingOptions to deeply clone from
-   */
-  constructor(
-    _value?: RecursivePartial<S2tLlmPostProcessingCasingOptions.AsObject>
-  ) {
-    _value = _value || {};
-    this.active = _value.active;
-    S2tLlmPostProcessingCasingOptions.refineValues(this);
-  }
-  get active(): boolean {
-    return this._active;
-  }
-  set active(value: boolean) {
-    this._active = value;
-  }
-
-  /**
-   * Serialize message to binary data
-   * @param instance message instance
-   */
-  serializeBinary() {
-    const writer = new BinaryWriter();
-    S2tLlmPostProcessingCasingOptions.serializeBinaryToWriter(this, writer);
-    return writer.getResultBuffer();
-  }
-
-  /**
-   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-   */
-  toObject(): S2tLlmPostProcessingCasingOptions.AsObject {
-    return {
-      active: this.active
-    };
-  }
-
-  /**
-   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-   */
-  toJSON() {
-    return this.toObject();
-  }
-
-  /**
-   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-   */
-  toProtobufJSON(
-    // @ts-ignore
-    options?: ToProtobufJSONOptions
-  ): S2tLlmPostProcessingCasingOptions.AsProtobufJSON {
-    return {
-      active: this.active
-    };
-  }
-}
-export module S2tLlmPostProcessingCasingOptions {
-  /**
-   * Standard JavaScript object representation for S2tLlmPostProcessingCasingOptions
-   */
-  export interface AsObject {
-    active: boolean;
-  }
-
-  /**
-   * Protobuf JSON representation for S2tLlmPostProcessingCasingOptions
-   */
-  export interface AsProtobufJSON {
-    active: boolean;
-  }
-}
-
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingPunctuationOptions
- */
-export class S2tLlmPostProcessingPunctuationOptions implements GrpcMessage {
-  static id = 'ondewo.s2t.S2tLlmPostProcessingPunctuationOptions';
-
-  /**
-   * Deserialize binary data to message
-   * @param instance message instance
-   */
-  static deserializeBinary(bytes: ByteSource) {
-    const instance = new S2tLlmPostProcessingPunctuationOptions();
-    S2tLlmPostProcessingPunctuationOptions.deserializeBinaryFromReader(
-      instance,
-      new BinaryReader(bytes)
-    );
-    return instance;
-  }
-
-  /**
-   * Check all the properties and set default protobuf values if necessary
-   * @param _instance message instance
-   */
-  static refineValues(_instance: S2tLlmPostProcessingPunctuationOptions) {
-    _instance.active = _instance.active || false;
-  }
-
-  /**
-   * Deserializes / reads binary message into message instance using provided binary reader
-   * @param _instance message instance
-   * @param _reader binary reader instance
-   */
-  static deserializeBinaryFromReader(
-    _instance: S2tLlmPostProcessingPunctuationOptions,
-    _reader: BinaryReader
-  ) {
-    while (_reader.nextField()) {
-      if (_reader.isEndGroup()) break;
-
-      switch (_reader.getFieldNumber()) {
-        case 1:
-          _instance.active = _reader.readBool();
-          break;
-        default:
-          _reader.skipField();
-      }
-    }
-
-    S2tLlmPostProcessingPunctuationOptions.refineValues(_instance);
-  }
-
-  /**
-   * Serializes a message to binary format using provided binary reader
-   * @param _instance message instance
-   * @param _writer binary writer instance
-   */
-  static serializeBinaryToWriter(
-    _instance: S2tLlmPostProcessingPunctuationOptions,
-    _writer: BinaryWriter
-  ) {
-    if (_instance.active) {
-      _writer.writeBool(1, _instance.active);
-    }
-  }
-
-  private _active: boolean;
-
-  /**
-   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-   * @param _value initial values object or instance of S2tLlmPostProcessingPunctuationOptions to deeply clone from
-   */
-  constructor(
-    _value?: RecursivePartial<S2tLlmPostProcessingPunctuationOptions.AsObject>
-  ) {
-    _value = _value || {};
-    this.active = _value.active;
-    S2tLlmPostProcessingPunctuationOptions.refineValues(this);
-  }
-  get active(): boolean {
-    return this._active;
-  }
-  set active(value: boolean) {
-    this._active = value;
-  }
-
-  /**
-   * Serialize message to binary data
-   * @param instance message instance
-   */
-  serializeBinary() {
-    const writer = new BinaryWriter();
-    S2tLlmPostProcessingPunctuationOptions.serializeBinaryToWriter(
-      this,
-      writer
-    );
-    return writer.getResultBuffer();
-  }
-
-  /**
-   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-   */
-  toObject(): S2tLlmPostProcessingPunctuationOptions.AsObject {
-    return {
-      active: this.active
-    };
-  }
-
-  /**
-   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-   */
-  toJSON() {
-    return this.toObject();
-  }
-
-  /**
-   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-   */
-  toProtobufJSON(
-    // @ts-ignore
-    options?: ToProtobufJSONOptions
-  ): S2tLlmPostProcessingPunctuationOptions.AsProtobufJSON {
-    return {
-      active: this.active
-    };
-  }
-}
-export module S2tLlmPostProcessingPunctuationOptions {
-  /**
-   * Standard JavaScript object representation for S2tLlmPostProcessingPunctuationOptions
-   */
-  export interface AsObject {
-    active: boolean;
-  }
-
-  /**
-   * Protobuf JSON representation for S2tLlmPostProcessingPunctuationOptions
-   */
-  export interface AsProtobufJSON {
-    active: boolean;
-  }
-}
-
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingSpellCorrectionOptions
- */
-export class S2tLlmPostProcessingSpellCorrectionOptions implements GrpcMessage {
-  static id = 'ondewo.s2t.S2tLlmPostProcessingSpellCorrectionOptions';
-
-  /**
-   * Deserialize binary data to message
-   * @param instance message instance
-   */
-  static deserializeBinary(bytes: ByteSource) {
-    const instance = new S2tLlmPostProcessingSpellCorrectionOptions();
-    S2tLlmPostProcessingSpellCorrectionOptions.deserializeBinaryFromReader(
-      instance,
-      new BinaryReader(bytes)
-    );
-    return instance;
-  }
-
-  /**
-   * Check all the properties and set default protobuf values if necessary
-   * @param _instance message instance
-   */
-  static refineValues(_instance: S2tLlmPostProcessingSpellCorrectionOptions) {
-    _instance.active = _instance.active || false;
-  }
-
-  /**
-   * Deserializes / reads binary message into message instance using provided binary reader
-   * @param _instance message instance
-   * @param _reader binary reader instance
-   */
-  static deserializeBinaryFromReader(
-    _instance: S2tLlmPostProcessingSpellCorrectionOptions,
-    _reader: BinaryReader
-  ) {
-    while (_reader.nextField()) {
-      if (_reader.isEndGroup()) break;
-
-      switch (_reader.getFieldNumber()) {
-        case 1:
-          _instance.active = _reader.readBool();
-          break;
-        default:
-          _reader.skipField();
-      }
-    }
-
-    S2tLlmPostProcessingSpellCorrectionOptions.refineValues(_instance);
-  }
-
-  /**
-   * Serializes a message to binary format using provided binary reader
-   * @param _instance message instance
-   * @param _writer binary writer instance
-   */
-  static serializeBinaryToWriter(
-    _instance: S2tLlmPostProcessingSpellCorrectionOptions,
-    _writer: BinaryWriter
-  ) {
-    if (_instance.active) {
-      _writer.writeBool(1, _instance.active);
-    }
-  }
-
-  private _active: boolean;
-
-  /**
-   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-   * @param _value initial values object or instance of S2tLlmPostProcessingSpellCorrectionOptions to deeply clone from
-   */
-  constructor(
-    _value?: RecursivePartial<
-      S2tLlmPostProcessingSpellCorrectionOptions.AsObject
-    >
-  ) {
-    _value = _value || {};
-    this.active = _value.active;
-    S2tLlmPostProcessingSpellCorrectionOptions.refineValues(this);
-  }
-  get active(): boolean {
-    return this._active;
-  }
-  set active(value: boolean) {
-    this._active = value;
-  }
-
-  /**
-   * Serialize message to binary data
-   * @param instance message instance
-   */
-  serializeBinary() {
-    const writer = new BinaryWriter();
-    S2tLlmPostProcessingSpellCorrectionOptions.serializeBinaryToWriter(
-      this,
-      writer
-    );
-    return writer.getResultBuffer();
-  }
-
-  /**
-   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-   */
-  toObject(): S2tLlmPostProcessingSpellCorrectionOptions.AsObject {
-    return {
-      active: this.active
-    };
-  }
-
-  /**
-   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-   */
-  toJSON() {
-    return this.toObject();
-  }
-
-  /**
-   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-   */
-  toProtobufJSON(
-    // @ts-ignore
-    options?: ToProtobufJSONOptions
-  ): S2tLlmPostProcessingSpellCorrectionOptions.AsProtobufJSON {
-    return {
-      active: this.active
-    };
-  }
-}
-export module S2tLlmPostProcessingSpellCorrectionOptions {
-  /**
-   * Standard JavaScript object representation for S2tLlmPostProcessingSpellCorrectionOptions
-   */
-  export interface AsObject {
-    active: boolean;
-  }
-
-  /**
-   * Protobuf JSON representation for S2tLlmPostProcessingSpellCorrectionOptions
-   */
-  export interface AsProtobufJSON {
-    active: boolean;
-  }
-}
-
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingSemanticCorrectionOptions
- */
-export class S2tLlmPostProcessingSemanticCorrectionOptions
-  implements GrpcMessage {
-  static id = 'ondewo.s2t.S2tLlmPostProcessingSemanticCorrectionOptions';
-
-  /**
-   * Deserialize binary data to message
-   * @param instance message instance
-   */
-  static deserializeBinary(bytes: ByteSource) {
-    const instance = new S2tLlmPostProcessingSemanticCorrectionOptions();
-    S2tLlmPostProcessingSemanticCorrectionOptions.deserializeBinaryFromReader(
-      instance,
-      new BinaryReader(bytes)
-    );
-    return instance;
-  }
-
-  /**
-   * Check all the properties and set default protobuf values if necessary
-   * @param _instance message instance
-   */
-  static refineValues(
-    _instance: S2tLlmPostProcessingSemanticCorrectionOptions
-  ) {
-    _instance.active = _instance.active || false;
-  }
-
-  /**
-   * Deserializes / reads binary message into message instance using provided binary reader
-   * @param _instance message instance
-   * @param _reader binary reader instance
-   */
-  static deserializeBinaryFromReader(
-    _instance: S2tLlmPostProcessingSemanticCorrectionOptions,
-    _reader: BinaryReader
-  ) {
-    while (_reader.nextField()) {
-      if (_reader.isEndGroup()) break;
-
-      switch (_reader.getFieldNumber()) {
-        case 1:
-          _instance.active = _reader.readBool();
-          break;
-        default:
-          _reader.skipField();
-      }
-    }
-
-    S2tLlmPostProcessingSemanticCorrectionOptions.refineValues(_instance);
-  }
-
-  /**
-   * Serializes a message to binary format using provided binary reader
-   * @param _instance message instance
-   * @param _writer binary writer instance
-   */
-  static serializeBinaryToWriter(
-    _instance: S2tLlmPostProcessingSemanticCorrectionOptions,
-    _writer: BinaryWriter
-  ) {
-    if (_instance.active) {
-      _writer.writeBool(1, _instance.active);
-    }
-  }
-
-  private _active: boolean;
-
-  /**
-   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-   * @param _value initial values object or instance of S2tLlmPostProcessingSemanticCorrectionOptions to deeply clone from
-   */
-  constructor(
-    _value?: RecursivePartial<
-      S2tLlmPostProcessingSemanticCorrectionOptions.AsObject
-    >
-  ) {
-    _value = _value || {};
-    this.active = _value.active;
-    S2tLlmPostProcessingSemanticCorrectionOptions.refineValues(this);
-  }
-  get active(): boolean {
-    return this._active;
-  }
-  set active(value: boolean) {
-    this._active = value;
-  }
-
-  /**
-   * Serialize message to binary data
-   * @param instance message instance
-   */
-  serializeBinary() {
-    const writer = new BinaryWriter();
-    S2tLlmPostProcessingSemanticCorrectionOptions.serializeBinaryToWriter(
-      this,
-      writer
-    );
-    return writer.getResultBuffer();
-  }
-
-  /**
-   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-   */
-  toObject(): S2tLlmPostProcessingSemanticCorrectionOptions.AsObject {
-    return {
-      active: this.active
-    };
-  }
-
-  /**
-   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-   */
-  toJSON() {
-    return this.toObject();
-  }
-
-  /**
-   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-   */
-  toProtobufJSON(
-    // @ts-ignore
-    options?: ToProtobufJSONOptions
-  ): S2tLlmPostProcessingSemanticCorrectionOptions.AsProtobufJSON {
-    return {
-      active: this.active
-    };
-  }
-}
-export module S2tLlmPostProcessingSemanticCorrectionOptions {
-  /**
-   * Standard JavaScript object representation for S2tLlmPostProcessingSemanticCorrectionOptions
-   */
-  export interface AsObject {
-    active: boolean;
-  }
-
-  /**
-   * Protobuf JSON representation for S2tLlmPostProcessingSemanticCorrectionOptions
-   */
-  export interface AsProtobufJSON {
-    active: boolean;
+    s2tLlmPostProcessingUserPromptOptions: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
   }
 }
 
@@ -11835,12 +12438,13 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
     _instance: S2tLlmPostProcessingInverseNormalizationOptions
   ) {
     _instance.active = _instance.active || false;
-    _instance.email = _instance.email || false;
-    _instance.phoneNumber = _instance.phoneNumber || false;
-    _instance.dateAndTime = _instance.dateAndTime || false;
-    _instance.creditCardNumber = _instance.creditCardNumber || false;
-    _instance.socialSecurityNumber = _instance.socialSecurityNumber || false;
-    _instance.timeZone = _instance.timeZone || false;
+    _instance.email = _instance.email || undefined;
+    _instance.phoneNumber = _instance.phoneNumber || undefined;
+    _instance.dateAndTime = _instance.dateAndTime || undefined;
+    _instance.creditCardNumber = _instance.creditCardNumber || undefined;
+    _instance.socialSecurityNumber =
+      _instance.socialSecurityNumber || undefined;
+    _instance.timeZone = _instance.timeZone || undefined;
   }
 
   /**
@@ -11860,22 +12464,46 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
           _instance.active = _reader.readBool();
           break;
         case 2:
-          _instance.email = _reader.readBool();
+          _instance.email = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.email,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 3:
-          _instance.phoneNumber = _reader.readBool();
+          _instance.phoneNumber = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.phoneNumber,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 4:
-          _instance.dateAndTime = _reader.readBool();
+          _instance.dateAndTime = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.dateAndTime,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 5:
-          _instance.creditCardNumber = _reader.readBool();
+          _instance.creditCardNumber = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.creditCardNumber,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 6:
-          _instance.socialSecurityNumber = _reader.readBool();
+          _instance.socialSecurityNumber = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.socialSecurityNumber,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 7:
-          _instance.timeZone = _reader.readBool();
+          _instance.timeZone = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.timeZone,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         default:
           _reader.skipField();
@@ -11898,32 +12526,56 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
       _writer.writeBool(1, _instance.active);
     }
     if (_instance.email) {
-      _writer.writeBool(2, _instance.email);
+      _writer.writeMessage(
+        2,
+        _instance.email as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.phoneNumber) {
-      _writer.writeBool(3, _instance.phoneNumber);
+      _writer.writeMessage(
+        3,
+        _instance.phoneNumber as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.dateAndTime) {
-      _writer.writeBool(4, _instance.dateAndTime);
+      _writer.writeMessage(
+        4,
+        _instance.dateAndTime as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.creditCardNumber) {
-      _writer.writeBool(5, _instance.creditCardNumber);
+      _writer.writeMessage(
+        5,
+        _instance.creditCardNumber as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.socialSecurityNumber) {
-      _writer.writeBool(6, _instance.socialSecurityNumber);
+      _writer.writeMessage(
+        6,
+        _instance.socialSecurityNumber as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.timeZone) {
-      _writer.writeBool(7, _instance.timeZone);
+      _writer.writeMessage(
+        7,
+        _instance.timeZone as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
   }
 
   private _active: boolean;
-  private _email: boolean;
-  private _phoneNumber: boolean;
-  private _dateAndTime: boolean;
-  private _creditCardNumber: boolean;
-  private _socialSecurityNumber: boolean;
-  private _timeZone: boolean;
+  private _email?: S2tLlmPostProcessingSubTaskOptions;
+  private _phoneNumber?: S2tLlmPostProcessingSubTaskOptions;
+  private _dateAndTime?: S2tLlmPostProcessingSubTaskOptions;
+  private _creditCardNumber?: S2tLlmPostProcessingSubTaskOptions;
+  private _socialSecurityNumber?: S2tLlmPostProcessingSubTaskOptions;
+  private _timeZone?: S2tLlmPostProcessingSubTaskOptions;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -11936,12 +12588,24 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
   ) {
     _value = _value || {};
     this.active = _value.active;
-    this.email = _value.email;
-    this.phoneNumber = _value.phoneNumber;
-    this.dateAndTime = _value.dateAndTime;
-    this.creditCardNumber = _value.creditCardNumber;
-    this.socialSecurityNumber = _value.socialSecurityNumber;
-    this.timeZone = _value.timeZone;
+    this.email = _value.email
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.email)
+      : undefined;
+    this.phoneNumber = _value.phoneNumber
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.phoneNumber)
+      : undefined;
+    this.dateAndTime = _value.dateAndTime
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.dateAndTime)
+      : undefined;
+    this.creditCardNumber = _value.creditCardNumber
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.creditCardNumber)
+      : undefined;
+    this.socialSecurityNumber = _value.socialSecurityNumber
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.socialSecurityNumber)
+      : undefined;
+    this.timeZone = _value.timeZone
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.timeZone)
+      : undefined;
     S2tLlmPostProcessingInverseNormalizationOptions.refineValues(this);
   }
   get active(): boolean {
@@ -11950,40 +12614,42 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
   set active(value: boolean) {
     this._active = value;
   }
-  get email(): boolean {
+  get email(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._email;
   }
-  set email(value: boolean) {
+  set email(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._email = value;
   }
-  get phoneNumber(): boolean {
+  get phoneNumber(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._phoneNumber;
   }
-  set phoneNumber(value: boolean) {
+  set phoneNumber(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._phoneNumber = value;
   }
-  get dateAndTime(): boolean {
+  get dateAndTime(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._dateAndTime;
   }
-  set dateAndTime(value: boolean) {
+  set dateAndTime(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._dateAndTime = value;
   }
-  get creditCardNumber(): boolean {
+  get creditCardNumber(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._creditCardNumber;
   }
-  set creditCardNumber(value: boolean) {
+  set creditCardNumber(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._creditCardNumber = value;
   }
-  get socialSecurityNumber(): boolean {
+  get socialSecurityNumber(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._socialSecurityNumber;
   }
-  set socialSecurityNumber(value: boolean) {
+  set socialSecurityNumber(
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
+  ) {
     this._socialSecurityNumber = value;
   }
-  get timeZone(): boolean {
+  get timeZone(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._timeZone;
   }
-  set timeZone(value: boolean) {
+  set timeZone(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._timeZone = value;
   }
 
@@ -12006,12 +12672,16 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
   toObject(): S2tLlmPostProcessingInverseNormalizationOptions.AsObject {
     return {
       active: this.active,
-      email: this.email,
-      phoneNumber: this.phoneNumber,
-      dateAndTime: this.dateAndTime,
-      creditCardNumber: this.creditCardNumber,
-      socialSecurityNumber: this.socialSecurityNumber,
-      timeZone: this.timeZone
+      email: this.email ? this.email.toObject() : undefined,
+      phoneNumber: this.phoneNumber ? this.phoneNumber.toObject() : undefined,
+      dateAndTime: this.dateAndTime ? this.dateAndTime.toObject() : undefined,
+      creditCardNumber: this.creditCardNumber
+        ? this.creditCardNumber.toObject()
+        : undefined,
+      socialSecurityNumber: this.socialSecurityNumber
+        ? this.socialSecurityNumber.toObject()
+        : undefined,
+      timeZone: this.timeZone ? this.timeZone.toObject() : undefined
     };
   }
 
@@ -12033,12 +12703,20 @@ export class S2tLlmPostProcessingInverseNormalizationOptions
   ): S2tLlmPostProcessingInverseNormalizationOptions.AsProtobufJSON {
     return {
       active: this.active,
-      email: this.email,
-      phoneNumber: this.phoneNumber,
-      dateAndTime: this.dateAndTime,
-      creditCardNumber: this.creditCardNumber,
-      socialSecurityNumber: this.socialSecurityNumber,
-      timeZone: this.timeZone
+      email: this.email ? this.email.toProtobufJSON(options) : null,
+      phoneNumber: this.phoneNumber
+        ? this.phoneNumber.toProtobufJSON(options)
+        : null,
+      dateAndTime: this.dateAndTime
+        ? this.dateAndTime.toProtobufJSON(options)
+        : null,
+      creditCardNumber: this.creditCardNumber
+        ? this.creditCardNumber.toProtobufJSON(options)
+        : null,
+      socialSecurityNumber: this.socialSecurityNumber
+        ? this.socialSecurityNumber.toProtobufJSON(options)
+        : null,
+      timeZone: this.timeZone ? this.timeZone.toProtobufJSON(options) : null
     };
   }
 }
@@ -12048,12 +12726,12 @@ export module S2tLlmPostProcessingInverseNormalizationOptions {
    */
   export interface AsObject {
     active: boolean;
-    email: boolean;
-    phoneNumber: boolean;
-    dateAndTime: boolean;
-    creditCardNumber: boolean;
-    socialSecurityNumber: boolean;
-    timeZone: boolean;
+    email?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    phoneNumber?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    dateAndTime?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    creditCardNumber?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    socialSecurityNumber?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    timeZone?: S2tLlmPostProcessingSubTaskOptions.AsObject;
   }
 
   /**
@@ -12061,12 +12739,12 @@ export module S2tLlmPostProcessingInverseNormalizationOptions {
    */
   export interface AsProtobufJSON {
     active: boolean;
-    email: boolean;
-    phoneNumber: boolean;
-    dateAndTime: boolean;
-    creditCardNumber: boolean;
-    socialSecurityNumber: boolean;
-    timeZone: boolean;
+    email: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    phoneNumber: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    dateAndTime: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    creditCardNumber: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    socialSecurityNumber: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    timeZone: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
   }
 }
 
@@ -12095,12 +12773,13 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
    */
   static refineValues(_instance: S2tLlmPostProcessingNormalizationOptions) {
     _instance.active = _instance.active || false;
-    _instance.email = _instance.email || false;
-    _instance.phoneNumber = _instance.phoneNumber || false;
-    _instance.dateAndTime = _instance.dateAndTime || false;
-    _instance.creditCardNumber = _instance.creditCardNumber || false;
-    _instance.socialSecurityNumber = _instance.socialSecurityNumber || false;
-    _instance.timeZone = _instance.timeZone || false;
+    _instance.email = _instance.email || undefined;
+    _instance.phoneNumber = _instance.phoneNumber || undefined;
+    _instance.dateAndTime = _instance.dateAndTime || undefined;
+    _instance.creditCardNumber = _instance.creditCardNumber || undefined;
+    _instance.socialSecurityNumber =
+      _instance.socialSecurityNumber || undefined;
+    _instance.timeZone = _instance.timeZone || undefined;
   }
 
   /**
@@ -12120,22 +12799,46 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
           _instance.active = _reader.readBool();
           break;
         case 2:
-          _instance.email = _reader.readBool();
+          _instance.email = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.email,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 3:
-          _instance.phoneNumber = _reader.readBool();
+          _instance.phoneNumber = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.phoneNumber,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 4:
-          _instance.dateAndTime = _reader.readBool();
+          _instance.dateAndTime = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.dateAndTime,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 5:
-          _instance.creditCardNumber = _reader.readBool();
+          _instance.creditCardNumber = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.creditCardNumber,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 6:
-          _instance.socialSecurityNumber = _reader.readBool();
+          _instance.socialSecurityNumber = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.socialSecurityNumber,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         case 7:
-          _instance.timeZone = _reader.readBool();
+          _instance.timeZone = new S2tLlmPostProcessingSubTaskOptions();
+          _reader.readMessage(
+            _instance.timeZone,
+            S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader
+          );
           break;
         default:
           _reader.skipField();
@@ -12158,32 +12861,56 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
       _writer.writeBool(1, _instance.active);
     }
     if (_instance.email) {
-      _writer.writeBool(2, _instance.email);
+      _writer.writeMessage(
+        2,
+        _instance.email as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.phoneNumber) {
-      _writer.writeBool(3, _instance.phoneNumber);
+      _writer.writeMessage(
+        3,
+        _instance.phoneNumber as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.dateAndTime) {
-      _writer.writeBool(4, _instance.dateAndTime);
+      _writer.writeMessage(
+        4,
+        _instance.dateAndTime as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.creditCardNumber) {
-      _writer.writeBool(5, _instance.creditCardNumber);
+      _writer.writeMessage(
+        5,
+        _instance.creditCardNumber as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.socialSecurityNumber) {
-      _writer.writeBool(6, _instance.socialSecurityNumber);
+      _writer.writeMessage(
+        6,
+        _instance.socialSecurityNumber as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
     if (_instance.timeZone) {
-      _writer.writeBool(7, _instance.timeZone);
+      _writer.writeMessage(
+        7,
+        _instance.timeZone as any,
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter
+      );
     }
   }
 
   private _active: boolean;
-  private _email: boolean;
-  private _phoneNumber: boolean;
-  private _dateAndTime: boolean;
-  private _creditCardNumber: boolean;
-  private _socialSecurityNumber: boolean;
-  private _timeZone: boolean;
+  private _email?: S2tLlmPostProcessingSubTaskOptions;
+  private _phoneNumber?: S2tLlmPostProcessingSubTaskOptions;
+  private _dateAndTime?: S2tLlmPostProcessingSubTaskOptions;
+  private _creditCardNumber?: S2tLlmPostProcessingSubTaskOptions;
+  private _socialSecurityNumber?: S2tLlmPostProcessingSubTaskOptions;
+  private _timeZone?: S2tLlmPostProcessingSubTaskOptions;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -12194,12 +12921,24 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
   ) {
     _value = _value || {};
     this.active = _value.active;
-    this.email = _value.email;
-    this.phoneNumber = _value.phoneNumber;
-    this.dateAndTime = _value.dateAndTime;
-    this.creditCardNumber = _value.creditCardNumber;
-    this.socialSecurityNumber = _value.socialSecurityNumber;
-    this.timeZone = _value.timeZone;
+    this.email = _value.email
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.email)
+      : undefined;
+    this.phoneNumber = _value.phoneNumber
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.phoneNumber)
+      : undefined;
+    this.dateAndTime = _value.dateAndTime
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.dateAndTime)
+      : undefined;
+    this.creditCardNumber = _value.creditCardNumber
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.creditCardNumber)
+      : undefined;
+    this.socialSecurityNumber = _value.socialSecurityNumber
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.socialSecurityNumber)
+      : undefined;
+    this.timeZone = _value.timeZone
+      ? new S2tLlmPostProcessingSubTaskOptions(_value.timeZone)
+      : undefined;
     S2tLlmPostProcessingNormalizationOptions.refineValues(this);
   }
   get active(): boolean {
@@ -12208,40 +12947,42 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
   set active(value: boolean) {
     this._active = value;
   }
-  get email(): boolean {
+  get email(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._email;
   }
-  set email(value: boolean) {
+  set email(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._email = value;
   }
-  get phoneNumber(): boolean {
+  get phoneNumber(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._phoneNumber;
   }
-  set phoneNumber(value: boolean) {
+  set phoneNumber(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._phoneNumber = value;
   }
-  get dateAndTime(): boolean {
+  get dateAndTime(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._dateAndTime;
   }
-  set dateAndTime(value: boolean) {
+  set dateAndTime(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._dateAndTime = value;
   }
-  get creditCardNumber(): boolean {
+  get creditCardNumber(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._creditCardNumber;
   }
-  set creditCardNumber(value: boolean) {
+  set creditCardNumber(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._creditCardNumber = value;
   }
-  get socialSecurityNumber(): boolean {
+  get socialSecurityNumber(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._socialSecurityNumber;
   }
-  set socialSecurityNumber(value: boolean) {
+  set socialSecurityNumber(
+    value: S2tLlmPostProcessingSubTaskOptions | undefined
+  ) {
     this._socialSecurityNumber = value;
   }
-  get timeZone(): boolean {
+  get timeZone(): S2tLlmPostProcessingSubTaskOptions | undefined {
     return this._timeZone;
   }
-  set timeZone(value: boolean) {
+  set timeZone(value: S2tLlmPostProcessingSubTaskOptions | undefined) {
     this._timeZone = value;
   }
 
@@ -12264,12 +13005,16 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
   toObject(): S2tLlmPostProcessingNormalizationOptions.AsObject {
     return {
       active: this.active,
-      email: this.email,
-      phoneNumber: this.phoneNumber,
-      dateAndTime: this.dateAndTime,
-      creditCardNumber: this.creditCardNumber,
-      socialSecurityNumber: this.socialSecurityNumber,
-      timeZone: this.timeZone
+      email: this.email ? this.email.toObject() : undefined,
+      phoneNumber: this.phoneNumber ? this.phoneNumber.toObject() : undefined,
+      dateAndTime: this.dateAndTime ? this.dateAndTime.toObject() : undefined,
+      creditCardNumber: this.creditCardNumber
+        ? this.creditCardNumber.toObject()
+        : undefined,
+      socialSecurityNumber: this.socialSecurityNumber
+        ? this.socialSecurityNumber.toObject()
+        : undefined,
+      timeZone: this.timeZone ? this.timeZone.toObject() : undefined
     };
   }
 
@@ -12291,12 +13036,20 @@ export class S2tLlmPostProcessingNormalizationOptions implements GrpcMessage {
   ): S2tLlmPostProcessingNormalizationOptions.AsProtobufJSON {
     return {
       active: this.active,
-      email: this.email,
-      phoneNumber: this.phoneNumber,
-      dateAndTime: this.dateAndTime,
-      creditCardNumber: this.creditCardNumber,
-      socialSecurityNumber: this.socialSecurityNumber,
-      timeZone: this.timeZone
+      email: this.email ? this.email.toProtobufJSON(options) : null,
+      phoneNumber: this.phoneNumber
+        ? this.phoneNumber.toProtobufJSON(options)
+        : null,
+      dateAndTime: this.dateAndTime
+        ? this.dateAndTime.toProtobufJSON(options)
+        : null,
+      creditCardNumber: this.creditCardNumber
+        ? this.creditCardNumber.toProtobufJSON(options)
+        : null,
+      socialSecurityNumber: this.socialSecurityNumber
+        ? this.socialSecurityNumber.toProtobufJSON(options)
+        : null,
+      timeZone: this.timeZone ? this.timeZone.toProtobufJSON(options) : null
     };
   }
 }
@@ -12306,12 +13059,12 @@ export module S2tLlmPostProcessingNormalizationOptions {
    */
   export interface AsObject {
     active: boolean;
-    email: boolean;
-    phoneNumber: boolean;
-    dateAndTime: boolean;
-    creditCardNumber: boolean;
-    socialSecurityNumber: boolean;
-    timeZone: boolean;
+    email?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    phoneNumber?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    dateAndTime?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    creditCardNumber?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    socialSecurityNumber?: S2tLlmPostProcessingSubTaskOptions.AsObject;
+    timeZone?: S2tLlmPostProcessingSubTaskOptions.AsObject;
   }
 
   /**
@@ -12319,12 +13072,12 @@ export module S2tLlmPostProcessingNormalizationOptions {
    */
   export interface AsProtobufJSON {
     active: boolean;
-    email: boolean;
-    phoneNumber: boolean;
-    dateAndTime: boolean;
-    creditCardNumber: boolean;
-    socialSecurityNumber: boolean;
-    timeZone: boolean;
+    email: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    phoneNumber: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    dateAndTime: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    creditCardNumber: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    socialSecurityNumber: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
+    timeZone: S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON | null;
   }
 }
 
@@ -12511,18 +13264,18 @@ export module S2tLlmPostProcessingSummarizationOptions {
 }
 
 /**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingUserPromptOptions
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingSubTaskOptions
  */
-export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
-  static id = 'ondewo.s2t.S2tLlmPostProcessingUserPromptOptions';
+export class S2tLlmPostProcessingSubTaskOptions implements GrpcMessage {
+  static id = 'ondewo.s2t.S2tLlmPostProcessingSubTaskOptions';
 
   /**
    * Deserialize binary data to message
    * @param instance message instance
    */
   static deserializeBinary(bytes: ByteSource) {
-    const instance = new S2tLlmPostProcessingUserPromptOptions();
-    S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader(
+    const instance = new S2tLlmPostProcessingSubTaskOptions();
+    S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader(
       instance,
       new BinaryReader(bytes)
     );
@@ -12533,7 +13286,7 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
    * Check all the properties and set default protobuf values if necessary
    * @param _instance message instance
    */
-  static refineValues(_instance: S2tLlmPostProcessingUserPromptOptions) {
+  static refineValues(_instance: S2tLlmPostProcessingSubTaskOptions) {
     _instance.active = _instance.active || false;
     _instance.prompt = _instance.prompt || '';
   }
@@ -12544,7 +13297,7 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
    * @param _reader binary reader instance
    */
   static deserializeBinaryFromReader(
-    _instance: S2tLlmPostProcessingUserPromptOptions,
+    _instance: S2tLlmPostProcessingSubTaskOptions,
     _reader: BinaryReader
   ) {
     while (_reader.nextField()) {
@@ -12562,7 +13315,7 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
       }
     }
 
-    S2tLlmPostProcessingUserPromptOptions.refineValues(_instance);
+    S2tLlmPostProcessingSubTaskOptions.refineValues(_instance);
   }
 
   /**
@@ -12571,7 +13324,7 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
    * @param _writer binary writer instance
    */
   static serializeBinaryToWriter(
-    _instance: S2tLlmPostProcessingUserPromptOptions,
+    _instance: S2tLlmPostProcessingSubTaskOptions,
     _writer: BinaryWriter
   ) {
     if (_instance.active) {
@@ -12587,15 +13340,15 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-   * @param _value initial values object or instance of S2tLlmPostProcessingUserPromptOptions to deeply clone from
+   * @param _value initial values object or instance of S2tLlmPostProcessingSubTaskOptions to deeply clone from
    */
   constructor(
-    _value?: RecursivePartial<S2tLlmPostProcessingUserPromptOptions.AsObject>
+    _value?: RecursivePartial<S2tLlmPostProcessingSubTaskOptions.AsObject>
   ) {
     _value = _value || {};
     this.active = _value.active;
     this.prompt = _value.prompt;
-    S2tLlmPostProcessingUserPromptOptions.refineValues(this);
+    S2tLlmPostProcessingSubTaskOptions.refineValues(this);
   }
   get active(): boolean {
     return this._active;
@@ -12616,14 +13369,14 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
    */
   serializeBinary() {
     const writer = new BinaryWriter();
-    S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter(this, writer);
+    S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter(this, writer);
     return writer.getResultBuffer();
   }
 
   /**
    * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
    */
-  toObject(): S2tLlmPostProcessingUserPromptOptions.AsObject {
+  toObject(): S2tLlmPostProcessingSubTaskOptions.AsObject {
     return {
       active: this.active,
       prompt: this.prompt
@@ -12645,16 +13398,16 @@ export class S2tLlmPostProcessingUserPromptOptions implements GrpcMessage {
   toProtobufJSON(
     // @ts-ignore
     options?: ToProtobufJSONOptions
-  ): S2tLlmPostProcessingUserPromptOptions.AsProtobufJSON {
+  ): S2tLlmPostProcessingSubTaskOptions.AsProtobufJSON {
     return {
       active: this.active,
       prompt: this.prompt
     };
   }
 }
-export module S2tLlmPostProcessingUserPromptOptions {
+export module S2tLlmPostProcessingSubTaskOptions {
   /**
-   * Standard JavaScript object representation for S2tLlmPostProcessingUserPromptOptions
+   * Standard JavaScript object representation for S2tLlmPostProcessingSubTaskOptions
    */
   export interface AsObject {
     active: boolean;
@@ -12662,7 +13415,7 @@ export module S2tLlmPostProcessingUserPromptOptions {
   }
 
   /**
-   * Protobuf JSON representation for S2tLlmPostProcessingUserPromptOptions
+   * Protobuf JSON representation for S2tLlmPostProcessingSubTaskOptions
    */
   export interface AsProtobufJSON {
     active: boolean;

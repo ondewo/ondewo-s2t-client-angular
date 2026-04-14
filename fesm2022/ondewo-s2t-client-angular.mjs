@@ -41,6 +41,30 @@ var InferenceBackend;
     InferenceBackend[InferenceBackend["INFERENCE_BACKEND_CLOUD_SERVICE_GOOGLE"] = 5] = "INFERENCE_BACKEND_CLOUD_SERVICE_GOOGLE";
     InferenceBackend[InferenceBackend["INFERENCE_BACKEND_CLOUD_SERVICE_MICROSOFT"] = 6] = "INFERENCE_BACKEND_CLOUD_SERVICE_MICROSOFT";
 })(InferenceBackend || (InferenceBackend = {}));
+var ServiceTier;
+(function (ServiceTier) {
+    ServiceTier[ServiceTier["SERVICE_TIER_UNSPECIFIED"] = 0] = "SERVICE_TIER_UNSPECIFIED";
+    ServiceTier[ServiceTier["SERVICE_TIER_AUTO"] = 1] = "SERVICE_TIER_AUTO";
+    ServiceTier[ServiceTier["SERVICE_TIER_DEFAULT"] = 2] = "SERVICE_TIER_DEFAULT";
+    ServiceTier[ServiceTier["SERVICE_TIER_FLEX"] = 3] = "SERVICE_TIER_FLEX";
+    ServiceTier[ServiceTier["SERVICE_TIER_SCALE"] = 4] = "SERVICE_TIER_SCALE";
+    ServiceTier[ServiceTier["SERVICE_TIER_PRIORITY"] = 5] = "SERVICE_TIER_PRIORITY";
+})(ServiceTier || (ServiceTier = {}));
+var Verbosity;
+(function (Verbosity) {
+    Verbosity[Verbosity["VERBOSITY_UNSPECIFIED"] = 0] = "VERBOSITY_UNSPECIFIED";
+    Verbosity[Verbosity["VERBOSITY_LOW"] = 1] = "VERBOSITY_LOW";
+    Verbosity[Verbosity["VERBOSITY_MEDIUM"] = 2] = "VERBOSITY_MEDIUM";
+    Verbosity[Verbosity["VERBOSITY_HIGH"] = 3] = "VERBOSITY_HIGH";
+})(Verbosity || (Verbosity = {}));
+var ReasoningEffort;
+(function (ReasoningEffort) {
+    ReasoningEffort[ReasoningEffort["REASONING_EFFORT_UNSPECIFIED"] = 0] = "REASONING_EFFORT_UNSPECIFIED";
+    ReasoningEffort[ReasoningEffort["REASONING_EFFORT_MINIMAL"] = 1] = "REASONING_EFFORT_MINIMAL";
+    ReasoningEffort[ReasoningEffort["REASONING_EFFORT_LOW"] = 2] = "REASONING_EFFORT_LOW";
+    ReasoningEffort[ReasoningEffort["REASONING_EFFORT_MEDIUM"] = 3] = "REASONING_EFFORT_MEDIUM";
+    ReasoningEffort[ReasoningEffort["REASONING_EFFORT_HIGH"] = 4] = "REASONING_EFFORT_HIGH";
+})(ReasoningEffort || (ReasoningEffort = {}));
 /**
  * Message implementation for ondewo.s2t.TranscribeRequestConfig
  */
@@ -6769,11 +6793,11 @@ class TurnDetectionOptions {
         _instance.active = _instance.active || false;
         _instance.fullUtteranceDeployment =
             _instance.fullUtteranceDeployment || false;
-        _instance.llmHost = _instance.llmHost || '';
-        _instance.llmPort = _instance.llmPort || 0;
-        _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
-        _instance.llmModelName = _instance.llmModelName || '';
-        _instance.llmHeaders = _instance.llmHeaders || undefined;
+        _instance.turnDetectionSystemPrompt =
+            _instance.turnDetectionSystemPrompt || '';
+        _instance.turnDetectionUserPrompt = _instance.turnDetectionUserPrompt || '';
+        _instance.turnDetectionLlmOpenaiOptions =
+            _instance.turnDetectionLlmOpenaiOptions || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -6792,20 +6816,14 @@ class TurnDetectionOptions {
                     _instance.fullUtteranceDeployment = _reader.readBool();
                     break;
                 case 3:
-                    _instance.llmHost = _reader.readString();
+                    _instance.turnDetectionSystemPrompt = _reader.readString();
                     break;
                 case 4:
-                    _instance.llmPort = _reader.readInt32();
+                    _instance.turnDetectionUserPrompt = _reader.readString();
                     break;
                 case 5:
-                    _instance.llmRequestTimeout = _reader.readFloat();
-                    break;
-                case 6:
-                    _instance.llmModelName = _reader.readString();
-                    break;
-                case 7:
-                    _instance.llmHeaders = new googleProtobuf001.Struct();
-                    _reader.readMessage(_instance.llmHeaders, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    _instance.turnDetectionLlmOpenaiOptions = new OpenaiLlmOptions();
+                    _reader.readMessage(_instance.turnDetectionLlmOpenaiOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -6825,20 +6843,14 @@ class TurnDetectionOptions {
         if (_instance.fullUtteranceDeployment) {
             _writer.writeBool(2, _instance.fullUtteranceDeployment);
         }
-        if (_instance.llmHost) {
-            _writer.writeString(3, _instance.llmHost);
+        if (_instance.turnDetectionSystemPrompt) {
+            _writer.writeString(3, _instance.turnDetectionSystemPrompt);
         }
-        if (_instance.llmPort) {
-            _writer.writeInt32(4, _instance.llmPort);
+        if (_instance.turnDetectionUserPrompt) {
+            _writer.writeString(4, _instance.turnDetectionUserPrompt);
         }
-        if (_instance.llmRequestTimeout) {
-            _writer.writeFloat(5, _instance.llmRequestTimeout);
-        }
-        if (_instance.llmModelName) {
-            _writer.writeString(6, _instance.llmModelName);
-        }
-        if (_instance.llmHeaders) {
-            _writer.writeMessage(7, _instance.llmHeaders, googleProtobuf001.Struct.serializeBinaryToWriter);
+        if (_instance.turnDetectionLlmOpenaiOptions) {
+            _writer.writeMessage(5, _instance.turnDetectionLlmOpenaiOptions, OpenaiLlmOptions.serializeBinaryToWriter);
         }
     }
     /**
@@ -6849,12 +6861,10 @@ class TurnDetectionOptions {
         _value = _value || {};
         this.active = _value.active;
         this.fullUtteranceDeployment = _value.fullUtteranceDeployment;
-        this.llmHost = _value.llmHost;
-        this.llmPort = _value.llmPort;
-        this.llmRequestTimeout = _value.llmRequestTimeout;
-        this.llmModelName = _value.llmModelName;
-        this.llmHeaders = _value.llmHeaders
-            ? new googleProtobuf001.Struct(_value.llmHeaders)
+        this.turnDetectionSystemPrompt = _value.turnDetectionSystemPrompt;
+        this.turnDetectionUserPrompt = _value.turnDetectionUserPrompt;
+        this.turnDetectionLlmOpenaiOptions = _value.turnDetectionLlmOpenaiOptions
+            ? new OpenaiLlmOptions(_value.turnDetectionLlmOpenaiOptions)
             : undefined;
         TurnDetectionOptions.refineValues(this);
     }
@@ -6870,35 +6880,23 @@ class TurnDetectionOptions {
     set fullUtteranceDeployment(value) {
         this._fullUtteranceDeployment = value;
     }
-    get llmHost() {
-        return this._llmHost;
+    get turnDetectionSystemPrompt() {
+        return this._turnDetectionSystemPrompt;
     }
-    set llmHost(value) {
-        this._llmHost = value;
+    set turnDetectionSystemPrompt(value) {
+        this._turnDetectionSystemPrompt = value;
     }
-    get llmPort() {
-        return this._llmPort;
+    get turnDetectionUserPrompt() {
+        return this._turnDetectionUserPrompt;
     }
-    set llmPort(value) {
-        this._llmPort = value;
+    set turnDetectionUserPrompt(value) {
+        this._turnDetectionUserPrompt = value;
     }
-    get llmRequestTimeout() {
-        return this._llmRequestTimeout;
+    get turnDetectionLlmOpenaiOptions() {
+        return this._turnDetectionLlmOpenaiOptions;
     }
-    set llmRequestTimeout(value) {
-        this._llmRequestTimeout = value;
-    }
-    get llmModelName() {
-        return this._llmModelName;
-    }
-    set llmModelName(value) {
-        this._llmModelName = value;
-    }
-    get llmHeaders() {
-        return this._llmHeaders;
-    }
-    set llmHeaders(value) {
-        this._llmHeaders = value;
+    set turnDetectionLlmOpenaiOptions(value) {
+        this._turnDetectionLlmOpenaiOptions = value;
     }
     /**
      * Serialize message to binary data
@@ -6916,11 +6914,11 @@ class TurnDetectionOptions {
         return {
             active: this.active,
             fullUtteranceDeployment: this.fullUtteranceDeployment,
-            llmHost: this.llmHost,
-            llmPort: this.llmPort,
-            llmRequestTimeout: this.llmRequestTimeout,
-            llmModelName: this.llmModelName,
-            llmHeaders: this.llmHeaders ? this.llmHeaders.toObject() : undefined
+            turnDetectionSystemPrompt: this.turnDetectionSystemPrompt,
+            turnDetectionUserPrompt: this.turnDetectionUserPrompt,
+            turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions
+                ? this.turnDetectionLlmOpenaiOptions.toObject()
+                : undefined
         };
     }
     /**
@@ -6940,16 +6938,946 @@ class TurnDetectionOptions {
         return {
             active: this.active,
             fullUtteranceDeployment: this.fullUtteranceDeployment,
-            llmHost: this.llmHost,
-            llmPort: this.llmPort,
-            llmRequestTimeout: this.llmRequestTimeout,
-            llmModelName: this.llmModelName,
-            llmHeaders: this.llmHeaders
-                ? this.llmHeaders.toProtobufJSON(options)
+            turnDetectionSystemPrompt: this.turnDetectionSystemPrompt,
+            turnDetectionUserPrompt: this.turnDetectionUserPrompt,
+            turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions
+                ? this.turnDetectionLlmOpenaiOptions.toProtobufJSON(options)
                 : null
         };
     }
 }
+/**
+ * Message implementation for ondewo.s2t.OpenaiLlmOptions
+ */
+class OpenaiLlmOptions {
+    static { this.id = 'ondewo.s2t.OpenaiLlmOptions'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new OpenaiLlmOptions();
+        OpenaiLlmOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.apiKey = _instance.apiKey || '';
+        _instance.organization = _instance.organization || '';
+        _instance.project = _instance.project || '';
+        _instance.webhookSecret = _instance.webhookSecret || '';
+        _instance.baseUrl = _instance.baseUrl || '';
+        _instance.websocketBaseUrl = _instance.websocketBaseUrl || '';
+        _instance.timeout = _instance.timeout || 0;
+        _instance.maxRetries = _instance.maxRetries || 0;
+        _instance.defaultHeaders = _instance.defaultHeaders || {};
+        _instance.defaultQuery = _instance.defaultQuery || undefined;
+        _instance.strictResponseValidation =
+            _instance.strictResponseValidation || false;
+        _instance.model = _instance.model || '';
+        _instance.frequencyPenalty = _instance.frequencyPenalty || 0;
+        _instance.logitBias = _instance.logitBias || {};
+        _instance.logprobs = _instance.logprobs || false;
+        _instance.maxCompletionTokens = _instance.maxCompletionTokens || 0;
+        _instance.maxTokens = _instance.maxTokens || 0;
+        _instance.metadata = _instance.metadata || undefined;
+        _instance.n = _instance.n || 0;
+        _instance.presencePenalty = _instance.presencePenalty || 0;
+        _instance.promptCacheKey = _instance.promptCacheKey || '';
+        _instance.reasoningEffort = _instance.reasoningEffort || 0;
+        _instance.seed = _instance.seed || '0';
+        _instance.serviceTier = _instance.serviceTier || 0;
+        _instance.stop = _instance.stop || [];
+        _instance.store = _instance.store || false;
+        _instance.temperature = _instance.temperature || 0;
+        _instance.topLogprobs = _instance.topLogprobs || 0;
+        _instance.topP = _instance.topP || 0;
+        _instance.user = _instance.user || '';
+        _instance.verbosity = _instance.verbosity || 0;
+        _instance.extraHeaders = _instance.extraHeaders || undefined;
+        _instance.extraQuery = _instance.extraQuery || undefined;
+        _instance.extraBody = _instance.extraBody || undefined;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.apiKey = _reader.readString();
+                    break;
+                case 2:
+                    _instance.organization = _reader.readString();
+                    break;
+                case 3:
+                    _instance.project = _reader.readString();
+                    break;
+                case 4:
+                    _instance.webhookSecret = _reader.readString();
+                    break;
+                case 5:
+                    _instance.baseUrl = _reader.readString();
+                    break;
+                case 6:
+                    _instance.websocketBaseUrl = _reader.readString();
+                    break;
+                case 7:
+                    _instance.timeout = _reader.readFloat();
+                    break;
+                case 8:
+                    _instance.maxRetries = _reader.readInt32();
+                    break;
+                case 9:
+                    const msg_9 = {};
+                    _reader.readMessage(msg_9, OpenaiLlmOptions.DefaultHeadersEntry.deserializeBinaryFromReader);
+                    _instance.defaultHeaders = _instance.defaultHeaders || {};
+                    _instance.defaultHeaders[msg_9.key] = msg_9.value;
+                    break;
+                case 10:
+                    _instance.defaultQuery = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.defaultQuery, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    break;
+                case 11:
+                    _instance.strictResponseValidation = _reader.readBool();
+                    break;
+                case 12:
+                    _instance.model = _reader.readString();
+                    break;
+                case 13:
+                    _instance.frequencyPenalty = _reader.readFloat();
+                    break;
+                case 14:
+                    const msg_14 = {};
+                    _reader.readMessage(msg_14, OpenaiLlmOptions.LogitBiasEntry.deserializeBinaryFromReader);
+                    _instance.logitBias = _instance.logitBias || {};
+                    _instance.logitBias[msg_14.key] = msg_14.value;
+                    break;
+                case 15:
+                    _instance.logprobs = _reader.readBool();
+                    break;
+                case 16:
+                    _instance.maxCompletionTokens = _reader.readInt32();
+                    break;
+                case 17:
+                    _instance.maxTokens = _reader.readInt32();
+                    break;
+                case 18:
+                    _instance.metadata = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.metadata, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    break;
+                case 19:
+                    _instance.n = _reader.readInt32();
+                    break;
+                case 20:
+                    _instance.presencePenalty = _reader.readFloat();
+                    break;
+                case 21:
+                    _instance.promptCacheKey = _reader.readString();
+                    break;
+                case 22:
+                    _instance.reasoningEffort = _reader.readEnum();
+                    break;
+                case 23:
+                    _instance.seed = _reader.readInt64String();
+                    break;
+                case 24:
+                    _instance.serviceTier = _reader.readEnum();
+                    break;
+                case 25:
+                    (_instance.stop = _instance.stop || []).push(_reader.readString());
+                    break;
+                case 26:
+                    _instance.store = _reader.readBool();
+                    break;
+                case 27:
+                    _instance.temperature = _reader.readFloat();
+                    break;
+                case 28:
+                    _instance.topLogprobs = _reader.readInt32();
+                    break;
+                case 29:
+                    _instance.topP = _reader.readFloat();
+                    break;
+                case 30:
+                    _instance.user = _reader.readString();
+                    break;
+                case 31:
+                    _instance.verbosity = _reader.readEnum();
+                    break;
+                case 32:
+                    _instance.extraHeaders = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.extraHeaders, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    break;
+                case 33:
+                    _instance.extraQuery = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.extraQuery, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    break;
+                case 34:
+                    _instance.extraBody = new googleProtobuf001.Struct();
+                    _reader.readMessage(_instance.extraBody, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        OpenaiLlmOptions.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.apiKey) {
+            _writer.writeString(1, _instance.apiKey);
+        }
+        if (_instance.organization) {
+            _writer.writeString(2, _instance.organization);
+        }
+        if (_instance.project) {
+            _writer.writeString(3, _instance.project);
+        }
+        if (_instance.webhookSecret) {
+            _writer.writeString(4, _instance.webhookSecret);
+        }
+        if (_instance.baseUrl) {
+            _writer.writeString(5, _instance.baseUrl);
+        }
+        if (_instance.websocketBaseUrl) {
+            _writer.writeString(6, _instance.websocketBaseUrl);
+        }
+        if (_instance.timeout) {
+            _writer.writeFloat(7, _instance.timeout);
+        }
+        if (_instance.maxRetries) {
+            _writer.writeInt32(8, _instance.maxRetries);
+        }
+        if (!!_instance.defaultHeaders) {
+            const keys_9 = Object.keys(_instance.defaultHeaders);
+            if (keys_9.length) {
+                const repeated_9 = keys_9
+                    .map(key => ({
+                    key: key,
+                    value: _instance.defaultHeaders[key]
+                }))
+                    .reduce((r, v) => [...r, v], []);
+                _writer.writeRepeatedMessage(9, repeated_9, OpenaiLlmOptions.DefaultHeadersEntry.serializeBinaryToWriter);
+            }
+        }
+        if (_instance.defaultQuery) {
+            _writer.writeMessage(10, _instance.defaultQuery, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
+        if (_instance.strictResponseValidation) {
+            _writer.writeBool(11, _instance.strictResponseValidation);
+        }
+        if (_instance.model) {
+            _writer.writeString(12, _instance.model);
+        }
+        if (_instance.frequencyPenalty) {
+            _writer.writeFloat(13, _instance.frequencyPenalty);
+        }
+        if (!!_instance.logitBias) {
+            const keys_14 = Object.keys(_instance.logitBias);
+            if (keys_14.length) {
+                const repeated_14 = keys_14
+                    .map(key => ({ key: key, value: _instance.logitBias[key] }))
+                    .reduce((r, v) => [...r, v], []);
+                _writer.writeRepeatedMessage(14, repeated_14, OpenaiLlmOptions.LogitBiasEntry.serializeBinaryToWriter);
+            }
+        }
+        if (_instance.logprobs) {
+            _writer.writeBool(15, _instance.logprobs);
+        }
+        if (_instance.maxCompletionTokens) {
+            _writer.writeInt32(16, _instance.maxCompletionTokens);
+        }
+        if (_instance.maxTokens) {
+            _writer.writeInt32(17, _instance.maxTokens);
+        }
+        if (_instance.metadata) {
+            _writer.writeMessage(18, _instance.metadata, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
+        if (_instance.n) {
+            _writer.writeInt32(19, _instance.n);
+        }
+        if (_instance.presencePenalty) {
+            _writer.writeFloat(20, _instance.presencePenalty);
+        }
+        if (_instance.promptCacheKey) {
+            _writer.writeString(21, _instance.promptCacheKey);
+        }
+        if (_instance.reasoningEffort) {
+            _writer.writeEnum(22, _instance.reasoningEffort);
+        }
+        if (_instance.seed) {
+            _writer.writeInt64String(23, _instance.seed);
+        }
+        if (_instance.serviceTier) {
+            _writer.writeEnum(24, _instance.serviceTier);
+        }
+        if (_instance.stop && _instance.stop.length) {
+            _writer.writeRepeatedString(25, _instance.stop);
+        }
+        if (_instance.store) {
+            _writer.writeBool(26, _instance.store);
+        }
+        if (_instance.temperature) {
+            _writer.writeFloat(27, _instance.temperature);
+        }
+        if (_instance.topLogprobs) {
+            _writer.writeInt32(28, _instance.topLogprobs);
+        }
+        if (_instance.topP) {
+            _writer.writeFloat(29, _instance.topP);
+        }
+        if (_instance.user) {
+            _writer.writeString(30, _instance.user);
+        }
+        if (_instance.verbosity) {
+            _writer.writeEnum(31, _instance.verbosity);
+        }
+        if (_instance.extraHeaders) {
+            _writer.writeMessage(32, _instance.extraHeaders, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
+        if (_instance.extraQuery) {
+            _writer.writeMessage(33, _instance.extraQuery, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
+        if (_instance.extraBody) {
+            _writer.writeMessage(34, _instance.extraBody, googleProtobuf001.Struct.serializeBinaryToWriter);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of OpenaiLlmOptions to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.apiKey = _value.apiKey;
+        this.organization = _value.organization;
+        this.project = _value.project;
+        this.webhookSecret = _value.webhookSecret;
+        this.baseUrl = _value.baseUrl;
+        this.websocketBaseUrl = _value.websocketBaseUrl;
+        this.timeout = _value.timeout;
+        this.maxRetries = _value.maxRetries;
+        (this.defaultHeaders = _value.defaultHeaders
+            ? Object.keys(_value.defaultHeaders).reduce((r, k) => ({ ...r, [k]: _value.defaultHeaders[k] }), {})
+            : {}),
+            (this.defaultQuery = _value.defaultQuery
+                ? new googleProtobuf001.Struct(_value.defaultQuery)
+                : undefined);
+        this.strictResponseValidation = _value.strictResponseValidation;
+        this.model = _value.model;
+        this.frequencyPenalty = _value.frequencyPenalty;
+        (this.logitBias = _value.logitBias
+            ? Object.keys(_value.logitBias).reduce((r, k) => ({ ...r, [k]: _value.logitBias[k] }), {})
+            : {}),
+            (this.logprobs = _value.logprobs);
+        this.maxCompletionTokens = _value.maxCompletionTokens;
+        this.maxTokens = _value.maxTokens;
+        this.metadata = _value.metadata
+            ? new googleProtobuf001.Struct(_value.metadata)
+            : undefined;
+        this.n = _value.n;
+        this.presencePenalty = _value.presencePenalty;
+        this.promptCacheKey = _value.promptCacheKey;
+        this.reasoningEffort = _value.reasoningEffort;
+        this.seed = _value.seed;
+        this.serviceTier = _value.serviceTier;
+        this.stop = (_value.stop || []).slice();
+        this.store = _value.store;
+        this.temperature = _value.temperature;
+        this.topLogprobs = _value.topLogprobs;
+        this.topP = _value.topP;
+        this.user = _value.user;
+        this.verbosity = _value.verbosity;
+        this.extraHeaders = _value.extraHeaders
+            ? new googleProtobuf001.Struct(_value.extraHeaders)
+            : undefined;
+        this.extraQuery = _value.extraQuery
+            ? new googleProtobuf001.Struct(_value.extraQuery)
+            : undefined;
+        this.extraBody = _value.extraBody
+            ? new googleProtobuf001.Struct(_value.extraBody)
+            : undefined;
+        OpenaiLlmOptions.refineValues(this);
+    }
+    get apiKey() {
+        return this._apiKey;
+    }
+    set apiKey(value) {
+        this._apiKey = value;
+    }
+    get organization() {
+        return this._organization;
+    }
+    set organization(value) {
+        this._organization = value;
+    }
+    get project() {
+        return this._project;
+    }
+    set project(value) {
+        this._project = value;
+    }
+    get webhookSecret() {
+        return this._webhookSecret;
+    }
+    set webhookSecret(value) {
+        this._webhookSecret = value;
+    }
+    get baseUrl() {
+        return this._baseUrl;
+    }
+    set baseUrl(value) {
+        this._baseUrl = value;
+    }
+    get websocketBaseUrl() {
+        return this._websocketBaseUrl;
+    }
+    set websocketBaseUrl(value) {
+        this._websocketBaseUrl = value;
+    }
+    get timeout() {
+        return this._timeout;
+    }
+    set timeout(value) {
+        this._timeout = value;
+    }
+    get maxRetries() {
+        return this._maxRetries;
+    }
+    set maxRetries(value) {
+        this._maxRetries = value;
+    }
+    get defaultHeaders() {
+        return this._defaultHeaders;
+    }
+    set defaultHeaders(value) {
+        this._defaultHeaders = value;
+    }
+    get defaultQuery() {
+        return this._defaultQuery;
+    }
+    set defaultQuery(value) {
+        this._defaultQuery = value;
+    }
+    get strictResponseValidation() {
+        return this._strictResponseValidation;
+    }
+    set strictResponseValidation(value) {
+        this._strictResponseValidation = value;
+    }
+    get model() {
+        return this._model;
+    }
+    set model(value) {
+        this._model = value;
+    }
+    get frequencyPenalty() {
+        return this._frequencyPenalty;
+    }
+    set frequencyPenalty(value) {
+        this._frequencyPenalty = value;
+    }
+    get logitBias() {
+        return this._logitBias;
+    }
+    set logitBias(value) {
+        this._logitBias = value;
+    }
+    get logprobs() {
+        return this._logprobs;
+    }
+    set logprobs(value) {
+        this._logprobs = value;
+    }
+    get maxCompletionTokens() {
+        return this._maxCompletionTokens;
+    }
+    set maxCompletionTokens(value) {
+        this._maxCompletionTokens = value;
+    }
+    get maxTokens() {
+        return this._maxTokens;
+    }
+    set maxTokens(value) {
+        this._maxTokens = value;
+    }
+    get metadata() {
+        return this._metadata;
+    }
+    set metadata(value) {
+        this._metadata = value;
+    }
+    get n() {
+        return this._n;
+    }
+    set n(value) {
+        this._n = value;
+    }
+    get presencePenalty() {
+        return this._presencePenalty;
+    }
+    set presencePenalty(value) {
+        this._presencePenalty = value;
+    }
+    get promptCacheKey() {
+        return this._promptCacheKey;
+    }
+    set promptCacheKey(value) {
+        this._promptCacheKey = value;
+    }
+    get reasoningEffort() {
+        return this._reasoningEffort;
+    }
+    set reasoningEffort(value) {
+        this._reasoningEffort = value;
+    }
+    get seed() {
+        return this._seed;
+    }
+    set seed(value) {
+        this._seed = value;
+    }
+    get serviceTier() {
+        return this._serviceTier;
+    }
+    set serviceTier(value) {
+        this._serviceTier = value;
+    }
+    get stop() {
+        return this._stop;
+    }
+    set stop(value) {
+        this._stop = value;
+    }
+    get store() {
+        return this._store;
+    }
+    set store(value) {
+        this._store = value;
+    }
+    get temperature() {
+        return this._temperature;
+    }
+    set temperature(value) {
+        this._temperature = value;
+    }
+    get topLogprobs() {
+        return this._topLogprobs;
+    }
+    set topLogprobs(value) {
+        this._topLogprobs = value;
+    }
+    get topP() {
+        return this._topP;
+    }
+    set topP(value) {
+        this._topP = value;
+    }
+    get user() {
+        return this._user;
+    }
+    set user(value) {
+        this._user = value;
+    }
+    get verbosity() {
+        return this._verbosity;
+    }
+    set verbosity(value) {
+        this._verbosity = value;
+    }
+    get extraHeaders() {
+        return this._extraHeaders;
+    }
+    set extraHeaders(value) {
+        this._extraHeaders = value;
+    }
+    get extraQuery() {
+        return this._extraQuery;
+    }
+    set extraQuery(value) {
+        this._extraQuery = value;
+    }
+    get extraBody() {
+        return this._extraBody;
+    }
+    set extraBody(value) {
+        this._extraBody = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        OpenaiLlmOptions.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            apiKey: this.apiKey,
+            organization: this.organization,
+            project: this.project,
+            webhookSecret: this.webhookSecret,
+            baseUrl: this.baseUrl,
+            websocketBaseUrl: this.websocketBaseUrl,
+            timeout: this.timeout,
+            maxRetries: this.maxRetries,
+            defaultHeaders: this.defaultHeaders
+                ? Object.keys(this.defaultHeaders).reduce((r, k) => ({ ...r, [k]: this.defaultHeaders[k] }), {})
+                : {},
+            defaultQuery: this.defaultQuery
+                ? this.defaultQuery.toObject()
+                : undefined,
+            strictResponseValidation: this.strictResponseValidation,
+            model: this.model,
+            frequencyPenalty: this.frequencyPenalty,
+            logitBias: this.logitBias
+                ? Object.keys(this.logitBias).reduce((r, k) => ({ ...r, [k]: this.logitBias[k] }), {})
+                : {},
+            logprobs: this.logprobs,
+            maxCompletionTokens: this.maxCompletionTokens,
+            maxTokens: this.maxTokens,
+            metadata: this.metadata ? this.metadata.toObject() : undefined,
+            n: this.n,
+            presencePenalty: this.presencePenalty,
+            promptCacheKey: this.promptCacheKey,
+            reasoningEffort: this.reasoningEffort,
+            seed: this.seed,
+            serviceTier: this.serviceTier,
+            stop: (this.stop || []).slice(),
+            store: this.store,
+            temperature: this.temperature,
+            topLogprobs: this.topLogprobs,
+            topP: this.topP,
+            user: this.user,
+            verbosity: this.verbosity,
+            extraHeaders: this.extraHeaders
+                ? this.extraHeaders.toObject()
+                : undefined,
+            extraQuery: this.extraQuery ? this.extraQuery.toObject() : undefined,
+            extraBody: this.extraBody ? this.extraBody.toObject() : undefined
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            apiKey: this.apiKey,
+            organization: this.organization,
+            project: this.project,
+            webhookSecret: this.webhookSecret,
+            baseUrl: this.baseUrl,
+            websocketBaseUrl: this.websocketBaseUrl,
+            timeout: this.timeout,
+            maxRetries: this.maxRetries,
+            defaultHeaders: this.defaultHeaders
+                ? Object.keys(this.defaultHeaders).reduce((r, k) => ({ ...r, [k]: this.defaultHeaders[k] }), {})
+                : {},
+            defaultQuery: this.defaultQuery
+                ? this.defaultQuery.toProtobufJSON(options)
+                : null,
+            strictResponseValidation: this.strictResponseValidation,
+            model: this.model,
+            frequencyPenalty: this.frequencyPenalty,
+            logitBias: this.logitBias
+                ? Object.keys(this.logitBias).reduce((r, k) => ({ ...r, [k]: this.logitBias[k] }), {})
+                : {},
+            logprobs: this.logprobs,
+            maxCompletionTokens: this.maxCompletionTokens,
+            maxTokens: this.maxTokens,
+            metadata: this.metadata ? this.metadata.toProtobufJSON(options) : null,
+            n: this.n,
+            presencePenalty: this.presencePenalty,
+            promptCacheKey: this.promptCacheKey,
+            reasoningEffort: ReasoningEffort[this.reasoningEffort === null || this.reasoningEffort === undefined
+                ? 0
+                : this.reasoningEffort],
+            seed: this.seed,
+            serviceTier: ServiceTier[this.serviceTier === null || this.serviceTier === undefined
+                ? 0
+                : this.serviceTier],
+            stop: (this.stop || []).slice(),
+            store: this.store,
+            temperature: this.temperature,
+            topLogprobs: this.topLogprobs,
+            topP: this.topP,
+            user: this.user,
+            verbosity: Verbosity[this.verbosity === null || this.verbosity === undefined
+                ? 0
+                : this.verbosity],
+            extraHeaders: this.extraHeaders
+                ? this.extraHeaders.toProtobufJSON(options)
+                : null,
+            extraQuery: this.extraQuery
+                ? this.extraQuery.toProtobufJSON(options)
+                : null,
+            extraBody: this.extraBody ? this.extraBody.toProtobufJSON(options) : null
+        };
+    }
+}
+(function (OpenaiLlmOptions) {
+    /**
+     * Message implementation for ondewo.s2t.OpenaiLlmOptions.DefaultHeadersEntry
+     */
+    class DefaultHeadersEntry {
+        static { this.id = 'ondewo.s2t.OpenaiLlmOptions.DefaultHeadersEntry'; }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        static deserializeBinary(bytes) {
+            const instance = new DefaultHeadersEntry();
+            DefaultHeadersEntry.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+            return instance;
+        }
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        static refineValues(_instance) {
+            _instance.key = _instance.key || '';
+            _instance.value = _instance.value || '';
+        }
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        static deserializeBinaryFromReader(_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.key = _reader.readString();
+                        break;
+                    case 2:
+                        _instance.value = _reader.readString();
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            DefaultHeadersEntry.refineValues(_instance);
+        }
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        static serializeBinaryToWriter(_instance, _writer) {
+            if (_instance.key) {
+                _writer.writeString(1, _instance.key);
+            }
+            if (_instance.value) {
+                _writer.writeString(2, _instance.value);
+            }
+        }
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of DefaultHeadersEntry to deeply clone from
+         */
+        constructor(_value) {
+            _value = _value || {};
+            this.key = _value.key;
+            this.value = _value.value;
+            DefaultHeadersEntry.refineValues(this);
+        }
+        get key() {
+            return this._key;
+        }
+        set key(value) {
+            this._key = value;
+        }
+        get value() {
+            return this._value;
+        }
+        set value(value) {
+            this._value = value;
+        }
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        serializeBinary() {
+            const writer = new BinaryWriter();
+            DefaultHeadersEntry.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        }
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        toObject() {
+            return {
+                key: this.key,
+                value: this.value
+            };
+        }
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        toJSON() {
+            return this.toObject();
+        }
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        toProtobufJSON(
+        // @ts-ignore
+        options) {
+            return {
+                key: this.key,
+                value: this.value
+            };
+        }
+    }
+    OpenaiLlmOptions.DefaultHeadersEntry = DefaultHeadersEntry;
+    /**
+     * Message implementation for ondewo.s2t.OpenaiLlmOptions.LogitBiasEntry
+     */
+    class LogitBiasEntry {
+        static { this.id = 'ondewo.s2t.OpenaiLlmOptions.LogitBiasEntry'; }
+        /**
+         * Deserialize binary data to message
+         * @param instance message instance
+         */
+        static deserializeBinary(bytes) {
+            const instance = new LogitBiasEntry();
+            LogitBiasEntry.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+            return instance;
+        }
+        /**
+         * Check all the properties and set default protobuf values if necessary
+         * @param _instance message instance
+         */
+        static refineValues(_instance) {
+            _instance.key = _instance.key || '';
+            _instance.value = _instance.value || 0;
+        }
+        /**
+         * Deserializes / reads binary message into message instance using provided binary reader
+         * @param _instance message instance
+         * @param _reader binary reader instance
+         */
+        static deserializeBinaryFromReader(_instance, _reader) {
+            while (_reader.nextField()) {
+                if (_reader.isEndGroup())
+                    break;
+                switch (_reader.getFieldNumber()) {
+                    case 1:
+                        _instance.key = _reader.readString();
+                        break;
+                    case 2:
+                        _instance.value = _reader.readInt32();
+                        break;
+                    default:
+                        _reader.skipField();
+                }
+            }
+            LogitBiasEntry.refineValues(_instance);
+        }
+        /**
+         * Serializes a message to binary format using provided binary reader
+         * @param _instance message instance
+         * @param _writer binary writer instance
+         */
+        static serializeBinaryToWriter(_instance, _writer) {
+            if (_instance.key) {
+                _writer.writeString(1, _instance.key);
+            }
+            if (_instance.value) {
+                _writer.writeInt32(2, _instance.value);
+            }
+        }
+        /**
+         * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+         * @param _value initial values object or instance of LogitBiasEntry to deeply clone from
+         */
+        constructor(_value) {
+            _value = _value || {};
+            this.key = _value.key;
+            this.value = _value.value;
+            LogitBiasEntry.refineValues(this);
+        }
+        get key() {
+            return this._key;
+        }
+        set key(value) {
+            this._key = value;
+        }
+        get value() {
+            return this._value;
+        }
+        set value(value) {
+            this._value = value;
+        }
+        /**
+         * Serialize message to binary data
+         * @param instance message instance
+         */
+        serializeBinary() {
+            const writer = new BinaryWriter();
+            LogitBiasEntry.serializeBinaryToWriter(this, writer);
+            return writer.getResultBuffer();
+        }
+        /**
+         * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+         */
+        toObject() {
+            return {
+                key: this.key,
+                value: this.value
+            };
+        }
+        /**
+         * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+         */
+        toJSON() {
+            return this.toObject();
+        }
+        /**
+         * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+         * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+         * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+         */
+        toProtobufJSON(
+        // @ts-ignore
+        options) {
+            return {
+                key: this.key,
+                value: this.value
+            };
+        }
+    }
+    OpenaiLlmOptions.LogitBiasEntry = LogitBiasEntry;
+})(OpenaiLlmOptions || (OpenaiLlmOptions = {}));
 /**
  * Message implementation for ondewo.s2t.VoiceActivityDetection
  */
@@ -7807,9 +8735,12 @@ class S2tLlmPostProcessing {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.llmHost = _instance.llmHost || '';
-        _instance.llmPort = _instance.llmPort || 0;
-        _instance.llmRequestTimeout = _instance.llmRequestTimeout || 0;
+        _instance.s2tLlmPostProcessingOpenaiOptions =
+            _instance.s2tLlmPostProcessingOpenaiOptions || undefined;
+        _instance.s2tLlmPostProcessingSystemPrompt =
+            _instance.s2tLlmPostProcessingSystemPrompt || '';
+        _instance.s2tLlmPostProcessingEndingPrompt =
+            _instance.s2tLlmPostProcessingEndingPrompt || '';
         _instance.s2tLlmPostProcessingCasingOptions =
             _instance.s2tLlmPostProcessingCasingOptions || undefined;
         _instance.s2tLlmPostProcessingPunctuationOptions =
@@ -7828,8 +8759,6 @@ class S2tLlmPostProcessing {
             _instance.s2tLlmPostProcessingSummarizationOptions || undefined;
         _instance.s2tLlmPostProcessingUserPromptOptions =
             _instance.s2tLlmPostProcessingUserPromptOptions || undefined;
-        _instance.llmModelName = _instance.llmModelName || '';
-        _instance.llmHeaders = _instance.llmHeaders || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -7842,29 +8771,30 @@ class S2tLlmPostProcessing {
                 break;
             switch (_reader.getFieldNumber()) {
                 case 1:
-                    _instance.llmHost = _reader.readString();
+                    _instance.s2tLlmPostProcessingOpenaiOptions = new OpenaiLlmOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingOpenaiOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
                     break;
                 case 2:
-                    _instance.llmPort = _reader.readInt32();
+                    _instance.s2tLlmPostProcessingSystemPrompt = _reader.readString();
                     break;
                 case 3:
-                    _instance.llmRequestTimeout = _reader.readFloat();
+                    _instance.s2tLlmPostProcessingEndingPrompt = _reader.readString();
                     break;
                 case 4:
-                    _instance.s2tLlmPostProcessingCasingOptions = new S2tLlmPostProcessingCasingOptions();
-                    _reader.readMessage(_instance.s2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingCasingOptions.deserializeBinaryFromReader);
+                    _instance.s2tLlmPostProcessingCasingOptions = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 5:
-                    _instance.s2tLlmPostProcessingPunctuationOptions = new S2tLlmPostProcessingPunctuationOptions();
-                    _reader.readMessage(_instance.s2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingPunctuationOptions.deserializeBinaryFromReader);
+                    _instance.s2tLlmPostProcessingPunctuationOptions = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 6:
-                    _instance.s2tLlmPostProcessingSpellingCorrectionOptions = new S2tLlmPostProcessingSpellCorrectionOptions();
-                    _reader.readMessage(_instance.s2tLlmPostProcessingSpellingCorrectionOptions, S2tLlmPostProcessingSpellCorrectionOptions.deserializeBinaryFromReader);
+                    _instance.s2tLlmPostProcessingSpellingCorrectionOptions = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingSpellingCorrectionOptions, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 7:
-                    _instance.s2tLlmPostProcessingSemanticCorrectionOptions = new S2tLlmPostProcessingSemanticCorrectionOptions();
-                    _reader.readMessage(_instance.s2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSemanticCorrectionOptions.deserializeBinaryFromReader);
+                    _instance.s2tLlmPostProcessingSemanticCorrectionOptions = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 8:
                     _instance.s2tLlmPostProcessingTranslationOptions = new S2tLlmPostProcessingTranslationOptions();
@@ -7883,15 +8813,8 @@ class S2tLlmPostProcessing {
                     _reader.readMessage(_instance.s2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingSummarizationOptions.deserializeBinaryFromReader);
                     break;
                 case 12:
-                    _instance.s2tLlmPostProcessingUserPromptOptions = new S2tLlmPostProcessingUserPromptOptions();
-                    _reader.readMessage(_instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader);
-                    break;
-                case 13:
-                    _instance.llmModelName = _reader.readString();
-                    break;
-                case 14:
-                    _instance.llmHeaders = new googleProtobuf001.Struct();
-                    _reader.readMessage(_instance.llmHeaders, googleProtobuf001.Struct.deserializeBinaryFromReader);
+                    _instance.s2tLlmPostProcessingUserPromptOptions = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -7905,26 +8828,26 @@ class S2tLlmPostProcessing {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.llmHost) {
-            _writer.writeString(1, _instance.llmHost);
+        if (_instance.s2tLlmPostProcessingOpenaiOptions) {
+            _writer.writeMessage(1, _instance.s2tLlmPostProcessingOpenaiOptions, OpenaiLlmOptions.serializeBinaryToWriter);
         }
-        if (_instance.llmPort) {
-            _writer.writeInt32(2, _instance.llmPort);
+        if (_instance.s2tLlmPostProcessingSystemPrompt) {
+            _writer.writeString(2, _instance.s2tLlmPostProcessingSystemPrompt);
         }
-        if (_instance.llmRequestTimeout) {
-            _writer.writeFloat(3, _instance.llmRequestTimeout);
+        if (_instance.s2tLlmPostProcessingEndingPrompt) {
+            _writer.writeString(3, _instance.s2tLlmPostProcessingEndingPrompt);
         }
         if (_instance.s2tLlmPostProcessingCasingOptions) {
-            _writer.writeMessage(4, _instance.s2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingCasingOptions.serializeBinaryToWriter);
+            _writer.writeMessage(4, _instance.s2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.s2tLlmPostProcessingPunctuationOptions) {
-            _writer.writeMessage(5, _instance.s2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingPunctuationOptions.serializeBinaryToWriter);
+            _writer.writeMessage(5, _instance.s2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.s2tLlmPostProcessingSpellingCorrectionOptions) {
-            _writer.writeMessage(6, _instance.s2tLlmPostProcessingSpellingCorrectionOptions, S2tLlmPostProcessingSpellCorrectionOptions.serializeBinaryToWriter);
+            _writer.writeMessage(6, _instance.s2tLlmPostProcessingSpellingCorrectionOptions, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.s2tLlmPostProcessingSemanticCorrectionOptions) {
-            _writer.writeMessage(7, _instance.s2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSemanticCorrectionOptions.serializeBinaryToWriter);
+            _writer.writeMessage(7, _instance.s2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.s2tLlmPostProcessingTranslationOptions) {
             _writer.writeMessage(8, _instance.s2tLlmPostProcessingTranslationOptions, S2tLlmPostProcessingTranslationOptions.serializeBinaryToWriter);
@@ -7939,13 +8862,7 @@ class S2tLlmPostProcessing {
             _writer.writeMessage(11, _instance.s2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingSummarizationOptions.serializeBinaryToWriter);
         }
         if (_instance.s2tLlmPostProcessingUserPromptOptions) {
-            _writer.writeMessage(12, _instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter);
-        }
-        if (_instance.llmModelName) {
-            _writer.writeString(13, _instance.llmModelName);
-        }
-        if (_instance.llmHeaders) {
-            _writer.writeMessage(14, _instance.llmHeaders, googleProtobuf001.Struct.serializeBinaryToWriter);
+            _writer.writeMessage(12, _instance.s2tLlmPostProcessingUserPromptOptions, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
     }
     /**
@@ -7954,20 +8871,24 @@ class S2tLlmPostProcessing {
      */
     constructor(_value) {
         _value = _value || {};
-        this.llmHost = _value.llmHost;
-        this.llmPort = _value.llmPort;
-        this.llmRequestTimeout = _value.llmRequestTimeout;
+        this.s2tLlmPostProcessingOpenaiOptions = _value.s2tLlmPostProcessingOpenaiOptions
+            ? new OpenaiLlmOptions(_value.s2tLlmPostProcessingOpenaiOptions)
+            : undefined;
+        this.s2tLlmPostProcessingSystemPrompt =
+            _value.s2tLlmPostProcessingSystemPrompt;
+        this.s2tLlmPostProcessingEndingPrompt =
+            _value.s2tLlmPostProcessingEndingPrompt;
         this.s2tLlmPostProcessingCasingOptions = _value.s2tLlmPostProcessingCasingOptions
-            ? new S2tLlmPostProcessingCasingOptions(_value.s2tLlmPostProcessingCasingOptions)
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.s2tLlmPostProcessingCasingOptions)
             : undefined;
         this.s2tLlmPostProcessingPunctuationOptions = _value.s2tLlmPostProcessingPunctuationOptions
-            ? new S2tLlmPostProcessingPunctuationOptions(_value.s2tLlmPostProcessingPunctuationOptions)
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.s2tLlmPostProcessingPunctuationOptions)
             : undefined;
         this.s2tLlmPostProcessingSpellingCorrectionOptions = _value.s2tLlmPostProcessingSpellingCorrectionOptions
-            ? new S2tLlmPostProcessingSpellCorrectionOptions(_value.s2tLlmPostProcessingSpellingCorrectionOptions)
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.s2tLlmPostProcessingSpellingCorrectionOptions)
             : undefined;
         this.s2tLlmPostProcessingSemanticCorrectionOptions = _value.s2tLlmPostProcessingSemanticCorrectionOptions
-            ? new S2tLlmPostProcessingSemanticCorrectionOptions(_value.s2tLlmPostProcessingSemanticCorrectionOptions)
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.s2tLlmPostProcessingSemanticCorrectionOptions)
             : undefined;
         this.s2tLlmPostProcessingTranslationOptions = _value.s2tLlmPostProcessingTranslationOptions
             ? new S2tLlmPostProcessingTranslationOptions(_value.s2tLlmPostProcessingTranslationOptions)
@@ -7982,31 +8903,27 @@ class S2tLlmPostProcessing {
             ? new S2tLlmPostProcessingSummarizationOptions(_value.s2tLlmPostProcessingSummarizationOptions)
             : undefined;
         this.s2tLlmPostProcessingUserPromptOptions = _value.s2tLlmPostProcessingUserPromptOptions
-            ? new S2tLlmPostProcessingUserPromptOptions(_value.s2tLlmPostProcessingUserPromptOptions)
-            : undefined;
-        this.llmModelName = _value.llmModelName;
-        this.llmHeaders = _value.llmHeaders
-            ? new googleProtobuf001.Struct(_value.llmHeaders)
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.s2tLlmPostProcessingUserPromptOptions)
             : undefined;
         S2tLlmPostProcessing.refineValues(this);
     }
-    get llmHost() {
-        return this._llmHost;
+    get s2tLlmPostProcessingOpenaiOptions() {
+        return this._s2tLlmPostProcessingOpenaiOptions;
     }
-    set llmHost(value) {
-        this._llmHost = value;
+    set s2tLlmPostProcessingOpenaiOptions(value) {
+        this._s2tLlmPostProcessingOpenaiOptions = value;
     }
-    get llmPort() {
-        return this._llmPort;
+    get s2tLlmPostProcessingSystemPrompt() {
+        return this._s2tLlmPostProcessingSystemPrompt;
     }
-    set llmPort(value) {
-        this._llmPort = value;
+    set s2tLlmPostProcessingSystemPrompt(value) {
+        this._s2tLlmPostProcessingSystemPrompt = value;
     }
-    get llmRequestTimeout() {
-        return this._llmRequestTimeout;
+    get s2tLlmPostProcessingEndingPrompt() {
+        return this._s2tLlmPostProcessingEndingPrompt;
     }
-    set llmRequestTimeout(value) {
-        this._llmRequestTimeout = value;
+    set s2tLlmPostProcessingEndingPrompt(value) {
+        this._s2tLlmPostProcessingEndingPrompt = value;
     }
     get s2tLlmPostProcessingCasingOptions() {
         return this._s2tLlmPostProcessingCasingOptions;
@@ -8062,18 +8979,6 @@ class S2tLlmPostProcessing {
     set s2tLlmPostProcessingUserPromptOptions(value) {
         this._s2tLlmPostProcessingUserPromptOptions = value;
     }
-    get llmModelName() {
-        return this._llmModelName;
-    }
-    set llmModelName(value) {
-        this._llmModelName = value;
-    }
-    get llmHeaders() {
-        return this._llmHeaders;
-    }
-    set llmHeaders(value) {
-        this._llmHeaders = value;
-    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -8088,9 +8993,11 @@ class S2tLlmPostProcessing {
      */
     toObject() {
         return {
-            llmHost: this.llmHost,
-            llmPort: this.llmPort,
-            llmRequestTimeout: this.llmRequestTimeout,
+            s2tLlmPostProcessingOpenaiOptions: this.s2tLlmPostProcessingOpenaiOptions
+                ? this.s2tLlmPostProcessingOpenaiOptions.toObject()
+                : undefined,
+            s2tLlmPostProcessingSystemPrompt: this.s2tLlmPostProcessingSystemPrompt,
+            s2tLlmPostProcessingEndingPrompt: this.s2tLlmPostProcessingEndingPrompt,
             s2tLlmPostProcessingCasingOptions: this.s2tLlmPostProcessingCasingOptions
                 ? this.s2tLlmPostProcessingCasingOptions.toObject()
                 : undefined,
@@ -8125,9 +9032,7 @@ class S2tLlmPostProcessing {
             s2tLlmPostProcessingUserPromptOptions: this
                 .s2tLlmPostProcessingUserPromptOptions
                 ? this.s2tLlmPostProcessingUserPromptOptions.toObject()
-                : undefined,
-            llmModelName: this.llmModelName,
-            llmHeaders: this.llmHeaders ? this.llmHeaders.toObject() : undefined
+                : undefined
         };
     }
     /**
@@ -8145,9 +9050,11 @@ class S2tLlmPostProcessing {
     // @ts-ignore
     options) {
         return {
-            llmHost: this.llmHost,
-            llmPort: this.llmPort,
-            llmRequestTimeout: this.llmRequestTimeout,
+            s2tLlmPostProcessingOpenaiOptions: this.s2tLlmPostProcessingOpenaiOptions
+                ? this.s2tLlmPostProcessingOpenaiOptions.toProtobufJSON(options)
+                : null,
+            s2tLlmPostProcessingSystemPrompt: this.s2tLlmPostProcessingSystemPrompt,
+            s2tLlmPostProcessingEndingPrompt: this.s2tLlmPostProcessingEndingPrompt,
             s2tLlmPostProcessingCasingOptions: this.s2tLlmPostProcessingCasingOptions
                 ? this.s2tLlmPostProcessingCasingOptions.toProtobufJSON(options)
                 : null,
@@ -8182,415 +9089,7 @@ class S2tLlmPostProcessing {
             s2tLlmPostProcessingUserPromptOptions: this
                 .s2tLlmPostProcessingUserPromptOptions
                 ? this.s2tLlmPostProcessingUserPromptOptions.toProtobufJSON(options)
-                : null,
-            llmModelName: this.llmModelName,
-            llmHeaders: this.llmHeaders
-                ? this.llmHeaders.toProtobufJSON(options)
                 : null
-        };
-    }
-}
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingCasingOptions
- */
-class S2tLlmPostProcessingCasingOptions {
-    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingCasingOptions'; }
-    /**
-     * Deserialize binary data to message
-     * @param instance message instance
-     */
-    static deserializeBinary(bytes) {
-        const instance = new S2tLlmPostProcessingCasingOptions();
-        S2tLlmPostProcessingCasingOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-        return instance;
-    }
-    /**
-     * Check all the properties and set default protobuf values if necessary
-     * @param _instance message instance
-     */
-    static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-    }
-    /**
-     * Deserializes / reads binary message into message instance using provided binary reader
-     * @param _instance message instance
-     * @param _reader binary reader instance
-     */
-    static deserializeBinaryFromReader(_instance, _reader) {
-        while (_reader.nextField()) {
-            if (_reader.isEndGroup())
-                break;
-            switch (_reader.getFieldNumber()) {
-                case 1:
-                    _instance.active = _reader.readBool();
-                    break;
-                default:
-                    _reader.skipField();
-            }
-        }
-        S2tLlmPostProcessingCasingOptions.refineValues(_instance);
-    }
-    /**
-     * Serializes a message to binary format using provided binary reader
-     * @param _instance message instance
-     * @param _writer binary writer instance
-     */
-    static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
-            _writer.writeBool(1, _instance.active);
-        }
-    }
-    /**
-     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2tLlmPostProcessingCasingOptions to deeply clone from
-     */
-    constructor(_value) {
-        _value = _value || {};
-        this.active = _value.active;
-        S2tLlmPostProcessingCasingOptions.refineValues(this);
-    }
-    get active() {
-        return this._active;
-    }
-    set active(value) {
-        this._active = value;
-    }
-    /**
-     * Serialize message to binary data
-     * @param instance message instance
-     */
-    serializeBinary() {
-        const writer = new BinaryWriter();
-        S2tLlmPostProcessingCasingOptions.serializeBinaryToWriter(this, writer);
-        return writer.getResultBuffer();
-    }
-    /**
-     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-     */
-    toObject() {
-        return {
-            active: this.active
-        };
-    }
-    /**
-     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-     */
-    toJSON() {
-        return this.toObject();
-    }
-    /**
-     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-     */
-    toProtobufJSON(
-    // @ts-ignore
-    options) {
-        return {
-            active: this.active
-        };
-    }
-}
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingPunctuationOptions
- */
-class S2tLlmPostProcessingPunctuationOptions {
-    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingPunctuationOptions'; }
-    /**
-     * Deserialize binary data to message
-     * @param instance message instance
-     */
-    static deserializeBinary(bytes) {
-        const instance = new S2tLlmPostProcessingPunctuationOptions();
-        S2tLlmPostProcessingPunctuationOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-        return instance;
-    }
-    /**
-     * Check all the properties and set default protobuf values if necessary
-     * @param _instance message instance
-     */
-    static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-    }
-    /**
-     * Deserializes / reads binary message into message instance using provided binary reader
-     * @param _instance message instance
-     * @param _reader binary reader instance
-     */
-    static deserializeBinaryFromReader(_instance, _reader) {
-        while (_reader.nextField()) {
-            if (_reader.isEndGroup())
-                break;
-            switch (_reader.getFieldNumber()) {
-                case 1:
-                    _instance.active = _reader.readBool();
-                    break;
-                default:
-                    _reader.skipField();
-            }
-        }
-        S2tLlmPostProcessingPunctuationOptions.refineValues(_instance);
-    }
-    /**
-     * Serializes a message to binary format using provided binary reader
-     * @param _instance message instance
-     * @param _writer binary writer instance
-     */
-    static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
-            _writer.writeBool(1, _instance.active);
-        }
-    }
-    /**
-     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2tLlmPostProcessingPunctuationOptions to deeply clone from
-     */
-    constructor(_value) {
-        _value = _value || {};
-        this.active = _value.active;
-        S2tLlmPostProcessingPunctuationOptions.refineValues(this);
-    }
-    get active() {
-        return this._active;
-    }
-    set active(value) {
-        this._active = value;
-    }
-    /**
-     * Serialize message to binary data
-     * @param instance message instance
-     */
-    serializeBinary() {
-        const writer = new BinaryWriter();
-        S2tLlmPostProcessingPunctuationOptions.serializeBinaryToWriter(this, writer);
-        return writer.getResultBuffer();
-    }
-    /**
-     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-     */
-    toObject() {
-        return {
-            active: this.active
-        };
-    }
-    /**
-     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-     */
-    toJSON() {
-        return this.toObject();
-    }
-    /**
-     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-     */
-    toProtobufJSON(
-    // @ts-ignore
-    options) {
-        return {
-            active: this.active
-        };
-    }
-}
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingSpellCorrectionOptions
- */
-class S2tLlmPostProcessingSpellCorrectionOptions {
-    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingSpellCorrectionOptions'; }
-    /**
-     * Deserialize binary data to message
-     * @param instance message instance
-     */
-    static deserializeBinary(bytes) {
-        const instance = new S2tLlmPostProcessingSpellCorrectionOptions();
-        S2tLlmPostProcessingSpellCorrectionOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-        return instance;
-    }
-    /**
-     * Check all the properties and set default protobuf values if necessary
-     * @param _instance message instance
-     */
-    static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-    }
-    /**
-     * Deserializes / reads binary message into message instance using provided binary reader
-     * @param _instance message instance
-     * @param _reader binary reader instance
-     */
-    static deserializeBinaryFromReader(_instance, _reader) {
-        while (_reader.nextField()) {
-            if (_reader.isEndGroup())
-                break;
-            switch (_reader.getFieldNumber()) {
-                case 1:
-                    _instance.active = _reader.readBool();
-                    break;
-                default:
-                    _reader.skipField();
-            }
-        }
-        S2tLlmPostProcessingSpellCorrectionOptions.refineValues(_instance);
-    }
-    /**
-     * Serializes a message to binary format using provided binary reader
-     * @param _instance message instance
-     * @param _writer binary writer instance
-     */
-    static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
-            _writer.writeBool(1, _instance.active);
-        }
-    }
-    /**
-     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2tLlmPostProcessingSpellCorrectionOptions to deeply clone from
-     */
-    constructor(_value) {
-        _value = _value || {};
-        this.active = _value.active;
-        S2tLlmPostProcessingSpellCorrectionOptions.refineValues(this);
-    }
-    get active() {
-        return this._active;
-    }
-    set active(value) {
-        this._active = value;
-    }
-    /**
-     * Serialize message to binary data
-     * @param instance message instance
-     */
-    serializeBinary() {
-        const writer = new BinaryWriter();
-        S2tLlmPostProcessingSpellCorrectionOptions.serializeBinaryToWriter(this, writer);
-        return writer.getResultBuffer();
-    }
-    /**
-     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-     */
-    toObject() {
-        return {
-            active: this.active
-        };
-    }
-    /**
-     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-     */
-    toJSON() {
-        return this.toObject();
-    }
-    /**
-     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-     */
-    toProtobufJSON(
-    // @ts-ignore
-    options) {
-        return {
-            active: this.active
-        };
-    }
-}
-/**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingSemanticCorrectionOptions
- */
-class S2tLlmPostProcessingSemanticCorrectionOptions {
-    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingSemanticCorrectionOptions'; }
-    /**
-     * Deserialize binary data to message
-     * @param instance message instance
-     */
-    static deserializeBinary(bytes) {
-        const instance = new S2tLlmPostProcessingSemanticCorrectionOptions();
-        S2tLlmPostProcessingSemanticCorrectionOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
-        return instance;
-    }
-    /**
-     * Check all the properties and set default protobuf values if necessary
-     * @param _instance message instance
-     */
-    static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-    }
-    /**
-     * Deserializes / reads binary message into message instance using provided binary reader
-     * @param _instance message instance
-     * @param _reader binary reader instance
-     */
-    static deserializeBinaryFromReader(_instance, _reader) {
-        while (_reader.nextField()) {
-            if (_reader.isEndGroup())
-                break;
-            switch (_reader.getFieldNumber()) {
-                case 1:
-                    _instance.active = _reader.readBool();
-                    break;
-                default:
-                    _reader.skipField();
-            }
-        }
-        S2tLlmPostProcessingSemanticCorrectionOptions.refineValues(_instance);
-    }
-    /**
-     * Serializes a message to binary format using provided binary reader
-     * @param _instance message instance
-     * @param _writer binary writer instance
-     */
-    static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
-            _writer.writeBool(1, _instance.active);
-        }
-    }
-    /**
-     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2tLlmPostProcessingSemanticCorrectionOptions to deeply clone from
-     */
-    constructor(_value) {
-        _value = _value || {};
-        this.active = _value.active;
-        S2tLlmPostProcessingSemanticCorrectionOptions.refineValues(this);
-    }
-    get active() {
-        return this._active;
-    }
-    set active(value) {
-        this._active = value;
-    }
-    /**
-     * Serialize message to binary data
-     * @param instance message instance
-     */
-    serializeBinary() {
-        const writer = new BinaryWriter();
-        S2tLlmPostProcessingSemanticCorrectionOptions.serializeBinaryToWriter(this, writer);
-        return writer.getResultBuffer();
-    }
-    /**
-     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
-     */
-    toObject() {
-        return {
-            active: this.active
-        };
-    }
-    /**
-     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
-     */
-    toJSON() {
-        return this.toObject();
-    }
-    /**
-     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
-     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
-     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
-     */
-    toProtobufJSON(
-    // @ts-ignore
-    options) {
-        return {
-            active: this.active
         };
     }
 }
@@ -8731,12 +9230,13 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
      */
     static refineValues(_instance) {
         _instance.active = _instance.active || false;
-        _instance.email = _instance.email || false;
-        _instance.phoneNumber = _instance.phoneNumber || false;
-        _instance.dateAndTime = _instance.dateAndTime || false;
-        _instance.creditCardNumber = _instance.creditCardNumber || false;
-        _instance.socialSecurityNumber = _instance.socialSecurityNumber || false;
-        _instance.timeZone = _instance.timeZone || false;
+        _instance.email = _instance.email || undefined;
+        _instance.phoneNumber = _instance.phoneNumber || undefined;
+        _instance.dateAndTime = _instance.dateAndTime || undefined;
+        _instance.creditCardNumber = _instance.creditCardNumber || undefined;
+        _instance.socialSecurityNumber =
+            _instance.socialSecurityNumber || undefined;
+        _instance.timeZone = _instance.timeZone || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -8752,22 +9252,28 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
                     _instance.active = _reader.readBool();
                     break;
                 case 2:
-                    _instance.email = _reader.readBool();
+                    _instance.email = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.email, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 3:
-                    _instance.phoneNumber = _reader.readBool();
+                    _instance.phoneNumber = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.phoneNumber, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 4:
-                    _instance.dateAndTime = _reader.readBool();
+                    _instance.dateAndTime = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.dateAndTime, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 5:
-                    _instance.creditCardNumber = _reader.readBool();
+                    _instance.creditCardNumber = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.creditCardNumber, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 6:
-                    _instance.socialSecurityNumber = _reader.readBool();
+                    _instance.socialSecurityNumber = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.socialSecurityNumber, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 7:
-                    _instance.timeZone = _reader.readBool();
+                    _instance.timeZone = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.timeZone, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -8785,22 +9291,22 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
             _writer.writeBool(1, _instance.active);
         }
         if (_instance.email) {
-            _writer.writeBool(2, _instance.email);
+            _writer.writeMessage(2, _instance.email, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.phoneNumber) {
-            _writer.writeBool(3, _instance.phoneNumber);
+            _writer.writeMessage(3, _instance.phoneNumber, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.dateAndTime) {
-            _writer.writeBool(4, _instance.dateAndTime);
+            _writer.writeMessage(4, _instance.dateAndTime, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.creditCardNumber) {
-            _writer.writeBool(5, _instance.creditCardNumber);
+            _writer.writeMessage(5, _instance.creditCardNumber, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.socialSecurityNumber) {
-            _writer.writeBool(6, _instance.socialSecurityNumber);
+            _writer.writeMessage(6, _instance.socialSecurityNumber, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.timeZone) {
-            _writer.writeBool(7, _instance.timeZone);
+            _writer.writeMessage(7, _instance.timeZone, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
     }
     /**
@@ -8810,12 +9316,24 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
     constructor(_value) {
         _value = _value || {};
         this.active = _value.active;
-        this.email = _value.email;
-        this.phoneNumber = _value.phoneNumber;
-        this.dateAndTime = _value.dateAndTime;
-        this.creditCardNumber = _value.creditCardNumber;
-        this.socialSecurityNumber = _value.socialSecurityNumber;
-        this.timeZone = _value.timeZone;
+        this.email = _value.email
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.email)
+            : undefined;
+        this.phoneNumber = _value.phoneNumber
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.phoneNumber)
+            : undefined;
+        this.dateAndTime = _value.dateAndTime
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.dateAndTime)
+            : undefined;
+        this.creditCardNumber = _value.creditCardNumber
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.creditCardNumber)
+            : undefined;
+        this.socialSecurityNumber = _value.socialSecurityNumber
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.socialSecurityNumber)
+            : undefined;
+        this.timeZone = _value.timeZone
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.timeZone)
+            : undefined;
         S2tLlmPostProcessingInverseNormalizationOptions.refineValues(this);
     }
     get active() {
@@ -8875,12 +9393,16 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
     toObject() {
         return {
             active: this.active,
-            email: this.email,
-            phoneNumber: this.phoneNumber,
-            dateAndTime: this.dateAndTime,
-            creditCardNumber: this.creditCardNumber,
-            socialSecurityNumber: this.socialSecurityNumber,
-            timeZone: this.timeZone
+            email: this.email ? this.email.toObject() : undefined,
+            phoneNumber: this.phoneNumber ? this.phoneNumber.toObject() : undefined,
+            dateAndTime: this.dateAndTime ? this.dateAndTime.toObject() : undefined,
+            creditCardNumber: this.creditCardNumber
+                ? this.creditCardNumber.toObject()
+                : undefined,
+            socialSecurityNumber: this.socialSecurityNumber
+                ? this.socialSecurityNumber.toObject()
+                : undefined,
+            timeZone: this.timeZone ? this.timeZone.toObject() : undefined
         };
     }
     /**
@@ -8899,12 +9421,20 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
     options) {
         return {
             active: this.active,
-            email: this.email,
-            phoneNumber: this.phoneNumber,
-            dateAndTime: this.dateAndTime,
-            creditCardNumber: this.creditCardNumber,
-            socialSecurityNumber: this.socialSecurityNumber,
-            timeZone: this.timeZone
+            email: this.email ? this.email.toProtobufJSON(options) : null,
+            phoneNumber: this.phoneNumber
+                ? this.phoneNumber.toProtobufJSON(options)
+                : null,
+            dateAndTime: this.dateAndTime
+                ? this.dateAndTime.toProtobufJSON(options)
+                : null,
+            creditCardNumber: this.creditCardNumber
+                ? this.creditCardNumber.toProtobufJSON(options)
+                : null,
+            socialSecurityNumber: this.socialSecurityNumber
+                ? this.socialSecurityNumber.toProtobufJSON(options)
+                : null,
+            timeZone: this.timeZone ? this.timeZone.toProtobufJSON(options) : null
         };
     }
 }
@@ -8928,12 +9458,13 @@ class S2tLlmPostProcessingNormalizationOptions {
      */
     static refineValues(_instance) {
         _instance.active = _instance.active || false;
-        _instance.email = _instance.email || false;
-        _instance.phoneNumber = _instance.phoneNumber || false;
-        _instance.dateAndTime = _instance.dateAndTime || false;
-        _instance.creditCardNumber = _instance.creditCardNumber || false;
-        _instance.socialSecurityNumber = _instance.socialSecurityNumber || false;
-        _instance.timeZone = _instance.timeZone || false;
+        _instance.email = _instance.email || undefined;
+        _instance.phoneNumber = _instance.phoneNumber || undefined;
+        _instance.dateAndTime = _instance.dateAndTime || undefined;
+        _instance.creditCardNumber = _instance.creditCardNumber || undefined;
+        _instance.socialSecurityNumber =
+            _instance.socialSecurityNumber || undefined;
+        _instance.timeZone = _instance.timeZone || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -8949,22 +9480,28 @@ class S2tLlmPostProcessingNormalizationOptions {
                     _instance.active = _reader.readBool();
                     break;
                 case 2:
-                    _instance.email = _reader.readBool();
+                    _instance.email = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.email, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 3:
-                    _instance.phoneNumber = _reader.readBool();
+                    _instance.phoneNumber = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.phoneNumber, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 4:
-                    _instance.dateAndTime = _reader.readBool();
+                    _instance.dateAndTime = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.dateAndTime, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 5:
-                    _instance.creditCardNumber = _reader.readBool();
+                    _instance.creditCardNumber = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.creditCardNumber, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 6:
-                    _instance.socialSecurityNumber = _reader.readBool();
+                    _instance.socialSecurityNumber = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.socialSecurityNumber, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 case 7:
-                    _instance.timeZone = _reader.readBool();
+                    _instance.timeZone = new S2tLlmPostProcessingSubTaskOptions();
+                    _reader.readMessage(_instance.timeZone, S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader);
                     break;
                 default:
                     _reader.skipField();
@@ -8982,22 +9519,22 @@ class S2tLlmPostProcessingNormalizationOptions {
             _writer.writeBool(1, _instance.active);
         }
         if (_instance.email) {
-            _writer.writeBool(2, _instance.email);
+            _writer.writeMessage(2, _instance.email, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.phoneNumber) {
-            _writer.writeBool(3, _instance.phoneNumber);
+            _writer.writeMessage(3, _instance.phoneNumber, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.dateAndTime) {
-            _writer.writeBool(4, _instance.dateAndTime);
+            _writer.writeMessage(4, _instance.dateAndTime, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.creditCardNumber) {
-            _writer.writeBool(5, _instance.creditCardNumber);
+            _writer.writeMessage(5, _instance.creditCardNumber, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.socialSecurityNumber) {
-            _writer.writeBool(6, _instance.socialSecurityNumber);
+            _writer.writeMessage(6, _instance.socialSecurityNumber, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
         if (_instance.timeZone) {
-            _writer.writeBool(7, _instance.timeZone);
+            _writer.writeMessage(7, _instance.timeZone, S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter);
         }
     }
     /**
@@ -9007,12 +9544,24 @@ class S2tLlmPostProcessingNormalizationOptions {
     constructor(_value) {
         _value = _value || {};
         this.active = _value.active;
-        this.email = _value.email;
-        this.phoneNumber = _value.phoneNumber;
-        this.dateAndTime = _value.dateAndTime;
-        this.creditCardNumber = _value.creditCardNumber;
-        this.socialSecurityNumber = _value.socialSecurityNumber;
-        this.timeZone = _value.timeZone;
+        this.email = _value.email
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.email)
+            : undefined;
+        this.phoneNumber = _value.phoneNumber
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.phoneNumber)
+            : undefined;
+        this.dateAndTime = _value.dateAndTime
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.dateAndTime)
+            : undefined;
+        this.creditCardNumber = _value.creditCardNumber
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.creditCardNumber)
+            : undefined;
+        this.socialSecurityNumber = _value.socialSecurityNumber
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.socialSecurityNumber)
+            : undefined;
+        this.timeZone = _value.timeZone
+            ? new S2tLlmPostProcessingSubTaskOptions(_value.timeZone)
+            : undefined;
         S2tLlmPostProcessingNormalizationOptions.refineValues(this);
     }
     get active() {
@@ -9072,12 +9621,16 @@ class S2tLlmPostProcessingNormalizationOptions {
     toObject() {
         return {
             active: this.active,
-            email: this.email,
-            phoneNumber: this.phoneNumber,
-            dateAndTime: this.dateAndTime,
-            creditCardNumber: this.creditCardNumber,
-            socialSecurityNumber: this.socialSecurityNumber,
-            timeZone: this.timeZone
+            email: this.email ? this.email.toObject() : undefined,
+            phoneNumber: this.phoneNumber ? this.phoneNumber.toObject() : undefined,
+            dateAndTime: this.dateAndTime ? this.dateAndTime.toObject() : undefined,
+            creditCardNumber: this.creditCardNumber
+                ? this.creditCardNumber.toObject()
+                : undefined,
+            socialSecurityNumber: this.socialSecurityNumber
+                ? this.socialSecurityNumber.toObject()
+                : undefined,
+            timeZone: this.timeZone ? this.timeZone.toObject() : undefined
         };
     }
     /**
@@ -9096,12 +9649,20 @@ class S2tLlmPostProcessingNormalizationOptions {
     options) {
         return {
             active: this.active,
-            email: this.email,
-            phoneNumber: this.phoneNumber,
-            dateAndTime: this.dateAndTime,
-            creditCardNumber: this.creditCardNumber,
-            socialSecurityNumber: this.socialSecurityNumber,
-            timeZone: this.timeZone
+            email: this.email ? this.email.toProtobufJSON(options) : null,
+            phoneNumber: this.phoneNumber
+                ? this.phoneNumber.toProtobufJSON(options)
+                : null,
+            dateAndTime: this.dateAndTime
+                ? this.dateAndTime.toProtobufJSON(options)
+                : null,
+            creditCardNumber: this.creditCardNumber
+                ? this.creditCardNumber.toProtobufJSON(options)
+                : null,
+            socialSecurityNumber: this.socialSecurityNumber
+                ? this.socialSecurityNumber.toProtobufJSON(options)
+                : null,
+            timeZone: this.timeZone ? this.timeZone.toProtobufJSON(options) : null
         };
     }
 }
@@ -9239,17 +9800,17 @@ class S2tLlmPostProcessingSummarizationOptions {
     }
 }
 /**
- * Message implementation for ondewo.s2t.S2tLlmPostProcessingUserPromptOptions
+ * Message implementation for ondewo.s2t.S2tLlmPostProcessingSubTaskOptions
  */
-class S2tLlmPostProcessingUserPromptOptions {
-    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingUserPromptOptions'; }
+class S2tLlmPostProcessingSubTaskOptions {
+    static { this.id = 'ondewo.s2t.S2tLlmPostProcessingSubTaskOptions'; }
     /**
      * Deserialize binary data to message
      * @param instance message instance
      */
     static deserializeBinary(bytes) {
-        const instance = new S2tLlmPostProcessingUserPromptOptions();
-        S2tLlmPostProcessingUserPromptOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        const instance = new S2tLlmPostProcessingSubTaskOptions();
+        S2tLlmPostProcessingSubTaskOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
         return instance;
     }
     /**
@@ -9280,7 +9841,7 @@ class S2tLlmPostProcessingUserPromptOptions {
                     _reader.skipField();
             }
         }
-        S2tLlmPostProcessingUserPromptOptions.refineValues(_instance);
+        S2tLlmPostProcessingSubTaskOptions.refineValues(_instance);
     }
     /**
      * Serializes a message to binary format using provided binary reader
@@ -9297,13 +9858,13 @@ class S2tLlmPostProcessingUserPromptOptions {
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
-     * @param _value initial values object or instance of S2tLlmPostProcessingUserPromptOptions to deeply clone from
+     * @param _value initial values object or instance of S2tLlmPostProcessingSubTaskOptions to deeply clone from
      */
     constructor(_value) {
         _value = _value || {};
         this.active = _value.active;
         this.prompt = _value.prompt;
-        S2tLlmPostProcessingUserPromptOptions.refineValues(this);
+        S2tLlmPostProcessingSubTaskOptions.refineValues(this);
     }
     get active() {
         return this._active;
@@ -9323,7 +9884,7 @@ class S2tLlmPostProcessingUserPromptOptions {
      */
     serializeBinary() {
         const writer = new BinaryWriter();
-        S2tLlmPostProcessingUserPromptOptions.serializeBinaryToWriter(this, writer);
+        S2tLlmPostProcessingSubTaskOptions.serializeBinaryToWriter(this, writer);
         return writer.getResultBuffer();
     }
     /**
@@ -10958,5 +11519,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.18", ngImpo
  * Generated bundle index. Do not edit.
  */
 
-export { AcousticModels, AddDataToUserLanguageModelRequest, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingCasingOptions, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingPunctuationOptions, S2tLlmPostProcessingSemanticCorrectionOptions, S2tLlmPostProcessingSpellCorrectionOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tLlmPostProcessingUserPromptOptions, S2tNormalization, S2tPipelineId, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TurnDetectionOptions, UtteranceDetectionOptions, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail };
+export { AcousticModels, AddDataToUserLanguageModelRequest, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, OpenaiLlmOptions, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TurnDetectionOptions, UtteranceDetectionOptions, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
