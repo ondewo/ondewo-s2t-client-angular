@@ -12,6 +12,18 @@ import * as googleProtobuf001 from '@ngx-grpc/well-known-types';
 //
 // THIS IS A GENERATED FILE
 // DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
+/**
+ * Specific GrpcClientSettings for Speech2Text.
+ * Use it only if your default settings are not set or the service requires other settings.
+ */
+const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+//
+// THIS IS A GENERATED FILE
+// DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
 var Decoding;
 (function (Decoding) {
     Decoding[Decoding["DEFAULT"] = 0] = "DEFAULT";
@@ -10424,18 +10436,6 @@ class ListS2tNormalizationPipelinesResponse {
         };
     }
 }
-
-/* tslint:disable */
-/* eslint-disable */
-// @ts-nocheck
-//
-// THIS IS A GENERATED FILE
-// DO NOT MODIFY IT! YOUR CHANGES WILL BE LOST
-/**
- * Specific GrpcClientSettings for Speech2Text.
- * Use it only if your default settings are not set or the service requires other settings.
- */
-const GRPC_SPEECH2_TEXT_CLIENT_SETTINGS = new InjectionToken('GRPC_SPEECH2_TEXT_CLIENT_SETTINGS');
 
 /* tslint:disable */
 /* eslint-disable */
