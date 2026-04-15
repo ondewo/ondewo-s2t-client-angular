@@ -9114,6 +9114,7 @@ class S2tLlmPostProcessingTranslationOptions {
     static refineValues(_instance) {
         _instance.active = _instance.active || false;
         _instance.language = _instance.language || '';
+        _instance.prompt = _instance.prompt || '';
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -9130,6 +9131,9 @@ class S2tLlmPostProcessingTranslationOptions {
                     break;
                 case 2:
                     _instance.language = _reader.readString();
+                    break;
+                case 3:
+                    _instance.prompt = _reader.readString();
                     break;
                 default:
                     _reader.skipField();
@@ -9149,6 +9153,9 @@ class S2tLlmPostProcessingTranslationOptions {
         if (_instance.language) {
             _writer.writeString(2, _instance.language);
         }
+        if (_instance.prompt) {
+            _writer.writeString(3, _instance.prompt);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -9158,6 +9165,7 @@ class S2tLlmPostProcessingTranslationOptions {
         _value = _value || {};
         this.active = _value.active;
         this.language = _value.language;
+        this.prompt = _value.prompt;
         S2tLlmPostProcessingTranslationOptions.refineValues(this);
     }
     get active() {
@@ -9171,6 +9179,12 @@ class S2tLlmPostProcessingTranslationOptions {
     }
     set language(value) {
         this._language = value;
+    }
+    get prompt() {
+        return this._prompt;
+    }
+    set prompt(value) {
+        this._prompt = value;
     }
     /**
      * Serialize message to binary data
@@ -9187,7 +9201,8 @@ class S2tLlmPostProcessingTranslationOptions {
     toObject() {
         return {
             active: this.active,
-            language: this.language
+            language: this.language,
+            prompt: this.prompt
         };
     }
     /**
@@ -9206,7 +9221,8 @@ class S2tLlmPostProcessingTranslationOptions {
     options) {
         return {
             active: this.active,
-            language: this.language
+            language: this.language,
+            prompt: this.prompt
         };
     }
 }
@@ -9686,6 +9702,7 @@ class S2tLlmPostProcessingSummarizationOptions {
      */
     static refineValues(_instance) {
         _instance.active = _instance.active || false;
+        _instance.prompt = _instance.prompt || '';
         _instance.minChars = _instance.minChars || 0;
         _instance.maxChars = _instance.maxChars || 0;
     }
@@ -9703,9 +9720,12 @@ class S2tLlmPostProcessingSummarizationOptions {
                     _instance.active = _reader.readBool();
                     break;
                 case 2:
-                    _instance.minChars = _reader.readInt32();
+                    _instance.prompt = _reader.readString();
                     break;
                 case 3:
+                    _instance.minChars = _reader.readInt32();
+                    break;
+                case 4:
                     _instance.maxChars = _reader.readInt32();
                     break;
                 default:
@@ -9723,11 +9743,14 @@ class S2tLlmPostProcessingSummarizationOptions {
         if (_instance.active) {
             _writer.writeBool(1, _instance.active);
         }
+        if (_instance.prompt) {
+            _writer.writeString(2, _instance.prompt);
+        }
         if (_instance.minChars) {
-            _writer.writeInt32(2, _instance.minChars);
+            _writer.writeInt32(3, _instance.minChars);
         }
         if (_instance.maxChars) {
-            _writer.writeInt32(3, _instance.maxChars);
+            _writer.writeInt32(4, _instance.maxChars);
         }
     }
     /**
@@ -9737,6 +9760,7 @@ class S2tLlmPostProcessingSummarizationOptions {
     constructor(_value) {
         _value = _value || {};
         this.active = _value.active;
+        this.prompt = _value.prompt;
         this.minChars = _value.minChars;
         this.maxChars = _value.maxChars;
         S2tLlmPostProcessingSummarizationOptions.refineValues(this);
@@ -9746,6 +9770,12 @@ class S2tLlmPostProcessingSummarizationOptions {
     }
     set active(value) {
         this._active = value;
+    }
+    get prompt() {
+        return this._prompt;
+    }
+    set prompt(value) {
+        this._prompt = value;
     }
     get minChars() {
         return this._minChars;
@@ -9774,6 +9804,7 @@ class S2tLlmPostProcessingSummarizationOptions {
     toObject() {
         return {
             active: this.active,
+            prompt: this.prompt,
             minChars: this.minChars,
             maxChars: this.maxChars
         };
@@ -9794,6 +9825,7 @@ class S2tLlmPostProcessingSummarizationOptions {
     options) {
         return {
             active: this.active,
+            prompt: this.prompt,
             minChars: this.minChars,
             maxChars: this.maxChars
         };

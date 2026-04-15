@@ -12273,6 +12273,7 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
   static refineValues(_instance: S2tLlmPostProcessingTranslationOptions) {
     _instance.active = _instance.active || false;
     _instance.language = _instance.language || '';
+    _instance.prompt = _instance.prompt || '';
   }
 
   /**
@@ -12293,6 +12294,9 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
           break;
         case 2:
           _instance.language = _reader.readString();
+          break;
+        case 3:
+          _instance.prompt = _reader.readString();
           break;
         default:
           _reader.skipField();
@@ -12317,10 +12321,14 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
     if (_instance.language) {
       _writer.writeString(2, _instance.language);
     }
+    if (_instance.prompt) {
+      _writer.writeString(3, _instance.prompt);
+    }
   }
 
   private _active: boolean;
   private _language: string;
+  private _prompt: string;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -12332,6 +12340,7 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
     _value = _value || {};
     this.active = _value.active;
     this.language = _value.language;
+    this.prompt = _value.prompt;
     S2tLlmPostProcessingTranslationOptions.refineValues(this);
   }
   get active(): boolean {
@@ -12345,6 +12354,12 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
   }
   set language(value: string) {
     this._language = value;
+  }
+  get prompt(): string {
+    return this._prompt;
+  }
+  set prompt(value: string) {
+    this._prompt = value;
   }
 
   /**
@@ -12366,7 +12381,8 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
   toObject(): S2tLlmPostProcessingTranslationOptions.AsObject {
     return {
       active: this.active,
-      language: this.language
+      language: this.language,
+      prompt: this.prompt
     };
   }
 
@@ -12388,7 +12404,8 @@ export class S2tLlmPostProcessingTranslationOptions implements GrpcMessage {
   ): S2tLlmPostProcessingTranslationOptions.AsProtobufJSON {
     return {
       active: this.active,
-      language: this.language
+      language: this.language,
+      prompt: this.prompt
     };
   }
 }
@@ -12399,6 +12416,7 @@ export module S2tLlmPostProcessingTranslationOptions {
   export interface AsObject {
     active: boolean;
     language: string;
+    prompt: string;
   }
 
   /**
@@ -12407,6 +12425,7 @@ export module S2tLlmPostProcessingTranslationOptions {
   export interface AsProtobufJSON {
     active: boolean;
     language: string;
+    prompt: string;
   }
 }
 
@@ -13106,6 +13125,7 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
    */
   static refineValues(_instance: S2tLlmPostProcessingSummarizationOptions) {
     _instance.active = _instance.active || false;
+    _instance.prompt = _instance.prompt || '';
     _instance.minChars = _instance.minChars || 0;
     _instance.maxChars = _instance.maxChars || 0;
   }
@@ -13127,9 +13147,12 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
           _instance.active = _reader.readBool();
           break;
         case 2:
-          _instance.minChars = _reader.readInt32();
+          _instance.prompt = _reader.readString();
           break;
         case 3:
+          _instance.minChars = _reader.readInt32();
+          break;
+        case 4:
           _instance.maxChars = _reader.readInt32();
           break;
         default:
@@ -13152,15 +13175,19 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
     if (_instance.active) {
       _writer.writeBool(1, _instance.active);
     }
+    if (_instance.prompt) {
+      _writer.writeString(2, _instance.prompt);
+    }
     if (_instance.minChars) {
-      _writer.writeInt32(2, _instance.minChars);
+      _writer.writeInt32(3, _instance.minChars);
     }
     if (_instance.maxChars) {
-      _writer.writeInt32(3, _instance.maxChars);
+      _writer.writeInt32(4, _instance.maxChars);
     }
   }
 
   private _active: boolean;
+  private _prompt: string;
   private _minChars: number;
   private _maxChars: number;
 
@@ -13173,6 +13200,7 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
   ) {
     _value = _value || {};
     this.active = _value.active;
+    this.prompt = _value.prompt;
     this.minChars = _value.minChars;
     this.maxChars = _value.maxChars;
     S2tLlmPostProcessingSummarizationOptions.refineValues(this);
@@ -13182,6 +13210,12 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
   }
   set active(value: boolean) {
     this._active = value;
+  }
+  get prompt(): string {
+    return this._prompt;
+  }
+  set prompt(value: string) {
+    this._prompt = value;
   }
   get minChars(): number {
     return this._minChars;
@@ -13215,6 +13249,7 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
   toObject(): S2tLlmPostProcessingSummarizationOptions.AsObject {
     return {
       active: this.active,
+      prompt: this.prompt,
       minChars: this.minChars,
       maxChars: this.maxChars
     };
@@ -13238,6 +13273,7 @@ export class S2tLlmPostProcessingSummarizationOptions implements GrpcMessage {
   ): S2tLlmPostProcessingSummarizationOptions.AsProtobufJSON {
     return {
       active: this.active,
+      prompt: this.prompt,
       minChars: this.minChars,
       maxChars: this.maxChars
     };
@@ -13249,6 +13285,7 @@ export module S2tLlmPostProcessingSummarizationOptions {
    */
   export interface AsObject {
     active: boolean;
+    prompt: string;
     minChars: number;
     maxChars: number;
   }
@@ -13258,6 +13295,7 @@ export module S2tLlmPostProcessingSummarizationOptions {
    */
   export interface AsProtobufJSON {
     active: boolean;
+    prompt: string;
     minChars: number;
     maxChars: number;
   }
