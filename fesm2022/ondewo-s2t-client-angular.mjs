@@ -4424,6 +4424,7 @@ class AcousticModels {
             _instance.s2tCloudServiceGoogle || undefined;
         _instance.s2tCloudServiceMicrosoft =
             _instance.s2tCloudServiceMicrosoft || undefined;
+        _instance.parakeet = _instance.parakeet || undefined;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -4470,6 +4471,10 @@ class AcousticModels {
                     _instance.s2tCloudServiceMicrosoft = new S2tCloudServiceMicrosoft();
                     _reader.readMessage(_instance.s2tCloudServiceMicrosoft, S2tCloudServiceMicrosoft.deserializeBinaryFromReader);
                     break;
+                case 10:
+                    _instance.parakeet = new Parakeet();
+                    _reader.readMessage(_instance.parakeet, Parakeet.deserializeBinaryFromReader);
+                    break;
                 default:
                     _reader.skipField();
             }
@@ -4509,6 +4514,9 @@ class AcousticModels {
         if (_instance.s2tCloudServiceMicrosoft) {
             _writer.writeMessage(9, _instance.s2tCloudServiceMicrosoft, S2tCloudServiceMicrosoft.serializeBinaryToWriter);
         }
+        if (_instance.parakeet) {
+            _writer.writeMessage(10, _instance.parakeet, Parakeet.serializeBinaryToWriter);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -4537,6 +4545,7 @@ class AcousticModels {
         this.s2tCloudServiceMicrosoft = _value.s2tCloudServiceMicrosoft
             ? new S2tCloudServiceMicrosoft(_value.s2tCloudServiceMicrosoft)
             : undefined;
+        this.parakeet = _value.parakeet ? new Parakeet(_value.parakeet) : undefined;
         AcousticModels.refineValues(this);
     }
     get type() {
@@ -4593,6 +4602,12 @@ class AcousticModels {
     set s2tCloudServiceMicrosoft(value) {
         this._s2tCloudServiceMicrosoft = value;
     }
+    get parakeet() {
+        return this._parakeet;
+    }
+    set parakeet(value) {
+        this._parakeet = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -4627,7 +4642,8 @@ class AcousticModels {
                 : undefined,
             s2tCloudServiceMicrosoft: this.s2tCloudServiceMicrosoft
                 ? this.s2tCloudServiceMicrosoft.toObject()
-                : undefined
+                : undefined,
+            parakeet: this.parakeet ? this.parakeet.toObject() : undefined
         };
     }
     /**
@@ -4665,7 +4681,8 @@ class AcousticModels {
                 : null,
             s2tCloudServiceMicrosoft: this.s2tCloudServiceMicrosoft
                 ? this.s2tCloudServiceMicrosoft.toProtobufJSON(options)
-                : null
+                : null,
+            parakeet: this.parakeet ? this.parakeet.toProtobufJSON(options) : null
         };
     }
 }
@@ -6035,6 +6052,171 @@ class Wav2VecTriton {
     options) {
         return {
             processorPath: this.processorPath,
+            tritonModelName: this.tritonModelName,
+            tritonModelVersion: this.tritonModelVersion,
+            checkStatusTimeout: this.checkStatusTimeout,
+            tritonServerHost: this.tritonServerHost,
+            tritonServerPort: this.tritonServerPort
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.Parakeet
+ */
+class Parakeet {
+    static { this.id = 'ondewo.s2t.Parakeet'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new Parakeet();
+        Parakeet.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.tritonModelName = _instance.tritonModelName || '';
+        _instance.tritonModelVersion = _instance.tritonModelVersion || '';
+        _instance.checkStatusTimeout = _instance.checkStatusTimeout || '0';
+        _instance.tritonServerHost = _instance.tritonServerHost || '';
+        _instance.tritonServerPort = _instance.tritonServerPort || '0';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.tritonModelName = _reader.readString();
+                    break;
+                case 2:
+                    _instance.tritonModelVersion = _reader.readString();
+                    break;
+                case 3:
+                    _instance.checkStatusTimeout = _reader.readInt64String();
+                    break;
+                case 4:
+                    _instance.tritonServerHost = _reader.readString();
+                    break;
+                case 5:
+                    _instance.tritonServerPort = _reader.readInt64String();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        Parakeet.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.tritonModelName) {
+            _writer.writeString(1, _instance.tritonModelName);
+        }
+        if (_instance.tritonModelVersion) {
+            _writer.writeString(2, _instance.tritonModelVersion);
+        }
+        if (_instance.checkStatusTimeout) {
+            _writer.writeInt64String(3, _instance.checkStatusTimeout);
+        }
+        if (_instance.tritonServerHost) {
+            _writer.writeString(4, _instance.tritonServerHost);
+        }
+        if (_instance.tritonServerPort) {
+            _writer.writeInt64String(5, _instance.tritonServerPort);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of Parakeet to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.tritonModelName = _value.tritonModelName;
+        this.tritonModelVersion = _value.tritonModelVersion;
+        this.checkStatusTimeout = _value.checkStatusTimeout;
+        this.tritonServerHost = _value.tritonServerHost;
+        this.tritonServerPort = _value.tritonServerPort;
+        Parakeet.refineValues(this);
+    }
+    get tritonModelName() {
+        return this._tritonModelName;
+    }
+    set tritonModelName(value) {
+        this._tritonModelName = value;
+    }
+    get tritonModelVersion() {
+        return this._tritonModelVersion;
+    }
+    set tritonModelVersion(value) {
+        this._tritonModelVersion = value;
+    }
+    get checkStatusTimeout() {
+        return this._checkStatusTimeout;
+    }
+    set checkStatusTimeout(value) {
+        this._checkStatusTimeout = value;
+    }
+    get tritonServerHost() {
+        return this._tritonServerHost;
+    }
+    set tritonServerHost(value) {
+        this._tritonServerHost = value;
+    }
+    get tritonServerPort() {
+        return this._tritonServerPort;
+    }
+    set tritonServerPort(value) {
+        this._tritonServerPort = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        Parakeet.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            tritonModelName: this.tritonModelName,
+            tritonModelVersion: this.tritonModelVersion,
+            checkStatusTimeout: this.checkStatusTimeout,
+            tritonServerHost: this.tritonServerHost,
+            tritonServerPort: this.tritonServerPort
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
             tritonModelName: this.tritonModelName,
             tritonModelVersion: this.tritonModelVersion,
             checkStatusTimeout: this.checkStatusTimeout,
@@ -11531,10 +11713,10 @@ class Speech2TextClient {
             .listS2tNormalizationPipelines(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.25", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.25", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: Speech2TextClient, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.25", ngImport: i0, type: Speech2TextClient, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'any' }]
         }], ctorParameters: () => [{ type: undefined, decorators: [{
@@ -11551,5 +11733,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.18", ngImpo
  * Generated bundle index. Do not edit.
  */
 
-export { AcousticModels, AddDataToUserLanguageModelRequest, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, OpenaiLlmOptions, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TurnDetectionOptions, UtteranceDetectionOptions, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail };
+export { AcousticModels, AddDataToUserLanguageModelRequest, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TurnDetectionOptions, UtteranceDetectionOptions, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
