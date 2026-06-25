@@ -1,7 +1,9 @@
 import * as authApi from "./index";
 
-describe("auth public API barrel", () => {
-  it("re-exports the full hand-written auth surface", () => {
+/** Unit tests asserting the public auth barrel re-exports the whole surface. */
+describe("auth public API barrel", (): void => {
+  /** Every hand-written export must be reachable through the barrel module. */
+  it("re-exports the full hand-written auth surface", (): void => {
     expect(typeof authApi.authHttpInterceptor).toBe("function");
     expect(typeof authApi.AuthGrpcInterceptor).toBe("function");
     expect(typeof authApi.provideOndewoS2tAuth).toBe("function");
