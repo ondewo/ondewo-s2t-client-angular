@@ -13,9 +13,9 @@ const TOKEN: string = "eyJhbGciOi.payload.signature";
 
 /** Unit tests for the header-name / scheme-prefix constants. */
 describe("constants", (): void => {
-  /** The header name must be lower-cased for HTTP/2 and gRPC-web metadata. */
-  it("uses a lower-case authorization header name", (): void => {
-    expect(AUTHORIZATION_HEADER).toBe("authorization");
+  /** The header name must use the canonical `Authorization` casing. */
+  it("uses the canonical Authorization header name", (): void => {
+    expect(AUTHORIZATION_HEADER).toBe("Authorization");
   });
 
   /** The credential scheme prefix must be the standard `"Bearer "`. */

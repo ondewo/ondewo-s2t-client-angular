@@ -4,10 +4,11 @@ import { TokenResult } from "./token-provider";
 /**
  * The HTTP / gRPC header under which the bearer credential is attached.
  *
- * Lower-case on purpose: gRPC-web metadata keys are case-insensitive but are
- * conventionally lower-cased, and HTTP/2 requires lower-case header names.
+ * Written in the canonical `Authorization` casing (capital `A`) from the HTTP
+ * spec. Header names are case-insensitive, so the gRPC-web / HTTP/2 transport
+ * may lower-case it on the wire — but the source uses the canonical form.
  */
-export const AUTHORIZATION_HEADER = "authorization";
+export const AUTHORIZATION_HEADER = "Authorization";
 
 /** The credential scheme prefix prepended to the raw access token. */
 export const BEARER_PREFIX = "Bearer ";
