@@ -503,4 +503,62 @@ describe("KeycloakTokenProvider", (): void => {
     expect(REFRESH_SKEW_IN_S).toBe(30);
     expect(MIN_REFRESH_DELAY_IN_S).toBe(1);
   });
+
+  describe("keycloakVerifySsl (browser no-op, config -> provider parity)", (): void => {
+    /** An offlineToken config exercising the refresh_token grant. */
+    const offlineConfig: KeycloakTokenProviderConfig = {
+      keycloakUrl: KEYCLOAK_URL,
+      realm: REALM,
+      clientId: CLIENT_ID,
+      offlineToken: "pre-offline"
+    };
+
+    /** Omitting the field defaults the stored flag to verification-ON (secure). */
+    it("defaults the stored flag to true when keycloakVerifySsl is omitted", (): void => {
+      const { create } = setup(offlineConfig);
+      expect(create().keycloakVerifySsl).toBe(true);
+    });
+
+    /** An explicit true is stored as true. */
+    it("stores an explicit keycloakVerifySsl: true as true", (): void => {
+      const { create } = setup({ ...offlineConfig, keycloakVerifySsl: true });
+      expect(create().keycloakVerifySsl).toBe(true);
+    });
+
+    /** An explicit false is threaded from config through to the provider field. */
+    it("stores keycloakVerifySsl: false as false (threaded config -> provider)", (): void => {
+      const { create } = setup({ ...offlineConfig, keycloakVerifySsl: false });
+      expect(create().keycloakVerifySsl).toBe(false);
+    });
+
+    /**
+     * The flag is inert at the transport layer: with keycloakVerifySsl: false the
+     * provider issues the SAME single POST (same URL, method, headers, body) and
+     * logs in exactly as with the field omitted — proving it is a no-op, not wired
+     * to TLS.
+     */
+    it("does not alter or break the token request when keycloakVerifySsl is false", async (): Promise<void> => {
+      const { controller, create } = setup({ ...offlineConfig, keycloakVerifySsl: false });
+      const provider: KeycloakTokenProvider = create();
+
+      const loginDone: Promise<void> = provider.login();
+      const request: TestRequest = await flushToken(controller, {
+        access_token: "access-1",
+        refresh_token: "offline-1",
+        expires_in: 300
+      });
+      await loginDone;
+
+      expect(request.request.method).toBe("POST");
+      expect(request.request.headers.get("Content-Type")).toBe("application/x-www-form-urlencoded");
+      const params: URLSearchParams = new URLSearchParams(request.request.body as string);
+      expect(params.get("grant_type")).toBe("refresh_token");
+      expect(params.get("client_id")).toBe(CLIENT_ID);
+      expect(params.get("refresh_token")).toBe("pre-offline");
+
+      expect(provider.getToken()).toBe("access-1");
+      provider.stop();
+      controller.verify();
+    });
+  });
 });
