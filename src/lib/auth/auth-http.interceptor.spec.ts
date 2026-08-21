@@ -16,7 +16,7 @@ const URL: string = "https://api.example.com/ondewo.s2t.Speech2Text/GetS2tPipeli
 
 /** A `TokenProvider` whose `getToken` returns a caller-supplied value. */
 class StubTokenProvider implements TokenProvider {
-  constructor(private readonly value: TokenResult) {}
+  public constructor(private readonly value: TokenResult) {}
 
   /**
    * Return the value the test seeded the provider with.

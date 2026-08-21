@@ -9,13 +9,13 @@ import { TokenProvider, TokenResult } from "./token-provider";
  * the round-trip latency to Keycloak. Mirrors `REFRESH_SKEW_IN_S` in the nodejs
  * SDK and `_EXPIRY_LEEWAY_S` in the python SDK.
  */
-export const REFRESH_SKEW_IN_S = 30;
+export const REFRESH_SKEW_IN_S: number = 30;
 
 /**
  * Lower bound (in seconds) for the scheduled refresh delay, so a tiny or zero
  * `expires_in` can never spin a hot refresh loop.
  */
-export const MIN_REFRESH_DELAY_IN_S = 1;
+export const MIN_REFRESH_DELAY_IN_S: number = 1;
 
 /**
  * Configuration for {@link KeycloakTokenProvider}.
@@ -94,7 +94,7 @@ export class KeycloakAuthenticationError extends Error {
    *
    * @param message a human-readable description of the failure.
    */
-  constructor(message: string) {
+  public constructor(message: string) {
     super(message);
     this.name = "KeycloakAuthenticationError";
   }
@@ -108,6 +108,27 @@ interface KeycloakTokenResponse {
   refresh_token?: string;
   /** The access token lifetime in seconds, as reported by Keycloak. */
   expires_in?: number;
+}
+
+/**
+ * Render an unknown rejection reason from the token endpoint as a string that is safe to
+ * interpolate into an error message.
+ *
+ * `String(unknown)` would trip `@typescript-eslint/no-base-to-string` (an object without a
+ * meaningful `toString` stringifies to `[object Object]`), and `JSON.stringify` alone flattens
+ * an `Error` to `{}`, dropping the message. Narrow first, so an `Error` keeps `name: message`.
+ *
+ * @param caughtError the value the HTTP call rejected with.
+ * @returns a human-readable description of the failure.
+ */
+function describeTokenEndpointError(caughtError: unknown): string {
+  if (caughtError instanceof HttpErrorResponse) {
+    return caughtError.message;
+  }
+  if (caughtError instanceof Error) {
+    return `${caughtError.name}: ${caughtError.message}`;
+  }
+  return JSON.stringify(caughtError);
 }
 
 /**
@@ -163,7 +184,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
   private timer: ReturnType<typeof setTimeout> | null = null;
 
   /** Whether {@link stop} has been called; suppresses any further (re-)scheduling. */
-  private stopped = false;
+  private stopped: boolean = false;
 
   /** Absolute epoch-ms deadline for the bounded loop, or `null` when unbounded. */
   private deadlineInMs: number | null = null;
@@ -190,7 +211,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
    * @throws {@link KeycloakAuthenticationError} when no config is provided or a
    *   required field is missing.
    */
-  constructor(
+  public constructor(
     private readonly http: HttpClient,
     @Optional() @Inject(KEYCLOAK_TOKEN_PROVIDER_CONFIG) config: KeycloakTokenProviderConfig | null
   ) {
@@ -254,7 +275,9 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
         : await this.postTokenRequest({
             grant_type: "password",
             client_id: this.config.clientId,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the strict jest tsconfig; redundant only under the non-strict release one
             username: this.config.username as string,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the strict jest tsconfig; redundant only under the non-strict release one
             password: this.config.password as string,
             scope: "offline_access"
           });
@@ -319,6 +342,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
     const tokenResponse: KeycloakTokenResponse = await this.postTokenRequest({
       grant_type: "refresh_token",
       client_id: this.config.clientId,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the strict jest tsconfig; redundant only under the non-strict release one
       refresh_token: this.refreshToken as string
     });
     this.storeTokens(tokenResponse);
@@ -387,8 +411,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
       );
     } catch (caughtError: unknown) {
       const status: number = caughtError instanceof HttpErrorResponse ? caughtError.status : 0;
-      const detail: string =
-        caughtError instanceof HttpErrorResponse ? caughtError.message : String(caughtError);
+      const detail: string = describeTokenEndpointError(caughtError);
       throw new KeycloakAuthenticationError(
         `Keycloak token endpoint returned HTTP ${status}: ${detail}`
       );

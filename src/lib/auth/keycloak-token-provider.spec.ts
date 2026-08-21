@@ -12,22 +12,22 @@ import {
 } from "./keycloak-token-provider";
 
 /** Base Keycloak URL used across the cases (with a trailing slash to exercise stripping). */
-const KEYCLOAK_URL = "https://auth.example.com/auth/";
+const KEYCLOAK_URL: string = "https://auth.example.com/auth/";
 
 /** Realm name used across the cases. */
-const REALM = "ondewo-ccai-platform";
+const REALM: string = "ondewo-ccai-platform";
 
 /** Public SDK client id used across the cases. */
-const CLIENT_ID = "ondewo-nlu-cai-sdk-public";
+const CLIENT_ID: string = "ondewo-nlu-cai-sdk-public";
 
 /** The fully-qualified token endpoint the configured realm resolves to. */
-const TOKEN_ENDPOINT = `https://auth.example.com/auth/realms/${REALM}/protocol/openid-connect/token`;
+const TOKEN_ENDPOINT: string = `https://auth.example.com/auth/realms/${REALM}/protocol/openid-connect/token`;
 
 /** A representative 2FA-exempt technical-user email for the ROPC grant. */
-const USERNAME = "tech-user@example.com";
+const USERNAME: string = "tech-user@example.com";
 
 /** A representative technical-user password for the ROPC grant. */
-const PASSWORD = "super-secret";
+const PASSWORD: string = "super-secret";
 
 /** Valid ROPC (username/password) login config shared via spread by most cases. */
 const ROPC_CONFIG: KeycloakTokenProviderConfig = {
@@ -468,6 +468,16 @@ describe("KeycloakTokenProvider", (): void => {
     const provider: KeycloakTokenProvider = create();
 
     await expect(provider.login()).rejects.toThrow(/HTTP 0: Error: network down/);
+  });
+
+  /** A rejection that is neither an HttpErrorResponse nor an Error is still described, not "[object Object]". */
+  it("describes a non-Error rejection reason without stringifying it to [object Object]", async (): Promise<void> => {
+    const { create } = setup(ROPC_CONFIG);
+    const http: HttpClient = TestBed.inject(HttpClient);
+    jest.spyOn(http, "post").mockReturnValue(throwError((): unknown => ({ reason: "socket closed" })));
+    const provider: KeycloakTokenProvider = create();
+
+    await expect(provider.login()).rejects.toThrow(/HTTP 0: \{"reason":"socket closed"\}/);
   });
 
   /** stop() while a refresh is in flight applies that refresh but re-arms nothing. */
