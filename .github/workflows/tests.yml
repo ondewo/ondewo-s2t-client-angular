@@ -20,6 +20,19 @@ jobs:
         with:
           submodules: false
 
+      - name: Check out ondewo-proto-compiler at the tag the Makefile pins
+        # The submodule URL is SSH, which no runner can clone, so it is fetched over HTTPS
+        # instead. tests/build-layout.spec.ts reads ng-packagr's `dest` out of its
+        # ng-package.json; without it on disk that guard reports a visible SKIPPED line
+        # rather than running, so a GitHub outage weakens this job instead of failing it.
+        continue-on-error: true
+        run: |
+          tag="$(sed -n 's|^ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/||p' Makefile)"
+          test -n "$tag"
+          rm -rf ondewo-proto-compiler
+          git clone --depth 1 --branch "$tag" \
+            https://github.com/ondewo/ondewo-proto-compiler.git ondewo-proto-compiler
+
       - name: Set up Node.js 20
         uses: actions/setup-node@v5
         with:

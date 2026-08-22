@@ -12,8 +12,8 @@
 #   src/ondewo-s2t-api/      git submodule (proto api)
 #   *.d.ts / *.d.ts.map / *.metadata.json / index.d.ts   generated type declarations
 #   package-lock.json        vendored lockfile
-# NOTE: src/lib/auth/ is HAND-WRITTEN and stays in scope (the generic `lib/` exclude that
-# ships with the template would wrongly drop it, so it is intentionally not used here).
+# NOTE: src/auth/ is HAND-WRITTEN and stays in scope. It deliberately sits OUTSIDE src/lib,
+# which is ng-packagr's `dest` and is deleted on every build (tests/build-layout.spec.ts).
 exclude: |
   (?x)(
       ^(node_modules|api|fesm2022)/
