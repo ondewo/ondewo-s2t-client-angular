@@ -7,7 +7,10 @@ node_modules
 npm
 # Release-critical markdown: prettier rewrites `[comment]: <> (START OF GITHUB README)`
 # into `[comment]: <> 'START OF GITHUB README'`, and `make build` slices the published
-# npm/README.md between exactly those markers. Both root files are copies of src/README.md
+# npm/README.md between exactly those markers. `.prettierrc` also sets useTabs, so prettier
+# re-tabs the fenced code blocks that markdownlint's MD010 de-tabs, and .husky/pre-commit
+# runs `prettier -w` before `pre-commit run` -- the two rewrite the same file in opposite
+# directions on every commit that touches it. Both root files are copies of src/README.md
 # and src/RELEASE.md (src/package.json "postbuild"), and src/ is ignored below, so
 # formatting them here only creates drift the next build overwrites. markdownlint-cli2
 # (pre-commit) owns the markdown style instead.

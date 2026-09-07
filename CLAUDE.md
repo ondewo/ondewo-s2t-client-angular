@@ -94,13 +94,14 @@ clarifying questions come before implementation rather than after mistakes.
 ## What this repo is (and what is generated)
 
 Angular SDK for the ONDEWO Speech-2-Text gRPC API, published to npm as `@ondewo/s2t-client-angular`
-(`ONDEWO_S2T_VERSION` in the `Makefile`, currently `7.4.0`).
+(`ONDEWO_S2T_VERSION` in the `Makefile`, currently `7.4.2`).
 
 **Hand-written — the only code worth linting, testing and reviewing:**
 
-- `src/lib/auth/` — the Keycloak bearer-auth surface (`TokenProvider`, `KeycloakTokenProvider`,
+- `src/auth/` — the Keycloak bearer-auth surface (`TokenProvider`, `KeycloakTokenProvider`,
   `resolveToken`, `AuthGrpcInterceptor`, `authHttpInterceptor`, `provideOndewoS2tAuth`).
 - `examples/transcribe-app/` — the usage example.
+- `tests/` — `build-layout.spec.ts`, the packaging-layout guard described below.
 - `Makefile`, `.github/`, `.husky/`, `jest.config.js`, `eslint.config.mjs`, the dotfile configs,
   `src/README.md`, `src/RELEASE.md`.
 
@@ -109,26 +110,43 @@ Angular SDK for the ONDEWO Speech-2-Text gRPC API, published to npm as `@ondewo/
 `ondewo-s2t-client-angular.metadata.json`, `npm/`, and both root `README.md` / `RELEASE.md`
 (copies of the `src/` originals, see _Release_ below).
 
-The published bundle does **not** export the auth surface: `public-api.ts` is three
-`export * from './api/ondewo/s2t/speech-to-text.pb*'` lines and nothing else, and
-`grep -c 'provideOndewoS2tAuth' index.d.ts fesm2022/*.mjs` is `0`. Emitting the auth re-export needs a
-`make build` with proto-compiler >= 5.13.0. The pin is already 5.14.0; the stubs are not regenerated.
+The auth surface **is** exported from the published bundle since 7.4.1: `public-api.ts` carries
+`export * from './src/auth';` next to the three `speech-to-text.pb*` lines, and
+`grep -c 'provideOndewoS2tAuth' index.d.ts fesm2022/*.mjs` is `6` in each. The re-export is emitted
+by the compiler (>= 5.13.0), so it survives every regeneration.
+
+## `src/lib` is ng-packagr's `dest` — never put hand-written code there
+
+ng-packagr deletes `dest` recursively **before** it compiles the library entry point, and the
+proto-compiler's default `ng-package.json` sets `dest: "lib"` relative to `src/`. Hand-written
+sources under `src/lib` are therefore gone by the time the compilation that needs them runs. That
+is why the auth surface lives at `src/auth`, not `src/lib/auth` (moved in 7.4.2, after
+proto-compiler 5.13.0 made the generated barrel star-export the directory and the build died with
+`TS2307: Cannot find module './lib/auth'`).
+
+`tests/build-layout.spec.ts` guards this: it reads `dest` out of the `ng-package.json` the build
+actually resolves (this repo ships none, so the compiler's
+`ondewo-proto-compiler/angular/image-data/default-lib-files/ng-package.json` wins) and fails when
+any hand-written source sits underneath it. With the compiler submodule absent it reports a visible
+skip instead of failing, which is why the CI job clones the compiler over HTTPS.
 
 ## Tests and the coverage gate
 
 ```shell
 npm install --no-audit --no-fund --legacy-peer-deps   # what CI installs with
-npx jest --config jest.config.js --coverage --ci      # what CI runs; 8 suites / 73 tests
+npx jest --config jest.config.js --coverage --ci      # what CI runs; 9 suites / 76 tests
 npm test                                              # same jest run, used by .husky/pre-push
 ```
 
-- `jest.config.js`: `preset: 'jest-preset-angular'`, `roots: ['<rootDir>/src/lib/auth',
-  '<rootDir>/examples']`, `coverageThreshold: { global: { branches/functions/lines/statements: 100 } }`.
-- `collectCoverageFrom: ['src/lib/auth/**/*.ts', 'examples/**/*.ts', '!**/*.spec.ts']` — **roots, not
-  file lists**. That is what makes the gate bite: dropping an untested `.ts` into either root shows it
-  at 0% and fails the threshold (verified: a 5-line probe file took the run to
-  `Coverage for statements (97.76%) does not meet "global" threshold (100%)`, exit 1).
-- Current state: 175/175 statements, 78/78 branches, 54/54 functions, 166/166 lines.
+- `jest.config.js`: `preset: 'jest-preset-angular'`, `roots: ['<rootDir>/src/auth',
+  '<rootDir>/examples', '<rootDir>/tests']`, `coverageThreshold: { global: {
+  branches/functions/lines/statements: 100 } }`.
+- `collectCoverageFrom: ['src/auth/**/*.ts', 'examples/**/*.ts', 'tests/**/*.ts', '!**/*.spec.ts']`
+  — **roots, not file lists**. That is what makes the gate bite: dropping an untested `.ts` into any
+  gated root shows it at 0% and fails the threshold (verified in both `src/auth/` and
+  `examples/transcribe-app/`: a 5-line probe took the run to
+  `Coverage for statements (97.82%) does not meet "global" threshold (100%)`, exit 1).
+- Current state: 180/180 statements, 80/80 branches, 55/55 functions, 171/171 lines.
 - `coveragePathIgnorePatterns` excludes `node_modules`, `src/ondewo-s2t-api/`, `api/`, `*.spec.ts` and
   the `GENERATED_STUB_PATTERNS` list (`.pb.ts`, `.pbsc.ts`, `.pbconf.ts`, `_pb.*`, `*ServiceClientPb.ts`,
   `_grpc_web_pb.*`). Without it the thousands of generated lines would force the threshold down.
@@ -138,15 +156,19 @@ npm test                                              # same jest run, used by .
 Triggers on push to **every** branch (`branches: ['**']`) and on every pull request. Job
 `auth-unit-tests` on `ubuntu-latest`, Node 20 with `cache: 'npm'`, `submodules: false`:
 
-1. `npm install --no-audit --no-fund --legacy-peer-deps`
-2. `make eslint`
-3. `npx jest --config jest.config.js --coverage --ci`
-4. `Upload coverage report` (`actions/upload-artifact@v5`, `coverage/`, 14 days, `if: always()`)
+1. `Check out ondewo-proto-compiler at the tag the Makefile pins` — `continue-on-error: true`; reads
+   the tag out of `ONDEWO_PROTO_COMPILER_GIT_BRANCH` and clones the compiler over **HTTPS**, because
+   the submodule URL is SSH and no runner can clone it. Without it `tests/build-layout.spec.ts`
+   skips instead of running.
+2. `npm install --no-audit --no-fund --legacy-peer-deps`
+3. `make eslint`
+4. `npx jest --config jest.config.js --coverage --ci`
+5. `Upload coverage report` (`actions/upload-artifact@v5`, `coverage/`, 14 days, `if: always()`)
 
 What makes it red: an eslint **error** (warnings do not fail — there is no `--max-warnings 0`), a
-failing spec, or any hand-written line under `src/lib/auth/` or `examples/` that no test reaches.
-`submodules: false` means CI never has `src/ondewo-s2t-api` or `ondewo-proto-compiler` — anything that
-needs them cannot be added to this workflow.
+failing spec, or any hand-written line under `src/auth/`, `examples/` or `tests/` that no test
+reaches. `submodules: false` means the checkout itself carries neither submodule; `src/ondewo-s2t-api`
+is never available, so nothing that needs the protos can be added to this workflow.
 
 The trigger used to be `branches: [master, 'OND211-**']`, so work on an `OND231-*` branch ran no CI at
 all. Do not narrow it again.
@@ -167,11 +189,12 @@ eslint error breaks the release, not just the build. Rules that actually bite he
   narrow `// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion` above it
   (three sites in `keycloak-token-provider.ts`). Removing either half red-greens one toolchain and
   breaks the other.
-- `@typescript-eslint/no-base-to-string` — `String(caughtError)` on an `unknown` is flagged; the one
-  site in `postTokenRequest` carries a commented disable because `[object Object]` is the accepted
-  last-resort rendering there.
-- `no-ternary` / `no-mixed-operators` are **warnings**. Nine `no-ternary` warnings remain by design;
-  do not add `--max-warnings 0` without deciding that policy separately.
+- `@typescript-eslint/no-base-to-string` — this is why the token-endpoint failure path goes through
+  `describeTokenEndpointError`, a narrowing helper, instead of `String(caughtError)`. Do not
+  "simplify" it back: `String(unknown)` trips the rule, and a bare `JSON.stringify` flattens an
+  `Error` to `{}` and drops its message.
+- `no-ternary` / `no-mixed-operators` are **warnings**. 13 warnings remain by design (9 `no-ternary`,
+  4 `no-mixed-operators`); do not add `--max-warnings 0` without deciding that policy separately.
 
 ## Proto-compiler pin (`ondewo-proto-compiler` submodule)
 
@@ -183,9 +206,9 @@ grep -n '^ONDEWO_PROTO_COMPILER_GIT_BRANCH' Makefile   # -> tags/5.14.0
 ```
 
 `check_out_correct_submodule_versions` runs `git -C ondewo-proto-compiler checkout
-${ONDEWO_PROTO_COMPILER_GIT_BRANCH}`, so a Makefile value **older** than the gitlink silently downgrades
-the compiler on every build. That was the state before this pin: Makefile `tags/5.10.0` vs gitlink
-`5.11.0`.
+${ONDEWO_PROTO_COMPILER_GIT_BRANCH}`, so a Makefile value **older** than the gitlink silently
+downgrades the compiler on every build. Both moved together here (5.13.0 -> 5.14.0), which is the
+only safe way to bump.
 
 To bump (this is the whole procedure — `ondewo-proto-compiler/update_proto_compiler_dependency.sh` does
 nothing else for this repo):
@@ -203,31 +226,35 @@ Verified no-ops for this repo, so they must not appear as diffs: `Dockerfile.uti
 `ondewo-proto-compiler/angular/image-data/package.json` into `src/package.json` produces a
 byte-identical file.
 
-**A pin is not a regeneration.** 5.12.0/5.13.0/5.14.0 are all Angular codegen fixes — the auth-barrel
-re-export in `public-api.ts` (5.13.0) and proto3 explicit presence (5.14.0, which is why the 63 scalar
-`optional` fields in `speech-to-text.proto` currently cannot transmit `false`/`0`/`""` from Angular).
-None of them reach the committed stubs until someone runs `make build`. Never write a RELEASE.md line
+**A pin is not a regeneration.** 5.13.0's auth-barrel re-export in `public-api.ts` _is_ in the
+committed stubs — 7.4.1/7.4.2 were regenerated against it. 5.14.0's change is proto3 explicit
+presence, and it is **not** regenerated: the scalar and enum `optional` fields in
+`speech-to-text.proto` (57 scalars plus 3 enums at the pinned api commit) still cannot transmit
+`false`/`0`/`""` from Angular until someone runs `make build`. Never write a RELEASE.md line
 claiming a regeneration that did not happen.
 
 ## Pre-commit (`uvx pre-commit`, chained into husky)
 
 `pre-commit` is **not on PATH** on this machine — always `uvx pre-commit run --all-files`. Consequences:
 
-- `.husky/pre-commit` guards its `pre-commit run` with `command -v pre-commit`, so it just skips.
+- `.husky/pre-commit` guards its `pre-commit run` with `command -v pre-commit`, so it just skips. The
+  same line also guards on `git diff --quiet -- .pre-commit-config.yaml`, because `make release` runs
+  `.husky/pre-commit` **directly** through `make run_precommit_hooks` and the codegen can leave the
+  config unstaged — at which point `pre-commit run` aborts with _"Your pre-commit configuration is
+  unstaged"_ and takes the whole release with it.
 - `.husky/commit-msg` does **not** guard: `sh .husky/commit-msg <file>` exits **127**
   (`pre-commit: not found`). Harmless today because husky is not installed in this checkout
   (`git config core.hooksPath` is unset), but `npx husky install` would block every commit.
 
 Hook revisions (all verified as the newest stable): markdownlint-cli2 `v0.23.2`, pre-commit-hooks
 `v6.0.0`, conventional-pre-commit `v4.4.0`, giticket `'1.92'` (keep the quotes — unquoted `1.92` is a
-YAML float). giticket's `1.92` and `v1.92` tags are the same commit as its `master`.
+YAML float). giticket publishes both `1.92` and `v1.92`; the config uses the unprefixed one.
 
 **ORDER MATTERS — conventional-pre-commit BEFORE giticket.** Both run at the `commit-msg` stage and
 pre-commit executes repos in declaration order. giticket rewrites the subject to
 `[OND231-624] chore: probe`, which is no longer valid Conventional Commits, so with giticket first every
-commit on a ticket branch failed and needed `--no-verify`. Verified on a throwaway
-`feature/OND231-624-…` branch: with the current order `chore: probe` passes both hooks and becomes
-`[OND231-624] chore: probe`; feeding the already-prefixed subject to conventional-pre-commit exits 1.
+commit on a ticket branch failed and needed `--no-verify`. Declare each of them exactly once, in that
+order.
 
 **`.markdownlint-cli2.yaml` must NOT declare `globs:`.** The pre-commit hook always passes the changed
 files as CLI arguments and markdownlint-cli2 _adds_ the config globs on top. pre-commit chunks a long
@@ -240,9 +267,11 @@ is fixed exactly once and `uvx pre-commit run --all-files` exits 0.
 **markdownlint MD053 stays disabled.** Its auto-fix deletes the
 `[comment]: <> (START/END OF GITHUB README)` reference-definition markers that `make build` slices the
 published README with. After any markdown tooling change, re-check:
-`grep -n 'GITHUB README' README.md src/README.md` (must show the parenthesised form),
-`grep -c '^## Release' RELEASE.md src/RELEASE.md` (22 == 22) and
-`grep -c '^\*\{5,\}$' RELEASE.md` (22).
+`grep -n 'GITHUB README' README.md src/README.md` (must show the parenthesised form, lines 78 and 165),
+`grep -c '^## Release' RELEASE.md src/RELEASE.md` (24 == 24) and
+`grep -c '^\*\{5,\}$' RELEASE.md` (24). `RELEASE.md` is the authoritative changelog and the release tag
+holds the complete history — if a tooling pass ever drops `## Release … X.Y.Z` headings, restore both
+copies from the latest release tag.
 
 ## prettier vs markdownlint — who owns which file
 
@@ -251,47 +280,46 @@ rewrites but does not stage leaves the tree dirty mid-commit; rewriting `.pre-co
 particular makes the very next `pre-commit run` abort with _"Your pre-commit configuration is
 unstaged"_. `.prettierignore` therefore hands ownership over, with the reason inline:
 
-- prettier owns: `src/lib/auth/**` is _excluded_ (via `src/`), so it owns only the root TS/JS/JSON it can
-  reach plus `examples/`.
+- prettier owns: `src/auth/**` is _excluded_ (via `src/`), so it owns only the root TS/JS/JSON it can
+  reach plus `examples/` and `tests/`.
 - markdownlint owns every `.md` — `README.md`, `RELEASE.md` and `CLAUDE.md` are prettier-ignored so no
-  file is rewritten by both tools (that ping-pong never converges).
+  file is rewritten by both tools (that ping-pong never converges). `.prettierrc` sets `useTabs`, so
+  prettier re-tabs exactly the fenced code blocks markdownlint's MD010 de-tabs.
 - also prettier-ignored: `index.d.ts` (generated), `coverage/` (jest output),
   `.pre-commit-config.yaml`, `.markdownlint-cli2.yaml`.
 
 prettier would otherwise corrupt `[comment]: <> (START OF GITHUB README)` into
-`[comment]: <> 'START OF GITHUB README'` and break the README slice — which is exactly the state the
-committed root `README.md` was in.
+`[comment]: <> 'START OF GITHUB README'` and break the README slice.
 
 ## Release
 
 - `make ondewo_release` -> `release`, which runs `make build`, `check_build`, `run_precommit_hooks`
   (i.e. `.husky/pre-commit`, i.e. `make eslint` + `make prettier -w`), then commits, pushes, publishes to
-  npm and cuts the GitHub release.
+  npm and cuts the GitHub release. It also stages `public-api.ts` and `index.d.ts`, which every build
+  regenerates and which carry the auth surface into the published typings.
 - **Root `README.md` / `RELEASE.md` are build artefacts.** `src/package.json`'s
   `"postbuild": "cp README.md ../. && cp RELEASE.md ../."` copies them up, and `"build"` is
   `npm run generate && npm run postbuild`. Edit `src/README.md` / `src/RELEASE.md` and copy up; never
-  hand-edit the root copies. They had drifted years behind (root topped out at 5.7.0 while the version
-  was 7.4.0) because `postbuild` did not exist.
-- `CURRENT_RELEASE_NOTES` slices `RELEASE.md` with
+  hand-edit the root copies. Before `postbuild` existed nothing copied them, so the root `RELEASE.md`
+  had lost the 6.0.0–7.4.0 entries entirely while `ONDEWO_S2T_VERSION` was already 7.4.2.
+- `CURRENT_RELEASE_NOTES` slices the **root** `RELEASE.md` with
   `perl -ne 'print if /Release ONDEWO S2T Angular Client ${ONDEWO_S2T_VERSION}/../^\*{5}/'`. The
-  terminator is anchored `^\*{5}` on purpose: the older `/\*\*/` matched any line containing two
-  asterisks, so a `**bold**` release note truncated the notes. If the version has no heading in
-  `RELEASE.md`, the variable is silently empty and `gh release create -n ""` publishes an empty release.
+  terminator is anchored `^\*{5}` on purpose: a bare `/\*\*/` matches any line containing two
+  asterisks, so a `**bold**` release note truncates the notes. If the version has no heading in the
+  root `RELEASE.md`, the variable is silently empty and `gh release create -n ""` publishes an empty
+  release — which is why the root copy has to stay complete.
 - The release commit is `-git commit --no-verify …`: `--no-verify` so husky cannot reformat freshly
   generated files mid-commit, and the leading `-` so make ignores git's non-zero exit when the build
   produced nothing to commit.
 - Every token-bearing recipe line is `@`-prefixed and `make TEST` masks secrets as `<set>`/`<unset>`.
   Keep it that way.
 
-## Sharp edges hit while doing this work
+## Sharp edges
 
-- `make eslint` was failing with 24 errors on the hand-written auth surface, which means `make release`
-  was failing too (the release runs `.husky/pre-commit`, which has `set -e`). CI did not catch it because
-  the workflow ran jest only. It now runs `make eslint` as well.
-- `npm install` prints `npm warn allow-scripts … esbuild@0.28.1, unrs-resolver@1.12.2`. Benign, exit 0.
-- The committed root `README.md` already carried prettier-corrupted slice markers
-  (`[comment]: <> 'START OF GITHUB README'`), so `make build` would have cut the published README at
-  the wrong place. Resynced from `src/README.md` and both root copies are now prettier-ignored.
 - `git status --short` after any tooling change must show only intended files. `make prettier
   PRETTIER_WRITE=-w` and markdownlint's `fix: true` both rewrite in place, so a "check" is never
   read-only here.
+- `npm install` prints `npm warn allow-scripts … esbuild@0.28.1, unrs-resolver@1.12.2`. Benign, exit 0.
+- `make eslint` runs inside `.husky/pre-commit`, which has `set -e`, so an eslint **error** fails
+  `make release` even when CI is green on an older workflow. The workflow now runs `make eslint` too;
+  keep that step.

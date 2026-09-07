@@ -111,6 +111,27 @@ interface KeycloakTokenResponse {
 }
 
 /**
+ * Render an unknown rejection reason from the token endpoint as a string that is safe to
+ * interpolate into an error message.
+ *
+ * `String(unknown)` would trip `@typescript-eslint/no-base-to-string` (an object without a
+ * meaningful `toString` stringifies to `[object Object]`), and `JSON.stringify` alone flattens
+ * an `Error` to `{}`, dropping the message. Narrow first, so an `Error` keeps `name: message`.
+ *
+ * @param caughtError the value the HTTP call rejected with.
+ * @returns a human-readable description of the failure.
+ */
+function describeTokenEndpointError(caughtError: unknown): string {
+  if (caughtError instanceof HttpErrorResponse) {
+    return caughtError.message;
+  }
+  if (caughtError instanceof Error) {
+    return `${caughtError.name}: ${caughtError.message}`;
+  }
+  return JSON.stringify(caughtError);
+}
+
+/**
  * Concrete, ready-to-use {@link TokenProvider} that authenticates against
  * Keycloak with the D18 headless offline-token flow and keeps the access token
  * fresh in the background — so consumers get refreshing bearer auth **without**
@@ -254,13 +275,9 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
         : await this.postTokenRequest({
             grant_type: "password",
             client_id: this.config.clientId,
-            // assertCredentials() proved both are non-empty strings before this branch is
-            // reachable. The assertions are REQUIRED by the strict jest tsconfig.spec.json
-            // (the fields are `string | undefined`); the release/eslint tsconfig.json has no
-            // strictNullChecks, so there they look redundant.
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the strict jest tsconfig; redundant only under the non-strict release one
             username: this.config.username as string,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the strict jest tsconfig; redundant only under the non-strict release one
             password: this.config.password as string,
             scope: "offline_access"
           });
@@ -274,7 +291,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
     }
 
     if (this.config.tokenExpirationInS !== undefined) {
-      this.deadlineInMs = Date.now() + (this.config.tokenExpirationInS * 1000);
+      this.deadlineInMs = Date.now() + this.config.tokenExpirationInS * 1000;
     }
     this.scheduleRefresh(tokenResponse.expires_in);
   }
@@ -325,10 +342,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
     const tokenResponse: KeycloakTokenResponse = await this.postTokenRequest({
       grant_type: "refresh_token",
       client_id: this.config.clientId,
-      // The refresh timer is only armed after login() proved refreshToken non-null
-      // (storeTokens preserves it), so this is safe. Assertion required by the strict
-      // jest tsconfig.spec.json, redundant under the non-strict release tsconfig.json.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the strict jest tsconfig; redundant only under the non-strict release one
       refresh_token: this.refreshToken as string
     });
     this.storeTokens(tokenResponse);
@@ -397,13 +411,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
       );
     } catch (caughtError: unknown) {
       const status: number = caughtError instanceof HttpErrorResponse ? caughtError.status : 0;
-      const detail: string =
-        caughtError instanceof HttpErrorResponse
-          ? caughtError.message
-          : // `caughtError` is `unknown`, so String() is the deliberate best-effort rendering
-            // of whatever the transport threw; `[object Object]` is an acceptable last resort.
-            // eslint-disable-next-line @typescript-eslint/no-base-to-string
-            String(caughtError);
+      const detail: string = describeTokenEndpointError(caughtError);
       throw new KeycloakAuthenticationError(
         `Keycloak token endpoint returned HTTP ${status}: ${detail}`
       );

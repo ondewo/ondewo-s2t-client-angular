@@ -301,7 +301,7 @@ describe("KeycloakTokenProvider", (): void => {
     await loginDone;
 
     // No timer should have fired yet just before the minimum delay.
-    jest.advanceTimersByTime((MIN_REFRESH_DELAY_IN_S * 1000) - 1);
+    jest.advanceTimersByTime(MIN_REFRESH_DELAY_IN_S * 1000 - 1);
     await flushMicrotasks();
     controller.verify();
 
@@ -468,6 +468,16 @@ describe("KeycloakTokenProvider", (): void => {
     const provider: KeycloakTokenProvider = create();
 
     await expect(provider.login()).rejects.toThrow(/HTTP 0: Error: network down/);
+  });
+
+  /** A rejection that is neither an HttpErrorResponse nor an Error is still described, not "[object Object]". */
+  it("describes a non-Error rejection reason without stringifying it to [object Object]", async (): Promise<void> => {
+    const { create } = setup(ROPC_CONFIG);
+    const http: HttpClient = TestBed.inject(HttpClient);
+    jest.spyOn(http, "post").mockReturnValue(throwError((): unknown => ({ reason: "socket closed" })));
+    const provider: KeycloakTokenProvider = create();
+
+    await expect(provider.login()).rejects.toThrow(/HTTP 0: \{"reason":"socket closed"\}/);
   });
 
   /** stop() while a refresh is in flight applies that refresh but re-arms nothing. */

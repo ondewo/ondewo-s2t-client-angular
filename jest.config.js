@@ -1,8 +1,8 @@
 /**
  * Jest configuration for the hand-written sources of this package: the Keycloak bearer-auth
- * surface (src/lib/auth) and the usage example (examples/). Uses jest-preset-angular so the
- * Angular/rxjs/@ngx-grpc ESM is transformed correctly; every generated protobuf/gRPC-web stub
- * is excluded from coverage.
+ * surface (src/auth), the usage example (examples/) and the build-layout guard (tests/).
+ * Uses jest-preset-angular so the Angular/rxjs/@ngx-grpc ESM is transformed correctly; every
+ * generated protobuf/gRPC-web stub is excluded from coverage.
  */
 
 /**
@@ -32,15 +32,15 @@ const GENERATED_STUB_PATTERNS = [
 module.exports = {
 	preset: 'jest-preset-angular',
 	setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
-	roots: ['<rootDir>/src/lib/auth', '<rootDir>/examples'],
+	roots: ['<rootDir>/src/auth', '<rootDir>/examples', '<rootDir>/tests'],
 	testMatch: ['**/*.spec.ts'],
 	moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
 	collectCoverage: true,
 	coverageDirectory: '<rootDir>/coverage',
 	coverageReporters: ['text', 'text-summary', 'lcov'],
-	// Every hand-written .ts under both roots, so a NEW untested file shows up at 0% and trips
-	// the 100% threshold below instead of silently vanishing from the report.
-	collectCoverageFrom: ['src/lib/auth/**/*.ts', 'examples/**/*.ts', '!**/*.spec.ts'],
+	// Every hand-written .ts under the gated roots, so a NEW untested file shows up at 0% and
+	// trips the 100% threshold below instead of silently vanishing from the report.
+	collectCoverageFrom: ['src/auth/**/*.ts', 'examples/**/*.ts', 'tests/**/*.ts', '!**/*.spec.ts'],
 	coveragePathIgnorePatterns: [
 		'/node_modules/',
 		'/src/ondewo-s2t-api/',

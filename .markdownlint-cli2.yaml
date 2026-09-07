@@ -24,9 +24,9 @@ config:
 # the second one wrote its stale copy back, silently DELETING changelog bullets and
 # `### Improvements` headings from RELEASE.md. Without globs each file is fixed exactly once.
 ignores:
-  - "node_modules/**"
-  - "api/**"
-  - "fesm2022/**"
-  - "ondewo-proto-compiler/**"
-  - "src/ondewo-s2t-api/**"
-  - ".venv/**"
+  - 'node_modules/**'
+  - 'api/**'
+  - 'fesm2022/**'
+  - 'ondewo-proto-compiler/**'
+  - 'src/ondewo-s2t-api/**'
+  - '.venv/**'
