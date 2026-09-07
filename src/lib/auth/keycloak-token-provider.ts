@@ -9,13 +9,13 @@ import { TokenProvider, TokenResult } from "./token-provider";
  * the round-trip latency to Keycloak. Mirrors `REFRESH_SKEW_IN_S` in the nodejs
  * SDK and `_EXPIRY_LEEWAY_S` in the python SDK.
  */
-export const REFRESH_SKEW_IN_S = 30;
+export const REFRESH_SKEW_IN_S: number = 30;
 
 /**
  * Lower bound (in seconds) for the scheduled refresh delay, so a tiny or zero
  * `expires_in` can never spin a hot refresh loop.
  */
-export const MIN_REFRESH_DELAY_IN_S = 1;
+export const MIN_REFRESH_DELAY_IN_S: number = 1;
 
 /**
  * Configuration for {@link KeycloakTokenProvider}.
@@ -94,7 +94,7 @@ export class KeycloakAuthenticationError extends Error {
    *
    * @param message a human-readable description of the failure.
    */
-  constructor(message: string) {
+  public constructor(message: string) {
     super(message);
     this.name = "KeycloakAuthenticationError";
   }
@@ -163,7 +163,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
   private timer: ReturnType<typeof setTimeout> | null = null;
 
   /** Whether {@link stop} has been called; suppresses any further (re-)scheduling. */
-  private stopped = false;
+  private stopped: boolean = false;
 
   /** Absolute epoch-ms deadline for the bounded loop, or `null` when unbounded. */
   private deadlineInMs: number | null = null;
@@ -190,7 +190,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
    * @throws {@link KeycloakAuthenticationError} when no config is provided or a
    *   required field is missing.
    */
-  constructor(
+  public constructor(
     private readonly http: HttpClient,
     @Optional() @Inject(KEYCLOAK_TOKEN_PROVIDER_CONFIG) config: KeycloakTokenProviderConfig | null
   ) {
@@ -254,7 +254,13 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
         : await this.postTokenRequest({
             grant_type: "password",
             client_id: this.config.clientId,
+            // assertCredentials() proved both are non-empty strings before this branch is
+            // reachable. The assertions are REQUIRED by the strict jest tsconfig.spec.json
+            // (the fields are `string | undefined`); the release/eslint tsconfig.json has no
+            // strictNullChecks, so there they look redundant.
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             username: this.config.username as string,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             password: this.config.password as string,
             scope: "offline_access"
           });
@@ -268,7 +274,7 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
     }
 
     if (this.config.tokenExpirationInS !== undefined) {
-      this.deadlineInMs = Date.now() + this.config.tokenExpirationInS * 1000;
+      this.deadlineInMs = Date.now() + (this.config.tokenExpirationInS * 1000);
     }
     this.scheduleRefresh(tokenResponse.expires_in);
   }
@@ -319,6 +325,10 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
     const tokenResponse: KeycloakTokenResponse = await this.postTokenRequest({
       grant_type: "refresh_token",
       client_id: this.config.clientId,
+      // The refresh timer is only armed after login() proved refreshToken non-null
+      // (storeTokens preserves it), so this is safe. Assertion required by the strict
+      // jest tsconfig.spec.json, redundant under the non-strict release tsconfig.json.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       refresh_token: this.refreshToken as string
     });
     this.storeTokens(tokenResponse);
@@ -388,7 +398,12 @@ export class KeycloakTokenProvider implements TokenProvider, OnDestroy {
     } catch (caughtError: unknown) {
       const status: number = caughtError instanceof HttpErrorResponse ? caughtError.status : 0;
       const detail: string =
-        caughtError instanceof HttpErrorResponse ? caughtError.message : String(caughtError);
+        caughtError instanceof HttpErrorResponse
+          ? caughtError.message
+          : // `caughtError` is `unknown`, so String() is the deliberate best-effort rendering
+            // of whatever the transport threw; `[object Object]` is an acceptable last resort.
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
+            String(caughtError);
       throw new KeycloakAuthenticationError(
         `Keycloak token endpoint returned HTTP ${status}: ${detail}`
       );

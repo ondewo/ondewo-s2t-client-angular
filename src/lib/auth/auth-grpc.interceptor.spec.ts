@@ -13,7 +13,7 @@ const BEARER: string = `${BEARER_PREFIX}${TOKEN}`;
 
 /** A `TokenProvider` whose `getToken` returns a caller-supplied value. */
 class StubTokenProvider implements TokenProvider {
-  constructor(private readonly value: TokenResult) {}
+  public constructor(private readonly value: TokenResult) {}
 
   /**
    * Return the value the test seeded the provider with.
@@ -29,7 +29,7 @@ class StubTokenProvider implements TokenProvider {
 class FakeMetadata {
   private readonly map: Map<string, string> = new Map<string, string>();
 
-  constructor(initial?: Record<string, string>) {
+  public constructor(initial?: Record<string, string>) {
     if (initial !== undefined) {
       for (const key of Object.keys(initial)) {
         this.map.set(key, initial[key]);
