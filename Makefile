@@ -29,7 +29,7 @@ IMAGE_UTILS_NAME=ondewo-s2t-client-utils-angular:${ONDEWO_S2T_VERSION}
 PRETTIER_WRITE?=
 
 CURRENT_RELEASE_NOTES=`cat RELEASE.md \
-	| perl -ne 'print if /Release ONDEWO S2T Angular Client ${ONDEWO_S2T_VERSION}/../\*\*/'`
+	| perl -ne 'print if /Release ONDEWO S2T Angular Client ${ONDEWO_S2T_VERSION}/../^\*{5}/'`
 
 GH_REPO="https://github.com/ondewo/ondewo-s2t-client-angular"
 DEVOPS_ACCOUNT_GIT="ondewo-devops-accounts"
@@ -123,7 +123,7 @@ release: ## Create Github and NPM Release
 	git add ${ONDEWO_PROTO_COMPILER_DIR}
 	git add ${S2T_APIS_DIR}
 	git status
-	git commit --no-verify -m "Preparing for Release ${ONDEWO_S2T_VERSION}"
+	-git commit --no-verify -m "Preparing for Release ${ONDEWO_S2T_VERSION}"
 	git push
 	make publish_npm_via_docker
 	make create_release_branch
