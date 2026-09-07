@@ -56,6 +56,19 @@ var ReasoningEffort;
     ReasoningEffort[ReasoningEffort["REASONING_EFFORT_MEDIUM"] = 3] = "REASONING_EFFORT_MEDIUM";
     ReasoningEffort[ReasoningEffort["REASONING_EFFORT_HIGH"] = 4] = "REASONING_EFFORT_HIGH";
 })(ReasoningEffort || (ReasoningEffort = {}));
+var VadMethod;
+(function (VadMethod) {
+    VadMethod[VadMethod["VAD_METHOD_UNSPECIFIED"] = 0] = "VAD_METHOD_UNSPECIFIED";
+    VadMethod[VadMethod["VAD_METHOD_PYANNOTE"] = 1] = "VAD_METHOD_PYANNOTE";
+    VadMethod[VadMethod["VAD_METHOD_SILERO"] = 2] = "VAD_METHOD_SILERO";
+})(VadMethod || (VadMethod = {}));
+var TsdMethod;
+(function (TsdMethod) {
+    TsdMethod[TsdMethod["TSD_METHOD_UNSPECIFIED"] = 0] = "TSD_METHOD_UNSPECIFIED";
+    TsdMethod[TsdMethod["TSD_METHOD_NONE"] = 1] = "TSD_METHOD_NONE";
+    TsdMethod[TsdMethod["TSD_METHOD_PYANNOTE"] = 2] = "TSD_METHOD_PYANNOTE";
+    TsdMethod[TsdMethod["TSD_METHOD_WESPEAKER"] = 3] = "TSD_METHOD_WESPEAKER";
+})(TsdMethod || (TsdMethod = {}));
 /**
  * Message implementation for ondewo.s2t.TranscribeRequestConfig
  */
@@ -77,8 +90,6 @@ class TranscribeRequestConfig {
     static refineValues(_instance) {
         _instance.s2tPipelineId = _instance.s2tPipelineId || '';
         _instance.decoding = _instance.decoding || 0;
-        _instance.language = _instance.language || '';
-        _instance.task = _instance.task || '';
         _instance.s2tServiceConfig = _instance.s2tServiceConfig || undefined;
         _instance.s2tCloudProviderConfig =
             _instance.s2tCloudProviderConfig || undefined;
@@ -165,10 +176,10 @@ class TranscribeRequestConfig {
         if (_instance.returnOptions) {
             _writer.writeMessage(8, _instance.returnOptions, TranscriptionReturnOptions.serializeBinaryToWriter);
         }
-        if (_instance.language) {
+        if (_instance.language !== undefined && _instance.language !== null) {
             _writer.writeString(9, _instance.language);
         }
-        if (_instance.task) {
+        if (_instance.task !== undefined && _instance.task !== null) {
             _writer.writeString(10, _instance.task);
         }
         if (_instance.s2tServiceConfig) {
@@ -620,11 +631,6 @@ class S2tCloudProviderConfigAmazon {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.enablePartialResultsStabilization =
-            _instance.enablePartialResultsStabilization || false;
-        _instance.partialResultsStability = _instance.partialResultsStability || '';
-        _instance.languageModelName = _instance.languageModelName || '';
-        _instance.vocabularyName = _instance.vocabularyName || '';
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -660,16 +666,20 @@ class S2tCloudProviderConfigAmazon {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.enablePartialResultsStabilization) {
+        if (_instance.enablePartialResultsStabilization !== undefined &&
+            _instance.enablePartialResultsStabilization !== null) {
             _writer.writeBool(1, _instance.enablePartialResultsStabilization);
         }
-        if (_instance.partialResultsStability) {
+        if (_instance.partialResultsStability !== undefined &&
+            _instance.partialResultsStability !== null) {
             _writer.writeString(2, _instance.partialResultsStability);
         }
-        if (_instance.languageModelName) {
+        if (_instance.languageModelName !== undefined &&
+            _instance.languageModelName !== null) {
             _writer.writeString(3, _instance.languageModelName);
         }
-        if (_instance.vocabularyName) {
+        if (_instance.vocabularyName !== undefined &&
+            _instance.vocabularyName !== null) {
             _writer.writeString(4, _instance.vocabularyName);
         }
     }
@@ -771,11 +781,6 @@ class S2tCloudProviderConfigDeepgram {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.punctuate = _instance.punctuate || false;
-        _instance.smartFormat = _instance.smartFormat || false;
-        _instance.numerals = _instance.numerals || false;
-        _instance.measurements = _instance.measurements || false;
-        _instance.dictation = _instance.dictation || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -814,19 +819,20 @@ class S2tCloudProviderConfigDeepgram {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.punctuate) {
+        if (_instance.punctuate !== undefined && _instance.punctuate !== null) {
             _writer.writeBool(1, _instance.punctuate);
         }
-        if (_instance.smartFormat) {
+        if (_instance.smartFormat !== undefined && _instance.smartFormat !== null) {
             _writer.writeBool(2, _instance.smartFormat);
         }
-        if (_instance.numerals) {
+        if (_instance.numerals !== undefined && _instance.numerals !== null) {
             _writer.writeBool(3, _instance.numerals);
         }
-        if (_instance.measurements) {
+        if (_instance.measurements !== undefined &&
+            _instance.measurements !== null) {
             _writer.writeBool(4, _instance.measurements);
         }
-        if (_instance.dictation) {
+        if (_instance.dictation !== undefined && _instance.dictation !== null) {
             _writer.writeBool(5, _instance.dictation);
         }
     }
@@ -936,13 +942,6 @@ class S2tCloudProviderConfigGoogle {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.enableAutomaticPunctuation =
-            _instance.enableAutomaticPunctuation || false;
-        _instance.enableWordTimeOffsets = _instance.enableWordTimeOffsets || false;
-        _instance.enableWordConfidence = _instance.enableWordConfidence || false;
-        _instance.transcriptNormalization =
-            _instance.transcriptNormalization || false;
-        _instance.maxAlternatives = _instance.maxAlternatives || 0;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -981,19 +980,24 @@ class S2tCloudProviderConfigGoogle {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.enableAutomaticPunctuation) {
+        if (_instance.enableAutomaticPunctuation !== undefined &&
+            _instance.enableAutomaticPunctuation !== null) {
             _writer.writeBool(1, _instance.enableAutomaticPunctuation);
         }
-        if (_instance.enableWordTimeOffsets) {
+        if (_instance.enableWordTimeOffsets !== undefined &&
+            _instance.enableWordTimeOffsets !== null) {
             _writer.writeBool(2, _instance.enableWordTimeOffsets);
         }
-        if (_instance.enableWordConfidence) {
+        if (_instance.enableWordConfidence !== undefined &&
+            _instance.enableWordConfidence !== null) {
             _writer.writeBool(3, _instance.enableWordConfidence);
         }
-        if (_instance.transcriptNormalization) {
+        if (_instance.transcriptNormalization !== undefined &&
+            _instance.transcriptNormalization !== null) {
             _writer.writeBool(4, _instance.transcriptNormalization);
         }
-        if (_instance.maxAlternatives) {
+        if (_instance.maxAlternatives !== undefined &&
+            _instance.maxAlternatives !== null) {
             _writer.writeInt32(5, _instance.maxAlternatives);
         }
     }
@@ -1103,10 +1107,6 @@ class S2tCloudProviderConfigMicrosoft {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.useFastTranscriptionApi =
-            _instance.useFastTranscriptionApi || false;
-        _instance.useDetailedOutputFormat =
-            _instance.useDetailedOutputFormat || false;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -1136,10 +1136,12 @@ class S2tCloudProviderConfigMicrosoft {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.useFastTranscriptionApi) {
+        if (_instance.useFastTranscriptionApi !== undefined &&
+            _instance.useFastTranscriptionApi !== null) {
             _writer.writeBool(1, _instance.useFastTranscriptionApi);
         }
-        if (_instance.useDetailedOutputFormat) {
+        if (_instance.useDetailedOutputFormat !== undefined &&
+            _instance.useDetailedOutputFormat !== null) {
             _writer.writeBool(2, _instance.useDetailedOutputFormat);
         }
     }
@@ -6963,12 +6965,6 @@ class TurnDetectionOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-        _instance.fullUtteranceDeployment =
-            _instance.fullUtteranceDeployment || false;
-        _instance.turnDetectionSystemPrompt =
-            _instance.turnDetectionSystemPrompt || '';
-        _instance.turnDetectionUserPrompt = _instance.turnDetectionUserPrompt || '';
         _instance.turnDetectionLlmOpenaiOptions =
             _instance.turnDetectionLlmOpenaiOptions || undefined;
     }
@@ -7010,16 +7006,19 @@ class TurnDetectionOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
+        if (_instance.active !== undefined && _instance.active !== null) {
             _writer.writeBool(1, _instance.active);
         }
-        if (_instance.fullUtteranceDeployment) {
+        if (_instance.fullUtteranceDeployment !== undefined &&
+            _instance.fullUtteranceDeployment !== null) {
             _writer.writeBool(2, _instance.fullUtteranceDeployment);
         }
-        if (_instance.turnDetectionSystemPrompt) {
+        if (_instance.turnDetectionSystemPrompt !== undefined &&
+            _instance.turnDetectionSystemPrompt !== null) {
             _writer.writeString(3, _instance.turnDetectionSystemPrompt);
         }
-        if (_instance.turnDetectionUserPrompt) {
+        if (_instance.turnDetectionUserPrompt !== undefined &&
+            _instance.turnDetectionUserPrompt !== null) {
             _writer.writeString(4, _instance.turnDetectionUserPrompt);
         }
         if (_instance.turnDetectionLlmOpenaiOptions) {
@@ -7138,38 +7137,12 @@ class OpenaiLlmOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.apiKey = _instance.apiKey || '';
-        _instance.organization = _instance.organization || '';
-        _instance.project = _instance.project || '';
-        _instance.webhookSecret = _instance.webhookSecret || '';
-        _instance.baseUrl = _instance.baseUrl || '';
-        _instance.websocketBaseUrl = _instance.websocketBaseUrl || '';
-        _instance.timeout = _instance.timeout || 0;
-        _instance.maxRetries = _instance.maxRetries || 0;
         _instance.defaultHeaders = _instance.defaultHeaders || {};
         _instance.defaultQuery = _instance.defaultQuery || undefined;
-        _instance.strictResponseValidation =
-            _instance.strictResponseValidation || false;
         _instance.model = _instance.model || '';
-        _instance.frequencyPenalty = _instance.frequencyPenalty || 0;
         _instance.logitBias = _instance.logitBias || {};
-        _instance.logprobs = _instance.logprobs || false;
-        _instance.maxCompletionTokens = _instance.maxCompletionTokens || 0;
-        _instance.maxTokens = _instance.maxTokens || 0;
         _instance.metadata = _instance.metadata || undefined;
-        _instance.n = _instance.n || 0;
-        _instance.presencePenalty = _instance.presencePenalty || 0;
-        _instance.promptCacheKey = _instance.promptCacheKey || '';
-        _instance.reasoningEffort = _instance.reasoningEffort || 0;
-        _instance.seed = _instance.seed || '0';
-        _instance.serviceTier = _instance.serviceTier || 0;
         _instance.stop = _instance.stop || [];
-        _instance.store = _instance.store || false;
-        _instance.temperature = _instance.temperature || 0;
-        _instance.topLogprobs = _instance.topLogprobs || 0;
-        _instance.topP = _instance.topP || 0;
-        _instance.user = _instance.user || '';
-        _instance.verbosity = _instance.verbosity || 0;
         _instance.extraHeaders = _instance.extraHeaders || undefined;
         _instance.extraQuery = _instance.extraQuery || undefined;
         _instance.extraBody = _instance.extraBody || undefined;
@@ -7309,28 +7282,31 @@ class OpenaiLlmOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.apiKey) {
+        if (_instance.apiKey !== undefined && _instance.apiKey !== null) {
             _writer.writeString(1, _instance.apiKey);
         }
-        if (_instance.organization) {
+        if (_instance.organization !== undefined &&
+            _instance.organization !== null) {
             _writer.writeString(2, _instance.organization);
         }
-        if (_instance.project) {
+        if (_instance.project !== undefined && _instance.project !== null) {
             _writer.writeString(3, _instance.project);
         }
-        if (_instance.webhookSecret) {
+        if (_instance.webhookSecret !== undefined &&
+            _instance.webhookSecret !== null) {
             _writer.writeString(4, _instance.webhookSecret);
         }
-        if (_instance.baseUrl) {
+        if (_instance.baseUrl !== undefined && _instance.baseUrl !== null) {
             _writer.writeString(5, _instance.baseUrl);
         }
-        if (_instance.websocketBaseUrl) {
+        if (_instance.websocketBaseUrl !== undefined &&
+            _instance.websocketBaseUrl !== null) {
             _writer.writeString(6, _instance.websocketBaseUrl);
         }
-        if (_instance.timeout) {
+        if (_instance.timeout !== undefined && _instance.timeout !== null) {
             _writer.writeFloat(7, _instance.timeout);
         }
-        if (_instance.maxRetries) {
+        if (_instance.maxRetries !== undefined && _instance.maxRetries !== null) {
             _writer.writeInt32(8, _instance.maxRetries);
         }
         if (!!_instance.defaultHeaders) {
@@ -7348,13 +7324,15 @@ class OpenaiLlmOptions {
         if (_instance.defaultQuery) {
             _writer.writeMessage(10, _instance.defaultQuery, googleProtobuf001.Struct.serializeBinaryToWriter);
         }
-        if (_instance.strictResponseValidation) {
+        if (_instance.strictResponseValidation !== undefined &&
+            _instance.strictResponseValidation !== null) {
             _writer.writeBool(11, _instance.strictResponseValidation);
         }
         if (_instance.model) {
             _writer.writeString(12, _instance.model);
         }
-        if (_instance.frequencyPenalty) {
+        if (_instance.frequencyPenalty !== undefined &&
+            _instance.frequencyPenalty !== null) {
             _writer.writeFloat(13, _instance.frequencyPenalty);
         }
         if (!!_instance.logitBias) {
@@ -7366,55 +7344,59 @@ class OpenaiLlmOptions {
                 _writer.writeRepeatedMessage(14, repeated_14, OpenaiLlmOptions.LogitBiasEntry.serializeBinaryToWriter);
             }
         }
-        if (_instance.logprobs) {
+        if (_instance.logprobs !== undefined && _instance.logprobs !== null) {
             _writer.writeBool(15, _instance.logprobs);
         }
-        if (_instance.maxCompletionTokens) {
+        if (_instance.maxCompletionTokens !== undefined &&
+            _instance.maxCompletionTokens !== null) {
             _writer.writeInt32(16, _instance.maxCompletionTokens);
         }
-        if (_instance.maxTokens) {
+        if (_instance.maxTokens !== undefined && _instance.maxTokens !== null) {
             _writer.writeInt32(17, _instance.maxTokens);
         }
         if (_instance.metadata) {
             _writer.writeMessage(18, _instance.metadata, googleProtobuf001.Struct.serializeBinaryToWriter);
         }
-        if (_instance.n) {
+        if (_instance.n !== undefined && _instance.n !== null) {
             _writer.writeInt32(19, _instance.n);
         }
-        if (_instance.presencePenalty) {
+        if (_instance.presencePenalty !== undefined &&
+            _instance.presencePenalty !== null) {
             _writer.writeFloat(20, _instance.presencePenalty);
         }
-        if (_instance.promptCacheKey) {
+        if (_instance.promptCacheKey !== undefined &&
+            _instance.promptCacheKey !== null) {
             _writer.writeString(21, _instance.promptCacheKey);
         }
-        if (_instance.reasoningEffort) {
+        if (_instance.reasoningEffort !== undefined &&
+            _instance.reasoningEffort !== null) {
             _writer.writeEnum(22, _instance.reasoningEffort);
         }
-        if (_instance.seed) {
+        if (_instance.seed !== undefined && _instance.seed !== null) {
             _writer.writeInt64String(23, _instance.seed);
         }
-        if (_instance.serviceTier) {
+        if (_instance.serviceTier !== undefined && _instance.serviceTier !== null) {
             _writer.writeEnum(24, _instance.serviceTier);
         }
         if (_instance.stop && _instance.stop.length) {
             _writer.writeRepeatedString(25, _instance.stop);
         }
-        if (_instance.store) {
+        if (_instance.store !== undefined && _instance.store !== null) {
             _writer.writeBool(26, _instance.store);
         }
-        if (_instance.temperature) {
+        if (_instance.temperature !== undefined && _instance.temperature !== null) {
             _writer.writeFloat(27, _instance.temperature);
         }
-        if (_instance.topLogprobs) {
+        if (_instance.topLogprobs !== undefined && _instance.topLogprobs !== null) {
             _writer.writeInt32(28, _instance.topLogprobs);
         }
-        if (_instance.topP) {
+        if (_instance.topP !== undefined && _instance.topP !== null) {
             _writer.writeFloat(29, _instance.topP);
         }
-        if (_instance.user) {
+        if (_instance.user !== undefined && _instance.user !== null) {
             _writer.writeString(30, _instance.user);
         }
-        if (_instance.verbosity) {
+        if (_instance.verbosity !== undefined && _instance.verbosity !== null) {
             _writer.writeEnum(31, _instance.verbosity);
         }
         if (_instance.extraHeaders) {
@@ -8073,6 +8055,10 @@ class VoiceActivityDetection {
         _instance.active = _instance.active || '';
         _instance.samplingRate = _instance.samplingRate || '0';
         _instance.pyannote = _instance.pyannote || undefined;
+        _instance.silero = _instance.silero || undefined;
+        _instance.wespeakerTsd = _instance.wespeakerTsd || undefined;
+        _instance.vadMethod = _instance.vadMethod || 0;
+        _instance.tsdMethod = _instance.tsdMethod || 0;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -8093,6 +8079,20 @@ class VoiceActivityDetection {
                 case 3:
                     _instance.pyannote = new Pyannote();
                     _reader.readMessage(_instance.pyannote, Pyannote.deserializeBinaryFromReader);
+                    break;
+                case 4:
+                    _instance.silero = new Silero();
+                    _reader.readMessage(_instance.silero, Silero.deserializeBinaryFromReader);
+                    break;
+                case 5:
+                    _instance.wespeakerTsd = new WespeakerTsd();
+                    _reader.readMessage(_instance.wespeakerTsd, WespeakerTsd.deserializeBinaryFromReader);
+                    break;
+                case 6:
+                    _instance.vadMethod = _reader.readEnum();
+                    break;
+                case 7:
+                    _instance.tsdMethod = _reader.readEnum();
                     break;
                 default:
                     _reader.skipField();
@@ -8115,6 +8115,18 @@ class VoiceActivityDetection {
         if (_instance.pyannote) {
             _writer.writeMessage(3, _instance.pyannote, Pyannote.serializeBinaryToWriter);
         }
+        if (_instance.silero) {
+            _writer.writeMessage(4, _instance.silero, Silero.serializeBinaryToWriter);
+        }
+        if (_instance.wespeakerTsd) {
+            _writer.writeMessage(5, _instance.wespeakerTsd, WespeakerTsd.serializeBinaryToWriter);
+        }
+        if (_instance.vadMethod) {
+            _writer.writeEnum(6, _instance.vadMethod);
+        }
+        if (_instance.tsdMethod) {
+            _writer.writeEnum(7, _instance.tsdMethod);
+        }
     }
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -8125,6 +8137,12 @@ class VoiceActivityDetection {
         this.active = _value.active;
         this.samplingRate = _value.samplingRate;
         this.pyannote = _value.pyannote ? new Pyannote(_value.pyannote) : undefined;
+        this.silero = _value.silero ? new Silero(_value.silero) : undefined;
+        this.wespeakerTsd = _value.wespeakerTsd
+            ? new WespeakerTsd(_value.wespeakerTsd)
+            : undefined;
+        this.vadMethod = _value.vadMethod;
+        this.tsdMethod = _value.tsdMethod;
         VoiceActivityDetection.refineValues(this);
     }
     get active() {
@@ -8145,6 +8163,30 @@ class VoiceActivityDetection {
     set pyannote(value) {
         this._pyannote = value;
     }
+    get silero() {
+        return this._silero;
+    }
+    set silero(value) {
+        this._silero = value;
+    }
+    get wespeakerTsd() {
+        return this._wespeakerTsd;
+    }
+    set wespeakerTsd(value) {
+        this._wespeakerTsd = value;
+    }
+    get vadMethod() {
+        return this._vadMethod;
+    }
+    set vadMethod(value) {
+        this._vadMethod = value;
+    }
+    get tsdMethod() {
+        return this._tsdMethod;
+    }
+    set tsdMethod(value) {
+        this._tsdMethod = value;
+    }
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -8161,7 +8203,13 @@ class VoiceActivityDetection {
         return {
             active: this.active,
             samplingRate: this.samplingRate,
-            pyannote: this.pyannote ? this.pyannote.toObject() : undefined
+            pyannote: this.pyannote ? this.pyannote.toObject() : undefined,
+            silero: this.silero ? this.silero.toObject() : undefined,
+            wespeakerTsd: this.wespeakerTsd
+                ? this.wespeakerTsd.toObject()
+                : undefined,
+            vadMethod: this.vadMethod,
+            tsdMethod: this.tsdMethod
         };
     }
     /**
@@ -8181,7 +8229,17 @@ class VoiceActivityDetection {
         return {
             active: this.active,
             samplingRate: this.samplingRate,
-            pyannote: this.pyannote ? this.pyannote.toProtobufJSON(options) : null
+            pyannote: this.pyannote ? this.pyannote.toProtobufJSON(options) : null,
+            silero: this.silero ? this.silero.toProtobufJSON(options) : null,
+            wespeakerTsd: this.wespeakerTsd
+                ? this.wespeakerTsd.toProtobufJSON(options)
+                : null,
+            vadMethod: VadMethod[this.vadMethod === null || this.vadMethod === undefined
+                ? 0
+                : this.vadMethod],
+            tsdMethod: TsdMethod[this.tsdMethod === null || this.tsdMethod === undefined
+                ? 0
+                : this.tsdMethod]
         };
     }
 }
@@ -8363,6 +8421,414 @@ class Pyannote {
             minDurationOn: this.minDurationOn,
             tritonServerHost: this.tritonServerHost,
             tritonServerPort: this.tritonServerPort
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.Silero
+ */
+class Silero {
+    static { this.id = 'ondewo.s2t.Silero'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new Silero();
+        Silero.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.modelName = _instance.modelName || '';
+        _instance.minAudioSize = _instance.minAudioSize || '0';
+        _instance.tritonServerHost = _instance.tritonServerHost || '';
+        _instance.tritonServerPort = _instance.tritonServerPort || '0';
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.modelName = _reader.readString();
+                    break;
+                case 2:
+                    _instance.minAudioSize = _reader.readInt64String();
+                    break;
+                case 3:
+                    _instance.threshold = _reader.readFloat();
+                    break;
+                case 4:
+                    _instance.minSpeechDurationMs = _reader.readFloat();
+                    break;
+                case 5:
+                    _instance.minSilenceDurationMs = _reader.readFloat();
+                    break;
+                case 6:
+                    _instance.speechPadMs = _reader.readFloat();
+                    break;
+                case 7:
+                    _instance.tritonServerHost = _reader.readString();
+                    break;
+                case 8:
+                    _instance.tritonServerPort = _reader.readInt64String();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        Silero.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.modelName) {
+            _writer.writeString(1, _instance.modelName);
+        }
+        if (_instance.minAudioSize) {
+            _writer.writeInt64String(2, _instance.minAudioSize);
+        }
+        if (_instance.threshold !== undefined && _instance.threshold !== null) {
+            _writer.writeFloat(3, _instance.threshold);
+        }
+        if (_instance.minSpeechDurationMs !== undefined &&
+            _instance.minSpeechDurationMs !== null) {
+            _writer.writeFloat(4, _instance.minSpeechDurationMs);
+        }
+        if (_instance.minSilenceDurationMs !== undefined &&
+            _instance.minSilenceDurationMs !== null) {
+            _writer.writeFloat(5, _instance.minSilenceDurationMs);
+        }
+        if (_instance.speechPadMs !== undefined && _instance.speechPadMs !== null) {
+            _writer.writeFloat(6, _instance.speechPadMs);
+        }
+        if (_instance.tritonServerHost) {
+            _writer.writeString(7, _instance.tritonServerHost);
+        }
+        if (_instance.tritonServerPort) {
+            _writer.writeInt64String(8, _instance.tritonServerPort);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of Silero to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.modelName = _value.modelName;
+        this.minAudioSize = _value.minAudioSize;
+        this.threshold = _value.threshold;
+        this.minSpeechDurationMs = _value.minSpeechDurationMs;
+        this.minSilenceDurationMs = _value.minSilenceDurationMs;
+        this.speechPadMs = _value.speechPadMs;
+        this.tritonServerHost = _value.tritonServerHost;
+        this.tritonServerPort = _value.tritonServerPort;
+        Silero.refineValues(this);
+    }
+    get modelName() {
+        return this._modelName;
+    }
+    set modelName(value) {
+        this._modelName = value;
+    }
+    get minAudioSize() {
+        return this._minAudioSize;
+    }
+    set minAudioSize(value) {
+        this._minAudioSize = value;
+    }
+    get threshold() {
+        return this._threshold;
+    }
+    set threshold(value) {
+        this._threshold = value;
+    }
+    get minSpeechDurationMs() {
+        return this._minSpeechDurationMs;
+    }
+    set minSpeechDurationMs(value) {
+        this._minSpeechDurationMs = value;
+    }
+    get minSilenceDurationMs() {
+        return this._minSilenceDurationMs;
+    }
+    set minSilenceDurationMs(value) {
+        this._minSilenceDurationMs = value;
+    }
+    get speechPadMs() {
+        return this._speechPadMs;
+    }
+    set speechPadMs(value) {
+        this._speechPadMs = value;
+    }
+    get tritonServerHost() {
+        return this._tritonServerHost;
+    }
+    set tritonServerHost(value) {
+        this._tritonServerHost = value;
+    }
+    get tritonServerPort() {
+        return this._tritonServerPort;
+    }
+    set tritonServerPort(value) {
+        this._tritonServerPort = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        Silero.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            modelName: this.modelName,
+            minAudioSize: this.minAudioSize,
+            threshold: this.threshold,
+            minSpeechDurationMs: this.minSpeechDurationMs,
+            minSilenceDurationMs: this.minSilenceDurationMs,
+            speechPadMs: this.speechPadMs,
+            tritonServerHost: this.tritonServerHost,
+            tritonServerPort: this.tritonServerPort
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            modelName: this.modelName,
+            minAudioSize: this.minAudioSize,
+            threshold: this.threshold,
+            minSpeechDurationMs: this.minSpeechDurationMs,
+            minSilenceDurationMs: this.minSilenceDurationMs,
+            speechPadMs: this.speechPadMs,
+            tritonServerHost: this.tritonServerHost,
+            tritonServerPort: this.tritonServerPort
+        };
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.WespeakerTsd
+ */
+class WespeakerTsd {
+    static { this.id = 'ondewo.s2t.WespeakerTsd'; }
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes) {
+        const instance = new WespeakerTsd();
+        WespeakerTsd.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+        return instance;
+    }
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance) {
+        _instance.active = _instance.active || false;
+        _instance.modelName = _instance.modelName || '';
+        _instance.tritonServerHost = _instance.tritonServerHost || '';
+        _instance.tritonServerPort = _instance.tritonServerPort || '0';
+        _instance.referenceMaxLength = _instance.referenceMaxLength || 0;
+    }
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance, _reader) {
+        while (_reader.nextField()) {
+            if (_reader.isEndGroup())
+                break;
+            switch (_reader.getFieldNumber()) {
+                case 1:
+                    _instance.active = _reader.readBool();
+                    break;
+                case 2:
+                    _instance.modelName = _reader.readString();
+                    break;
+                case 3:
+                    _instance.tritonServerHost = _reader.readString();
+                    break;
+                case 4:
+                    _instance.tritonServerPort = _reader.readInt64String();
+                    break;
+                case 5:
+                    _instance.similarityThreshold = _reader.readFloat();
+                    break;
+                case 6:
+                    _instance.minAudioLength = _reader.readFloat();
+                    break;
+                case 7:
+                    _instance.referenceMaxLength = _reader.readFloat();
+                    break;
+                default:
+                    _reader.skipField();
+            }
+        }
+        WespeakerTsd.refineValues(_instance);
+    }
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance, _writer) {
+        if (_instance.active) {
+            _writer.writeBool(1, _instance.active);
+        }
+        if (_instance.modelName) {
+            _writer.writeString(2, _instance.modelName);
+        }
+        if (_instance.tritonServerHost) {
+            _writer.writeString(3, _instance.tritonServerHost);
+        }
+        if (_instance.tritonServerPort) {
+            _writer.writeInt64String(4, _instance.tritonServerPort);
+        }
+        if (_instance.similarityThreshold !== undefined &&
+            _instance.similarityThreshold !== null) {
+            _writer.writeFloat(5, _instance.similarityThreshold);
+        }
+        if (_instance.minAudioLength !== undefined &&
+            _instance.minAudioLength !== null) {
+            _writer.writeFloat(6, _instance.minAudioLength);
+        }
+        if (_instance.referenceMaxLength) {
+            _writer.writeFloat(7, _instance.referenceMaxLength);
+        }
+    }
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of WespeakerTsd to deeply clone from
+     */
+    constructor(_value) {
+        _value = _value || {};
+        this.active = _value.active;
+        this.modelName = _value.modelName;
+        this.tritonServerHost = _value.tritonServerHost;
+        this.tritonServerPort = _value.tritonServerPort;
+        this.similarityThreshold = _value.similarityThreshold;
+        this.minAudioLength = _value.minAudioLength;
+        this.referenceMaxLength = _value.referenceMaxLength;
+        WespeakerTsd.refineValues(this);
+    }
+    get active() {
+        return this._active;
+    }
+    set active(value) {
+        this._active = value;
+    }
+    get modelName() {
+        return this._modelName;
+    }
+    set modelName(value) {
+        this._modelName = value;
+    }
+    get tritonServerHost() {
+        return this._tritonServerHost;
+    }
+    set tritonServerHost(value) {
+        this._tritonServerHost = value;
+    }
+    get tritonServerPort() {
+        return this._tritonServerPort;
+    }
+    set tritonServerPort(value) {
+        this._tritonServerPort = value;
+    }
+    get similarityThreshold() {
+        return this._similarityThreshold;
+    }
+    set similarityThreshold(value) {
+        this._similarityThreshold = value;
+    }
+    get minAudioLength() {
+        return this._minAudioLength;
+    }
+    set minAudioLength(value) {
+        this._minAudioLength = value;
+    }
+    get referenceMaxLength() {
+        return this._referenceMaxLength;
+    }
+    set referenceMaxLength(value) {
+        this._referenceMaxLength = value;
+    }
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary() {
+        const writer = new BinaryWriter();
+        WespeakerTsd.serializeBinaryToWriter(this, writer);
+        return writer.getResultBuffer();
+    }
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject() {
+        return {
+            active: this.active,
+            modelName: this.modelName,
+            tritonServerHost: this.tritonServerHost,
+            tritonServerPort: this.tritonServerPort,
+            similarityThreshold: this.similarityThreshold,
+            minAudioLength: this.minAudioLength,
+            referenceMaxLength: this.referenceMaxLength
+        };
+    }
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON() {
+        return this.toObject();
+    }
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(
+    // @ts-ignore
+    options) {
+        return {
+            active: this.active,
+            modelName: this.modelName,
+            tritonServerHost: this.tritonServerHost,
+            tritonServerPort: this.tritonServerPort,
+            similarityThreshold: this.similarityThreshold,
+            minAudioLength: this.minAudioLength,
+            referenceMaxLength: this.referenceMaxLength
         };
     }
 }
@@ -8910,10 +9376,6 @@ class S2tLlmPostProcessing {
     static refineValues(_instance) {
         _instance.s2tLlmPostProcessingOpenaiOptions =
             _instance.s2tLlmPostProcessingOpenaiOptions || undefined;
-        _instance.s2tLlmPostProcessingSystemPrompt =
-            _instance.s2tLlmPostProcessingSystemPrompt || '';
-        _instance.s2tLlmPostProcessingEndingPrompt =
-            _instance.s2tLlmPostProcessingEndingPrompt || '';
         _instance.s2tLlmPostProcessingCasingOptions =
             _instance.s2tLlmPostProcessingCasingOptions || undefined;
         _instance.s2tLlmPostProcessingPunctuationOptions =
@@ -9004,10 +9466,12 @@ class S2tLlmPostProcessing {
         if (_instance.s2tLlmPostProcessingOpenaiOptions) {
             _writer.writeMessage(1, _instance.s2tLlmPostProcessingOpenaiOptions, OpenaiLlmOptions.serializeBinaryToWriter);
         }
-        if (_instance.s2tLlmPostProcessingSystemPrompt) {
+        if (_instance.s2tLlmPostProcessingSystemPrompt !== undefined &&
+            _instance.s2tLlmPostProcessingSystemPrompt !== null) {
             _writer.writeString(2, _instance.s2tLlmPostProcessingSystemPrompt);
         }
-        if (_instance.s2tLlmPostProcessingEndingPrompt) {
+        if (_instance.s2tLlmPostProcessingEndingPrompt !== undefined &&
+            _instance.s2tLlmPostProcessingEndingPrompt !== null) {
             _writer.writeString(3, _instance.s2tLlmPostProcessingEndingPrompt);
         }
         if (_instance.s2tLlmPostProcessingCasingOptions) {
@@ -9285,9 +9749,6 @@ class S2tLlmPostProcessingTranslationOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-        _instance.language = _instance.language || '';
-        _instance.prompt = _instance.prompt || '';
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -9320,13 +9781,13 @@ class S2tLlmPostProcessingTranslationOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
+        if (_instance.active !== undefined && _instance.active !== null) {
             _writer.writeBool(1, _instance.active);
         }
-        if (_instance.language) {
+        if (_instance.language !== undefined && _instance.language !== null) {
             _writer.writeString(2, _instance.language);
         }
-        if (_instance.prompt) {
+        if (_instance.prompt !== undefined && _instance.prompt !== null) {
             _writer.writeString(3, _instance.prompt);
         }
     }
@@ -9418,7 +9879,6 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.active = _instance.active || false;
         _instance.email = _instance.email || undefined;
         _instance.phoneNumber = _instance.phoneNumber || undefined;
         _instance.dateAndTime = _instance.dateAndTime || undefined;
@@ -9476,7 +9936,7 @@ class S2tLlmPostProcessingInverseNormalizationOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
+        if (_instance.active !== undefined && _instance.active !== null) {
             _writer.writeBool(1, _instance.active);
         }
         if (_instance.email) {
@@ -9646,7 +10106,6 @@ class S2tLlmPostProcessingNormalizationOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.active = _instance.active || false;
         _instance.email = _instance.email || undefined;
         _instance.phoneNumber = _instance.phoneNumber || undefined;
         _instance.dateAndTime = _instance.dateAndTime || undefined;
@@ -9704,7 +10163,7 @@ class S2tLlmPostProcessingNormalizationOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
+        if (_instance.active !== undefined && _instance.active !== null) {
             _writer.writeBool(1, _instance.active);
         }
         if (_instance.email) {
@@ -9874,10 +10333,6 @@ class S2tLlmPostProcessingSummarizationOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-        _instance.prompt = _instance.prompt || '';
-        _instance.minChars = _instance.minChars || 0;
-        _instance.maxChars = _instance.maxChars || 0;
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -9913,16 +10368,16 @@ class S2tLlmPostProcessingSummarizationOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
+        if (_instance.active !== undefined && _instance.active !== null) {
             _writer.writeBool(1, _instance.active);
         }
-        if (_instance.prompt) {
+        if (_instance.prompt !== undefined && _instance.prompt !== null) {
             _writer.writeString(2, _instance.prompt);
         }
-        if (_instance.minChars) {
+        if (_instance.minChars !== undefined && _instance.minChars !== null) {
             _writer.writeInt32(3, _instance.minChars);
         }
-        if (_instance.maxChars) {
+        if (_instance.maxChars !== undefined && _instance.maxChars !== null) {
             _writer.writeInt32(4, _instance.maxChars);
         }
     }
@@ -10023,8 +10478,6 @@ class S2tLlmPostProcessingSubTaskOptions {
      * @param _instance message instance
      */
     static refineValues(_instance) {
-        _instance.active = _instance.active || false;
-        _instance.prompt = _instance.prompt || '';
     }
     /**
      * Deserializes / reads binary message into message instance using provided binary reader
@@ -10054,10 +10507,10 @@ class S2tLlmPostProcessingSubTaskOptions {
      * @param _writer binary writer instance
      */
     static serializeBinaryToWriter(_instance, _writer) {
-        if (_instance.active) {
+        if (_instance.active !== undefined && _instance.active !== null) {
             _writer.writeBool(1, _instance.active);
         }
-        if (_instance.prompt) {
+        if (_instance.prompt !== undefined && _instance.prompt !== null) {
             _writer.writeString(2, _instance.prompt);
         }
     }
@@ -11716,10 +12169,10 @@ class Speech2TextClient {
             .listS2tNormalizationPipelines(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: Speech2TextClient, deps: [{ token: GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, optional: true }, { token: GRPC_CLIENT_FACTORY }, { token: i1.GrpcHandler }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: Speech2TextClient, providedIn: 'any' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: Speech2TextClient, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: Speech2TextClient, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'any' }]
         }], ctorParameters: () => [{ type: undefined, decorators: [{
@@ -12093,10 +12546,10 @@ class KeycloakTokenProvider {
             throw new KeycloakAuthenticationError("KeycloakTokenProviderConfig requires either an offlineToken or a username + password pair");
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: KeycloakTokenProvider, deps: [{ token: i1$1.HttpClient }, { token: KEYCLOAK_TOKEN_PROVIDER_CONFIG, optional: true }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: KeycloakTokenProvider, providedIn: "root" }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: KeycloakTokenProvider, deps: [{ token: i1$1.HttpClient }, { token: KEYCLOAK_TOKEN_PROVIDER_CONFIG, optional: true }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: KeycloakTokenProvider, providedIn: "root" }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: KeycloakTokenProvider, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: KeycloakTokenProvider, decorators: [{
             type: Injectable,
             args: [{ providedIn: "root" }]
         }], ctorParameters: () => [{ type: i1$1.HttpClient }, { type: undefined, decorators: [{
@@ -12294,10 +12747,10 @@ class AuthGrpcInterceptor {
             return next.handle(request);
         }));
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: AuthGrpcInterceptor, deps: [{ token: TOKEN_PROVIDER }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: AuthGrpcInterceptor }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: AuthGrpcInterceptor, deps: [{ token: TOKEN_PROVIDER }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: AuthGrpcInterceptor }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.29", ngImport: i0, type: AuthGrpcInterceptor, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.30", ngImport: i0, type: AuthGrpcInterceptor, decorators: [{
             type: Injectable
         }], ctorParameters: () => [{ type: undefined, decorators: [{
                     type: Inject,
@@ -12355,5 +12808,5 @@ function provideOndewoS2tAuth(tokenProvider) {
  * Generated bundle index. Do not edit.
  */
 
-export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TurnDetectionOptions, UtteranceDetectionOptions, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
+export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
