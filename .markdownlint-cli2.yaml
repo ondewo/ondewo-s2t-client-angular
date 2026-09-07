@@ -17,8 +17,12 @@ config:
   MD041: false
   # MD045 image-alt-text: the branding header uses <img> logos / social icons.
   MD045: false
-globs:
-  - "*.md"
+# NO `globs:` HERE ON PURPOSE. The pre-commit hook always passes the changed files as
+# CLI arguments, and markdownlint-cli2 ADDS the config globs on top of them. pre-commit
+# chunks a large file list into several invocations, so a `*.md` glob made every batch
+# re-lint (and re-write) the same root markdown: two batches read the pre-fix buffer and
+# the second one wrote its stale copy back, silently DELETING changelog bullets and
+# `### Improvements` headings from RELEASE.md. Without globs each file is fixed exactly once.
 ignores:
   - "node_modules/**"
   - "api/**"
