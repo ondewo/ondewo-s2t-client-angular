@@ -158,7 +158,7 @@
 
 ## Release ONDEWO S2T Angular Client 3.3.0
 
-* Track version 3.3.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/3.1.1)
+* Track version 3.3.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/3.3.0)
 * [[OND211-2039]](https://ondewo.atlassian.net/browse/OND211-2039) - Implemented automated release for GitHub and NPM
 * [[OND211-2039]](https://ondewo.atlassian.net/browse/OND211-2039) - Added pre-commit hooks and adjusted files to them
 
@@ -175,27 +175,34 @@
 
 * Track version 3.0.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/3.0.0)
 
+### Breaking changes
+
+* Rename Description, GetServiceInfoResponse, Inference, and Normalization messages to include S2T
+
 *****************
 
-## Release ONDEWO-S2T Angular Client 2.0.0
+## Release ONDEWO S2T Angular Client 2.0.0
 
 * Track version 2.0.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/2.0.0)
 
 *****************
 
-## Release ONDEWO-S2T Angular Client 1.6.0
+## Release ONDEWO S2T Angular Client 1.6.0
 
 * Track version 1.6.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/1.6.0)
 
 *****************
 
-## Release ONDEWO-S2T Angular Client 1.4.1
+## Release ONDEWO S2T Angular Client 1.4.1
 
 * Track version 1.4.1 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/1.4.1)
 * Upgraded from ngx-grpc 0.3.1 to 2.1.0
 
 *****************
 
-## Release ONDEWO-S2T Angular Client 1.4.0
+## Release ONDEWO S2T Angular Client 1.4.0
 
 * Track version 1.4.0 of [ONDEWO S2T API](https://github.com/ondewo/ondewo-s2t-api/releases/1.4.0)
+* Compatible with ONDEWO-S2T 1.4.* GRPC server
+
+*****************
