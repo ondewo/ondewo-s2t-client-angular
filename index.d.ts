@@ -6948,5 +6948,58 @@ declare class AuthGrpcInterceptor implements GrpcInterceptor {
  */
 declare function provideOndewoS2tAuth(tokenProvider: Type<TokenProvider>): EnvironmentProviders;
 
-export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
-export type { KeycloakTokenProviderConfig, TokenProvider, TokenResult };
+/**
+ * Builds the gRPC-web endpoint URL (`host` setting of `@ngx-grpc/grpc-web-client`) from the
+ * same `host` / `port` / `useSecureChannel` fields every ONDEWO SDK takes.
+ *
+ * In a browser the TLS handshake belongs to the user agent: it verifies the server against
+ * its own (OS / browser) trust store and presents a client certificate only from the
+ * browser's certificate store. Application code can neither add a CA nor attach a client
+ * identity, and a private key must never be shipped to a browser. The certificate fields the
+ * other SDKs accept (`grpcCert`, `grpcClientCert`, `grpcClientKey`) are therefore refused
+ * here instead of being silently dropped.
+ */
+/** Connection settings for a gRPC-web endpoint (an Envoy / gRPC-web proxy in front of the ONDEWO server). */
+interface GrpcWebEndpointConfig {
+    /**
+     * Host name or IP address (`nlu.example.com`, `10.0.0.5`, `::1`, `[::1]`), or a complete base
+     * URL with scheme (`https://nlu.example.com:8443/grpc`), which is then used as given.
+     */
+    host: string;
+    /** Port; omit it for the scheme's default port. Must be omitted when `host` is a URL. */
+    port?: number | string;
+    /** `true` (default): `https://`. `false`: plain `http://`, logged as a warning -- never in production. */
+    useSecureChannel?: boolean;
+}
+/**
+ * Certificate / key fields of the other ONDEWO SDKs' configs (camelCase and snake_case) that a
+ * browser cannot use. A non-empty value in any of them makes {@link buildGrpcWebHost} throw.
+ */
+declare const BROWSER_UNSUPPORTED_TLS_FIELDS: readonly string[];
+/** Raised for an unusable {@link GrpcWebEndpointConfig}. The message names fields, never their values. */
+declare class GrpcWebEndpointError extends Error {
+    /**
+     * @param message a description of the problem that names the offending field.
+     */
+    constructor(message: string);
+}
+/**
+ * Return the gRPC-web base URL for `config`: `https://host:port` by default, `http://host:port`
+ * when `useSecureChannel` is `false` (with a warning naming `host:port`). A bare IPv6 literal is
+ * bracketed (`https://[::1]:8443`); a bracketed host or a host that already carries a scheme is
+ * left alone.
+ *
+ * ```ts
+ * GrpcWebClientModule.forRoot({ settings: { host: buildGrpcWebHost({ host: "nlu.example.com", port: 443 }) } })
+ * ```
+ *
+ * @param config the endpoint settings.
+ * @returns the base URL to pass as the gRPC-web client's `host` setting.
+ * @throws GrpcWebEndpointError when a certificate / key field is set, the host is empty or
+ *   carries a port, the port is invalid, or an `http://` URL is combined with
+ *   `useSecureChannel: true`.
+ */
+declare function buildGrpcWebHost(config: GrpcWebEndpointConfig): string;
+
+export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, BROWSER_UNSUPPORTED_TLS_FIELDS, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, GrpcWebEndpointError, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, buildGrpcWebHost, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
+export type { GrpcWebEndpointConfig, KeycloakTokenProviderConfig, TokenProvider, TokenResult };
