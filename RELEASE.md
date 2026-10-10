@@ -2,6 +2,16 @@
 
 *****************
 
+## Release ONDEWO S2T Angular Client 7.5.2
+
+### Bug Fixes
+
+* Removed `Speech2TextClient.transcribeStream` (plain and `$raw`), the service-client method of the bidirectional-streaming RPC `TranscribeStream`, because it never worked in a browser: gRPC-web, the protocol this library speaks, carries unary and server-streaming calls only. `TranscribeStreamRequest` and `TranscribeStreamResponse` are still exported, and every unary method is unchanged. **Migration:** a client that has to stream audio for transcription uses a native SDK such as `ondewo-s2t-client` (python, PyPI) or `@ondewo/s2t-client-nodejs`; a browser uses `transcribeFile`. The js and typescript SDKs never generated this method.
+* Generated with ondewo-proto-compiler [5.15.7](https://github.com/ondewo/ondewo-proto-compiler/releases/tag/5.15.7), which omits these methods for the angular target. `tests/no-client-streaming.spec.ts` fails if the public typings (`index.d.ts`) expose a method whose request is an `Observable`.
+* Release automation: the GitHub and npm credentials no longer reach a process argv. `run_release_with_devops` exports them into the sub-make's environment instead of passing them as `make release NAME=<value>` arguments, `login_to_gh` and the npm `_authToken` config read them from the environment, the utils container receives them with `-e NAME`, and the NPM user name is no longer echoed. `tests/release-credentials.spec.ts` pins it.
+
+*****************
+
 ## Release ONDEWO S2T Angular Client 7.5.1
 
 ### Improvements

@@ -11705,24 +11705,6 @@ class Speech2TextClient {
                 });
             },
             /**
-             * Bidirectional streaming: /ondewo.s2t.Speech2Text/TranscribeStream
-             *
-             * @param requestMessage Request message
-             * @param requestMetadata Request metadata
-             * @returns Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>
-             */
-            transcribeStream: (requestData, requestMetadata = new GrpcMetadata()) => {
-                return this.handler.handle({
-                    type: GrpcCallType.bidiStream,
-                    client: this.client,
-                    path: '/ondewo.s2t.Speech2Text/TranscribeStream',
-                    requestData,
-                    requestMetadata,
-                    requestClass: TranscribeStreamRequest,
-                    responseClass: TranscribeStreamResponse
-                });
-            },
-            /**
              * Unary call: /ondewo.s2t.Speech2Text/GetS2tPipeline
              *
              * @param requestMessage Request message
@@ -11987,18 +11969,6 @@ class Speech2TextClient {
     transcribeFile(requestData, requestMetadata = new GrpcMetadata()) {
         return this.$raw
             .transcribeFile(requestData, requestMetadata)
-            .pipe(throwStatusErrors(), takeMessages());
-    }
-    /**
-     * Bidirectional streaming @/ondewo.s2t.Speech2Text/TranscribeStream
-     *
-     * @param requestMessage Request message
-     * @param requestMetadata Request metadata
-     * @returns Observable<thisProto.TranscribeStreamResponse>
-     */
-    transcribeStream(requestData, requestMetadata = new GrpcMetadata()) {
-        return this.$raw
-            .transcribeStream(requestData, requestMetadata)
             .pipe(throwStatusErrors(), takeMessages());
     }
     /**

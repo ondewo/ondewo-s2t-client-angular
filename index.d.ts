@@ -6245,14 +6245,6 @@ declare class Speech2TextClient {
          */
         transcribeFile: (requestData: TranscribeFileRequest, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<TranscribeFileResponse>>;
         /**
-         * Bidirectional streaming: /ondewo.s2t.Speech2Text/TranscribeStream
-         *
-         * @param requestMessage Request message
-         * @param requestMetadata Request metadata
-         * @returns Observable<GrpcEvent<thisProto.TranscribeStreamResponse>>
-         */
-        transcribeStream: (requestData: Observable<TranscribeStreamRequest>, requestMetadata?: GrpcMetadata) => Observable<GrpcEvent<TranscribeStreamResponse>>;
-        /**
          * Unary call: /ondewo.s2t.Speech2Text/GetS2tPipeline
          *
          * @param requestMessage Request message
@@ -6374,14 +6366,6 @@ declare class Speech2TextClient {
      * @returns Observable<thisProto.TranscribeFileResponse>
      */
     transcribeFile(requestData: TranscribeFileRequest, requestMetadata?: GrpcMetadata): Observable<TranscribeFileResponse>;
-    /**
-     * Bidirectional streaming @/ondewo.s2t.Speech2Text/TranscribeStream
-     *
-     * @param requestMessage Request message
-     * @param requestMetadata Request metadata
-     * @returns Observable<thisProto.TranscribeStreamResponse>
-     */
-    transcribeStream(requestData: Observable<TranscribeStreamRequest>, requestMetadata?: GrpcMetadata): Observable<TranscribeStreamResponse>;
     /**
      * Unary call @/ondewo.s2t.Speech2Text/GetS2tPipeline
      *
