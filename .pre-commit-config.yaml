@@ -16,7 +16,7 @@
 # which is ng-packagr's `dest` and is deleted on every build (tests/build-layout.spec.ts).
 exclude: |
   (?x)(
-      ^(node_modules|api|fesm2022)/
+      ^(node_modules|api|fesm2022|types)/
       |^(ondewo-proto-compiler|src/ondewo-s2t-api)(/|$)
       |^(index\.d\.ts|ondewo-s2t-client-angular\.d\.ts|ondewo-s2t-client-angular\.metadata\.json|package-lock\.json)$
       |(^|/)(node_modules|dist|build|\.venv)/
