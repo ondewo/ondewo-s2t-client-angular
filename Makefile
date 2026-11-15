@@ -18,6 +18,9 @@ ONDEWO_S2T_VERSION=7.5.2
 S2T_API_GIT_BRANCH=feature/OND236-120-barge-in-cancel
 ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/5.16.0
 ONDEWO_PROTO_COMPILER_DIR=ondewo-proto-compiler
+# The codegen image, tagged with the proto-compiler version the submodule is pinned to (build.sh only tags
+# :latest, and a stale :latest once emitted client-streaming methods gRPC-web cannot carry).
+CODEGEN_IMAGE=ondewo-angular-proto-compiler:$(patsubst tags/%,%,${ONDEWO_PROTO_COMPILER_GIT_BRANCH})
 S2T_APIS_DIR=src/ondewo-s2t-api
 S2T_PROTOS_DIR=${S2T_APIS_DIR}/ondewo
 GOOGLE_APIS_DIR=${S2T_APIS_DIR}/googleapis
@@ -165,8 +168,9 @@ build_gh_release: ## Generate Github Release with CLI
 push_to_gh: login_to_gh build_gh_release ##Logs into Github CLI and Releases
 	@echo 'Released to Github'
 
-build_compiler: ## Builds Ondewo-Proto-Compiler
+build_compiler: ## Builds Ondewo-Proto-Compiler and tags it with the pinned compiler version
 	cd ondewo-proto-compiler/angular && sh build.sh
+	docker tag ondewo-angular-proto-compiler:latest $(CODEGEN_IMAGE)
 
 release_to_github_via_docker_image: ## Release to Github via docker
 	@docker run --rm \
