@@ -1657,6 +1657,8 @@ export class TranscriptionReturnOptions implements GrpcMessage {
     _instance.returnAlternativeWordsNr =
       _instance.returnAlternativeWordsNr || 0;
     _instance.returnWordTiming = _instance.returnWordTiming || false;
+    _instance.returnEndOfSpeechCandidate =
+      _instance.returnEndOfSpeechCandidate || false;
   }
 
   /**
@@ -1695,6 +1697,9 @@ export class TranscriptionReturnOptions implements GrpcMessage {
           break;
         case 8:
           _instance.returnWordTiming = _reader.readBool();
+          break;
+        case 9:
+          _instance.returnEndOfSpeechCandidate = _reader.readBool();
           break;
         default:
           _reader.skipField();
@@ -1737,6 +1742,9 @@ export class TranscriptionReturnOptions implements GrpcMessage {
     if (_instance.returnWordTiming) {
       _writer.writeBool(8, _instance.returnWordTiming);
     }
+    if (_instance.returnEndOfSpeechCandidate) {
+      _writer.writeBool(9, _instance.returnEndOfSpeechCandidate);
+    }
   }
 
   private _returnStartOfSpeech: boolean;
@@ -1747,6 +1755,7 @@ export class TranscriptionReturnOptions implements GrpcMessage {
   private _returnAlternativeWords: boolean;
   private _returnAlternativeWordsNr: number;
   private _returnWordTiming: boolean;
+  private _returnEndOfSpeechCandidate: boolean;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -1764,6 +1773,7 @@ export class TranscriptionReturnOptions implements GrpcMessage {
     this.returnAlternativeWords = _value.returnAlternativeWords;
     this.returnAlternativeWordsNr = _value.returnAlternativeWordsNr;
     this.returnWordTiming = _value.returnWordTiming;
+    this.returnEndOfSpeechCandidate = _value.returnEndOfSpeechCandidate;
     TranscriptionReturnOptions.refineValues(this);
   }
   get returnStartOfSpeech(): boolean {
@@ -1814,6 +1824,12 @@ export class TranscriptionReturnOptions implements GrpcMessage {
   set returnWordTiming(value: boolean) {
     this._returnWordTiming = value;
   }
+  get returnEndOfSpeechCandidate(): boolean {
+    return this._returnEndOfSpeechCandidate;
+  }
+  set returnEndOfSpeechCandidate(value: boolean) {
+    this._returnEndOfSpeechCandidate = value;
+  }
 
   /**
    * Serialize message to binary data
@@ -1837,7 +1853,8 @@ export class TranscriptionReturnOptions implements GrpcMessage {
       returnAlternativeTranscriptionsNr: this.returnAlternativeTranscriptionsNr,
       returnAlternativeWords: this.returnAlternativeWords,
       returnAlternativeWordsNr: this.returnAlternativeWordsNr,
-      returnWordTiming: this.returnWordTiming
+      returnWordTiming: this.returnWordTiming,
+      returnEndOfSpeechCandidate: this.returnEndOfSpeechCandidate
     };
   }
 
@@ -1865,7 +1882,8 @@ export class TranscriptionReturnOptions implements GrpcMessage {
       returnAlternativeTranscriptionsNr: this.returnAlternativeTranscriptionsNr,
       returnAlternativeWords: this.returnAlternativeWords,
       returnAlternativeWordsNr: this.returnAlternativeWordsNr,
-      returnWordTiming: this.returnWordTiming
+      returnWordTiming: this.returnWordTiming,
+      returnEndOfSpeechCandidate: this.returnEndOfSpeechCandidate
     };
   }
 }
@@ -1882,6 +1900,7 @@ export module TranscriptionReturnOptions {
     returnAlternativeWords: boolean;
     returnAlternativeWordsNr: number;
     returnWordTiming: boolean;
+    returnEndOfSpeechCandidate: boolean;
   }
 
   /**
@@ -1896,6 +1915,7 @@ export module TranscriptionReturnOptions {
     returnAlternativeWords: boolean;
     returnAlternativeWordsNr: number;
     returnWordTiming: boolean;
+    returnEndOfSpeechCandidate: boolean;
   }
 }
 
@@ -1924,6 +1944,7 @@ export class UtteranceDetectionOptions implements GrpcMessage {
    */
   static refineValues(_instance: UtteranceDetectionOptions) {
     _instance.nextChunkTimeout = _instance.nextChunkTimeout || 0;
+
   }
 
   /**
@@ -1951,6 +1972,12 @@ export class UtteranceDetectionOptions implements GrpcMessage {
             _instance.turnDetection,
             TurnDetectionOptions.deserializeBinaryFromReader
           );
+          break;
+        case 4:
+          _instance.minAudioChunkSize = _reader.readInt64String();
+          break;
+        case 5:
+          _instance.transcribeNotFinalPeriodSeconds = _reader.readFloat();
           break;
         default:
           _reader.skipField();
@@ -1985,11 +2012,25 @@ export class UtteranceDetectionOptions implements GrpcMessage {
         TurnDetectionOptions.serializeBinaryToWriter
       );
     }
+    if (
+      _instance.minAudioChunkSize !== undefined &&
+      _instance.minAudioChunkSize !== null
+    ) {
+      _writer.writeInt64String(4, _instance.minAudioChunkSize);
+    }
+    if (
+      _instance.transcribeNotFinalPeriodSeconds !== undefined &&
+      _instance.transcribeNotFinalPeriodSeconds !== null
+    ) {
+      _writer.writeFloat(5, _instance.transcribeNotFinalPeriodSeconds);
+    }
   }
 
   private _transcribeNotFinal: boolean;
   private _nextChunkTimeout: number;
   private _turnDetection?: TurnDetectionOptions;
+  private _minAudioChunkSize: string;
+  private _transcribeNotFinalPeriodSeconds: number;
 
   private _oneofTranscribeNotFinal: UtteranceDetectionOptions.OneofTranscribeNotFinalCase =
     UtteranceDetectionOptions.OneofTranscribeNotFinalCase.none;
@@ -2007,6 +2048,9 @@ export class UtteranceDetectionOptions implements GrpcMessage {
     this.turnDetection = _value.turnDetection
       ? new TurnDetectionOptions(_value.turnDetection)
       : undefined;
+    this.minAudioChunkSize = _value.minAudioChunkSize;
+    this.transcribeNotFinalPeriodSeconds =
+      _value.transcribeNotFinalPeriodSeconds;
     UtteranceDetectionOptions.refineValues(this);
   }
   get transcribeNotFinal(): boolean {
@@ -2035,6 +2079,18 @@ export class UtteranceDetectionOptions implements GrpcMessage {
     }
     this._turnDetection = value;
   }
+  get minAudioChunkSize(): string {
+    return this._minAudioChunkSize;
+  }
+  set minAudioChunkSize(value: string) {
+    this._minAudioChunkSize = value;
+  }
+  get transcribeNotFinalPeriodSeconds(): number {
+    return this._transcribeNotFinalPeriodSeconds;
+  }
+  set transcribeNotFinalPeriodSeconds(value: number) {
+    this._transcribeNotFinalPeriodSeconds = value;
+  }
   get oneofTranscribeNotFinal() {
     return this._oneofTranscribeNotFinal;
   }
@@ -2061,7 +2117,9 @@ export class UtteranceDetectionOptions implements GrpcMessage {
       nextChunkTimeout: this.nextChunkTimeout,
       turnDetection: this.turnDetection
         ? this.turnDetection.toObject()
-        : undefined
+        : undefined,
+      minAudioChunkSize: this.minAudioChunkSize,
+      transcribeNotFinalPeriodSeconds: this.transcribeNotFinalPeriodSeconds
     };
   }
 
@@ -2086,7 +2144,9 @@ export class UtteranceDetectionOptions implements GrpcMessage {
       nextChunkTimeout: this.nextChunkTimeout,
       turnDetection: this.turnDetection
         ? this.turnDetection.toProtobufJSON(options)
-        : null
+        : null,
+      minAudioChunkSize: this.minAudioChunkSize,
+      transcribeNotFinalPeriodSeconds: this.transcribeNotFinalPeriodSeconds
     };
   }
 }
@@ -2098,6 +2158,8 @@ export module UtteranceDetectionOptions {
     transcribeNotFinal: boolean;
     nextChunkTimeout: number;
     turnDetection?: TurnDetectionOptions.AsObject;
+    minAudioChunkSize: string;
+    transcribeNotFinalPeriodSeconds: number;
   }
 
   /**
@@ -2107,6 +2169,8 @@ export module UtteranceDetectionOptions {
     transcribeNotFinal: boolean;
     nextChunkTimeout: number;
     turnDetection: TurnDetectionOptions.AsProtobufJSON | null;
+    minAudioChunkSize: string;
+    transcribeNotFinalPeriodSeconds: number;
   }
   export enum OneofTranscribeNotFinalCase {
     none = 0,
@@ -3349,6 +3413,7 @@ export class TranscribeStreamResponse implements GrpcMessage {
     _instance.audio = _instance.audio || new Uint8Array();
     _instance.utteranceStart = _instance.utteranceStart || false;
     _instance.audioUuid = _instance.audioUuid || '';
+    _instance.endOfSpeechCandidate = _instance.endOfSpeechCandidate || false;
   }
 
   /**
@@ -3391,6 +3456,9 @@ export class TranscribeStreamResponse implements GrpcMessage {
           break;
         case 7:
           _instance.audioUuid = _reader.readString();
+          break;
+        case 9:
+          _instance.endOfSpeechCandidate = _reader.readBool();
           break;
         case 8:
           _instance.config = new TranscribeRequestConfig();
@@ -3441,6 +3509,9 @@ export class TranscribeStreamResponse implements GrpcMessage {
     if (_instance.audioUuid) {
       _writer.writeString(7, _instance.audioUuid);
     }
+    if (_instance.endOfSpeechCandidate) {
+      _writer.writeBool(9, _instance.endOfSpeechCandidate);
+    }
     if (_instance.config) {
       _writer.writeMessage(
         8,
@@ -3457,6 +3528,7 @@ export class TranscribeStreamResponse implements GrpcMessage {
   private _audio: Uint8Array;
   private _utteranceStart: boolean;
   private _audioUuid: string;
+  private _endOfSpeechCandidate: boolean;
   private _config?: TranscribeRequestConfig;
 
   private _oneofConfig: TranscribeStreamResponse.OneofConfigCase =
@@ -3477,6 +3549,7 @@ export class TranscribeStreamResponse implements GrpcMessage {
     this.audio = _value.audio;
     this.utteranceStart = _value.utteranceStart;
     this.audioUuid = _value.audioUuid;
+    this.endOfSpeechCandidate = _value.endOfSpeechCandidate;
     this.config = _value.config
       ? new TranscribeRequestConfig(_value.config)
       : undefined;
@@ -3524,6 +3597,12 @@ export class TranscribeStreamResponse implements GrpcMessage {
   set audioUuid(value: string) {
     this._audioUuid = value;
   }
+  get endOfSpeechCandidate(): boolean {
+    return this._endOfSpeechCandidate;
+  }
+  set endOfSpeechCandidate(value: boolean) {
+    this._endOfSpeechCandidate = value;
+  }
   get config(): TranscribeRequestConfig | undefined {
     return this._config;
   }
@@ -3559,6 +3638,7 @@ export class TranscribeStreamResponse implements GrpcMessage {
       audio: this.audio ? this.audio.subarray(0) : new Uint8Array(),
       utteranceStart: this.utteranceStart,
       audioUuid: this.audioUuid,
+      endOfSpeechCandidate: this.endOfSpeechCandidate,
       config: this.config ? this.config.toObject() : undefined
     };
   }
@@ -3589,6 +3669,7 @@ export class TranscribeStreamResponse implements GrpcMessage {
       audio: this.audio ? uint8ArrayToBase64(this.audio) : '',
       utteranceStart: this.utteranceStart,
       audioUuid: this.audioUuid,
+      endOfSpeechCandidate: this.endOfSpeechCandidate,
       config: this.config ? this.config.toProtobufJSON(options) : null
     };
   }
@@ -3605,6 +3686,7 @@ export module TranscribeStreamResponse {
     audio: Uint8Array;
     utteranceStart: boolean;
     audioUuid: string;
+    endOfSpeechCandidate: boolean;
     config?: TranscribeRequestConfig.AsObject;
   }
 
@@ -3619,6 +3701,7 @@ export module TranscribeStreamResponse {
     audio: string;
     utteranceStart: boolean;
     audioUuid: string;
+    endOfSpeechCandidate: boolean;
     config: TranscribeRequestConfig.AsProtobufJSON | null;
   }
   export enum OneofConfigCase {
@@ -9114,7 +9197,6 @@ export class StreamingSpeechRecognition implements GrpcMessage {
    * @param _instance message instance
    */
   static refineValues(_instance: StreamingSpeechRecognition) {
-    _instance.transcribeNotFinal = _instance.transcribeNotFinal || false;
     _instance.decodingMethod = _instance.decodingMethod || '';
     _instance.samplingRate = _instance.samplingRate || '0';
     _instance.minAudioChunkSize = _instance.minAudioChunkSize || '0';
@@ -9157,6 +9239,9 @@ export class StreamingSpeechRecognition implements GrpcMessage {
             TurnDetectionOptions.deserializeBinaryFromReader
           );
           break;
+        case 7:
+          _instance.transcribeNotFinalPeriodSeconds = _reader.readFloat();
+          break;
         default:
           _reader.skipField();
       }
@@ -9174,7 +9259,10 @@ export class StreamingSpeechRecognition implements GrpcMessage {
     _instance: StreamingSpeechRecognition,
     _writer: BinaryWriter
   ) {
-    if (_instance.transcribeNotFinal) {
+    if (
+      _instance.transcribeNotFinal !== undefined &&
+      _instance.transcribeNotFinal !== null
+    ) {
       _writer.writeBool(1, _instance.transcribeNotFinal);
     }
     if (_instance.decodingMethod) {
@@ -9196,6 +9284,12 @@ export class StreamingSpeechRecognition implements GrpcMessage {
         TurnDetectionOptions.serializeBinaryToWriter
       );
     }
+    if (
+      _instance.transcribeNotFinalPeriodSeconds !== undefined &&
+      _instance.transcribeNotFinalPeriodSeconds !== null
+    ) {
+      _writer.writeFloat(7, _instance.transcribeNotFinalPeriodSeconds);
+    }
   }
 
   private _transcribeNotFinal: boolean;
@@ -9204,6 +9298,7 @@ export class StreamingSpeechRecognition implements GrpcMessage {
   private _minAudioChunkSize: string;
   private _nextChunkTimeout: number;
   private _turnDetection?: TurnDetectionOptions;
+  private _transcribeNotFinalPeriodSeconds: number;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -9219,6 +9314,8 @@ export class StreamingSpeechRecognition implements GrpcMessage {
     this.turnDetection = _value.turnDetection
       ? new TurnDetectionOptions(_value.turnDetection)
       : undefined;
+    this.transcribeNotFinalPeriodSeconds =
+      _value.transcribeNotFinalPeriodSeconds;
     StreamingSpeechRecognition.refineValues(this);
   }
   get transcribeNotFinal(): boolean {
@@ -9257,6 +9354,12 @@ export class StreamingSpeechRecognition implements GrpcMessage {
   set turnDetection(value: TurnDetectionOptions | undefined) {
     this._turnDetection = value;
   }
+  get transcribeNotFinalPeriodSeconds(): number {
+    return this._transcribeNotFinalPeriodSeconds;
+  }
+  set transcribeNotFinalPeriodSeconds(value: number) {
+    this._transcribeNotFinalPeriodSeconds = value;
+  }
 
   /**
    * Serialize message to binary data
@@ -9280,7 +9383,8 @@ export class StreamingSpeechRecognition implements GrpcMessage {
       nextChunkTimeout: this.nextChunkTimeout,
       turnDetection: this.turnDetection
         ? this.turnDetection.toObject()
-        : undefined
+        : undefined,
+      transcribeNotFinalPeriodSeconds: this.transcribeNotFinalPeriodSeconds
     };
   }
 
@@ -9308,7 +9412,8 @@ export class StreamingSpeechRecognition implements GrpcMessage {
       nextChunkTimeout: this.nextChunkTimeout,
       turnDetection: this.turnDetection
         ? this.turnDetection.toProtobufJSON(options)
-        : null
+        : null,
+      transcribeNotFinalPeriodSeconds: this.transcribeNotFinalPeriodSeconds
     };
   }
 }
@@ -9323,6 +9428,7 @@ export module StreamingSpeechRecognition {
     minAudioChunkSize: string;
     nextChunkTimeout: number;
     turnDetection?: TurnDetectionOptions.AsObject;
+    transcribeNotFinalPeriodSeconds: number;
   }
 
   /**
@@ -9335,6 +9441,7 @@ export module StreamingSpeechRecognition {
     minAudioChunkSize: string;
     nextChunkTimeout: number;
     turnDetection: TurnDetectionOptions.AsProtobufJSON | null;
+    transcribeNotFinalPeriodSeconds: number;
   }
 }
 
@@ -9364,6 +9471,8 @@ export class TurnDetectionOptions implements GrpcMessage {
   static refineValues(_instance: TurnDetectionOptions) {
     _instance.turnDetectionLlmOpenaiOptions =
       _instance.turnDetectionLlmOpenaiOptions || undefined;
+    _instance.conversationContext = _instance.conversationContext || undefined;
+    _instance.holdBands = _instance.holdBands || undefined;
   }
 
   /**
@@ -9397,6 +9506,47 @@ export class TurnDetectionOptions implements GrpcMessage {
             _instance.turnDetectionLlmOpenaiOptions,
             OpenaiLlmOptions.deserializeBinaryFromReader
           );
+          break;
+        case 6:
+          _instance.conversationContext = new TurnDetectionConversationContext();
+          _reader.readMessage(
+            _instance.conversationContext,
+            TurnDetectionConversationContext.deserializeBinaryFromReader
+          );
+          break;
+        case 7:
+          _instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+          break;
+        case 8:
+          _instance.holdBands = new TurnDetectionHoldBands();
+          _reader.readMessage(
+            _instance.holdBands,
+            TurnDetectionHoldBands.deserializeBinaryFromReader
+          );
+          break;
+        case 9:
+          _instance.uncertainMinWords = _reader.readUint32();
+          break;
+        case 10:
+          _instance.incompleteMaxSilenceSeconds = _reader.readFloat();
+          break;
+        case 11:
+          _instance.exactProbability = _reader.readBool();
+          break;
+        case 12:
+          _instance.pipecatTritonModelName = _reader.readString();
+          break;
+        case 13:
+          _instance.pipecatTritonServerHost = _reader.readString();
+          break;
+        case 14:
+          _instance.pipecatTritonServerPort = _reader.readInt64String();
+          break;
+        case 15:
+          _instance.pipecatMaxAudioSeconds = _reader.readFloat();
+          break;
+        case 16:
+          _instance.pipecatTimeoutSeconds = _reader.readFloat();
           break;
         default:
           _reader.skipField();
@@ -9443,6 +9593,74 @@ export class TurnDetectionOptions implements GrpcMessage {
         OpenaiLlmOptions.serializeBinaryToWriter
       );
     }
+    if (_instance.conversationContext) {
+      _writer.writeMessage(
+        6,
+        _instance.conversationContext as any,
+        TurnDetectionConversationContext.serializeBinaryToWriter
+      );
+    }
+    if (
+      _instance.endOfTurnProbabilityThreshold !== undefined &&
+      _instance.endOfTurnProbabilityThreshold !== null
+    ) {
+      _writer.writeFloat(7, _instance.endOfTurnProbabilityThreshold);
+    }
+    if (_instance.holdBands) {
+      _writer.writeMessage(
+        8,
+        _instance.holdBands as any,
+        TurnDetectionHoldBands.serializeBinaryToWriter
+      );
+    }
+    if (
+      _instance.uncertainMinWords !== undefined &&
+      _instance.uncertainMinWords !== null
+    ) {
+      _writer.writeUint32(9, _instance.uncertainMinWords);
+    }
+    if (
+      _instance.incompleteMaxSilenceSeconds !== undefined &&
+      _instance.incompleteMaxSilenceSeconds !== null
+    ) {
+      _writer.writeFloat(10, _instance.incompleteMaxSilenceSeconds);
+    }
+    if (
+      _instance.exactProbability !== undefined &&
+      _instance.exactProbability !== null
+    ) {
+      _writer.writeBool(11, _instance.exactProbability);
+    }
+    if (
+      _instance.pipecatTritonModelName !== undefined &&
+      _instance.pipecatTritonModelName !== null
+    ) {
+      _writer.writeString(12, _instance.pipecatTritonModelName);
+    }
+    if (
+      _instance.pipecatTritonServerHost !== undefined &&
+      _instance.pipecatTritonServerHost !== null
+    ) {
+      _writer.writeString(13, _instance.pipecatTritonServerHost);
+    }
+    if (
+      _instance.pipecatTritonServerPort !== undefined &&
+      _instance.pipecatTritonServerPort !== null
+    ) {
+      _writer.writeInt64String(14, _instance.pipecatTritonServerPort);
+    }
+    if (
+      _instance.pipecatMaxAudioSeconds !== undefined &&
+      _instance.pipecatMaxAudioSeconds !== null
+    ) {
+      _writer.writeFloat(15, _instance.pipecatMaxAudioSeconds);
+    }
+    if (
+      _instance.pipecatTimeoutSeconds !== undefined &&
+      _instance.pipecatTimeoutSeconds !== null
+    ) {
+      _writer.writeFloat(16, _instance.pipecatTimeoutSeconds);
+    }
   }
 
   private _active: boolean;
@@ -9450,6 +9668,17 @@ export class TurnDetectionOptions implements GrpcMessage {
   private _turnDetectionSystemPrompt: string;
   private _turnDetectionUserPrompt: string;
   private _turnDetectionLlmOpenaiOptions?: OpenaiLlmOptions;
+  private _conversationContext?: TurnDetectionConversationContext;
+  private _endOfTurnProbabilityThreshold: number;
+  private _holdBands?: TurnDetectionHoldBands;
+  private _uncertainMinWords: number;
+  private _incompleteMaxSilenceSeconds: number;
+  private _exactProbability: boolean;
+  private _pipecatTritonModelName: string;
+  private _pipecatTritonServerHost: string;
+  private _pipecatTritonServerPort: string;
+  private _pipecatMaxAudioSeconds: number;
+  private _pipecatTimeoutSeconds: number;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -9464,6 +9693,21 @@ export class TurnDetectionOptions implements GrpcMessage {
     this.turnDetectionLlmOpenaiOptions = _value.turnDetectionLlmOpenaiOptions
       ? new OpenaiLlmOptions(_value.turnDetectionLlmOpenaiOptions)
       : undefined;
+    this.conversationContext = _value.conversationContext
+      ? new TurnDetectionConversationContext(_value.conversationContext)
+      : undefined;
+    this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
+    this.holdBands = _value.holdBands
+      ? new TurnDetectionHoldBands(_value.holdBands)
+      : undefined;
+    this.uncertainMinWords = _value.uncertainMinWords;
+    this.incompleteMaxSilenceSeconds = _value.incompleteMaxSilenceSeconds;
+    this.exactProbability = _value.exactProbability;
+    this.pipecatTritonModelName = _value.pipecatTritonModelName;
+    this.pipecatTritonServerHost = _value.pipecatTritonServerHost;
+    this.pipecatTritonServerPort = _value.pipecatTritonServerPort;
+    this.pipecatMaxAudioSeconds = _value.pipecatMaxAudioSeconds;
+    this.pipecatTimeoutSeconds = _value.pipecatTimeoutSeconds;
     TurnDetectionOptions.refineValues(this);
   }
   get active(): boolean {
@@ -9496,6 +9740,72 @@ export class TurnDetectionOptions implements GrpcMessage {
   set turnDetectionLlmOpenaiOptions(value: OpenaiLlmOptions | undefined) {
     this._turnDetectionLlmOpenaiOptions = value;
   }
+  get conversationContext(): TurnDetectionConversationContext | undefined {
+    return this._conversationContext;
+  }
+  set conversationContext(value: TurnDetectionConversationContext | undefined) {
+    this._conversationContext = value;
+  }
+  get endOfTurnProbabilityThreshold(): number {
+    return this._endOfTurnProbabilityThreshold;
+  }
+  set endOfTurnProbabilityThreshold(value: number) {
+    this._endOfTurnProbabilityThreshold = value;
+  }
+  get holdBands(): TurnDetectionHoldBands | undefined {
+    return this._holdBands;
+  }
+  set holdBands(value: TurnDetectionHoldBands | undefined) {
+    this._holdBands = value;
+  }
+  get uncertainMinWords(): number {
+    return this._uncertainMinWords;
+  }
+  set uncertainMinWords(value: number) {
+    this._uncertainMinWords = value;
+  }
+  get incompleteMaxSilenceSeconds(): number {
+    return this._incompleteMaxSilenceSeconds;
+  }
+  set incompleteMaxSilenceSeconds(value: number) {
+    this._incompleteMaxSilenceSeconds = value;
+  }
+  get exactProbability(): boolean {
+    return this._exactProbability;
+  }
+  set exactProbability(value: boolean) {
+    this._exactProbability = value;
+  }
+  get pipecatTritonModelName(): string {
+    return this._pipecatTritonModelName;
+  }
+  set pipecatTritonModelName(value: string) {
+    this._pipecatTritonModelName = value;
+  }
+  get pipecatTritonServerHost(): string {
+    return this._pipecatTritonServerHost;
+  }
+  set pipecatTritonServerHost(value: string) {
+    this._pipecatTritonServerHost = value;
+  }
+  get pipecatTritonServerPort(): string {
+    return this._pipecatTritonServerPort;
+  }
+  set pipecatTritonServerPort(value: string) {
+    this._pipecatTritonServerPort = value;
+  }
+  get pipecatMaxAudioSeconds(): number {
+    return this._pipecatMaxAudioSeconds;
+  }
+  set pipecatMaxAudioSeconds(value: number) {
+    this._pipecatMaxAudioSeconds = value;
+  }
+  get pipecatTimeoutSeconds(): number {
+    return this._pipecatTimeoutSeconds;
+  }
+  set pipecatTimeoutSeconds(value: number) {
+    this._pipecatTimeoutSeconds = value;
+  }
 
   /**
    * Serialize message to binary data
@@ -9518,7 +9828,20 @@ export class TurnDetectionOptions implements GrpcMessage {
       turnDetectionUserPrompt: this.turnDetectionUserPrompt,
       turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions
         ? this.turnDetectionLlmOpenaiOptions.toObject()
-        : undefined
+        : undefined,
+      conversationContext: this.conversationContext
+        ? this.conversationContext.toObject()
+        : undefined,
+      endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold,
+      holdBands: this.holdBands ? this.holdBands.toObject() : undefined,
+      uncertainMinWords: this.uncertainMinWords,
+      incompleteMaxSilenceSeconds: this.incompleteMaxSilenceSeconds,
+      exactProbability: this.exactProbability,
+      pipecatTritonModelName: this.pipecatTritonModelName,
+      pipecatTritonServerHost: this.pipecatTritonServerHost,
+      pipecatTritonServerPort: this.pipecatTritonServerPort,
+      pipecatMaxAudioSeconds: this.pipecatMaxAudioSeconds,
+      pipecatTimeoutSeconds: this.pipecatTimeoutSeconds
     };
   }
 
@@ -9545,7 +9868,20 @@ export class TurnDetectionOptions implements GrpcMessage {
       turnDetectionUserPrompt: this.turnDetectionUserPrompt,
       turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions
         ? this.turnDetectionLlmOpenaiOptions.toProtobufJSON(options)
-        : null
+        : null,
+      conversationContext: this.conversationContext
+        ? this.conversationContext.toProtobufJSON(options)
+        : null,
+      endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold,
+      holdBands: this.holdBands ? this.holdBands.toProtobufJSON(options) : null,
+      uncertainMinWords: this.uncertainMinWords,
+      incompleteMaxSilenceSeconds: this.incompleteMaxSilenceSeconds,
+      exactProbability: this.exactProbability,
+      pipecatTritonModelName: this.pipecatTritonModelName,
+      pipecatTritonServerHost: this.pipecatTritonServerHost,
+      pipecatTritonServerPort: this.pipecatTritonServerPort,
+      pipecatMaxAudioSeconds: this.pipecatMaxAudioSeconds,
+      pipecatTimeoutSeconds: this.pipecatTimeoutSeconds
     };
   }
 }
@@ -9559,6 +9895,17 @@ export module TurnDetectionOptions {
     turnDetectionSystemPrompt: string;
     turnDetectionUserPrompt: string;
     turnDetectionLlmOpenaiOptions?: OpenaiLlmOptions.AsObject;
+    conversationContext?: TurnDetectionConversationContext.AsObject;
+    endOfTurnProbabilityThreshold: number;
+    holdBands?: TurnDetectionHoldBands.AsObject;
+    uncertainMinWords: number;
+    incompleteMaxSilenceSeconds: number;
+    exactProbability: boolean;
+    pipecatTritonModelName: string;
+    pipecatTritonServerHost: string;
+    pipecatTritonServerPort: string;
+    pipecatMaxAudioSeconds: number;
+    pipecatTimeoutSeconds: number;
   }
 
   /**
@@ -9570,6 +9917,639 @@ export module TurnDetectionOptions {
     turnDetectionSystemPrompt: string;
     turnDetectionUserPrompt: string;
     turnDetectionLlmOpenaiOptions: OpenaiLlmOptions.AsProtobufJSON | null;
+    conversationContext: TurnDetectionConversationContext.AsProtobufJSON | null;
+    endOfTurnProbabilityThreshold: number;
+    holdBands: TurnDetectionHoldBands.AsProtobufJSON | null;
+    uncertainMinWords: number;
+    incompleteMaxSilenceSeconds: number;
+    exactProbability: boolean;
+    pipecatTritonModelName: string;
+    pipecatTritonServerHost: string;
+    pipecatTritonServerPort: string;
+    pipecatMaxAudioSeconds: number;
+    pipecatTimeoutSeconds: number;
+  }
+}
+
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionConversationContext
+ */
+export class TurnDetectionConversationContext implements GrpcMessage {
+  static id = 'ondewo.s2t.TurnDetectionConversationContext';
+
+  /**
+   * Deserialize binary data to message
+   * @param instance message instance
+   */
+  static deserializeBinary(bytes: ByteSource) {
+    const instance = new TurnDetectionConversationContext();
+    TurnDetectionConversationContext.deserializeBinaryFromReader(
+      instance,
+      new BinaryReader(bytes)
+    );
+    return instance;
+  }
+
+  /**
+   * Check all the properties and set default protobuf values if necessary
+   * @param _instance message instance
+   */
+  static refineValues(_instance: TurnDetectionConversationContext) {
+    _instance.turns = _instance.turns || [];
+  }
+
+  /**
+   * Deserializes / reads binary message into message instance using provided binary reader
+   * @param _instance message instance
+   * @param _reader binary reader instance
+   */
+  static deserializeBinaryFromReader(
+    _instance: TurnDetectionConversationContext,
+    _reader: BinaryReader
+  ) {
+    while (_reader.nextField()) {
+      if (_reader.isEndGroup()) break;
+
+      switch (_reader.getFieldNumber()) {
+        case 1:
+          const messageInitializer1 = new TurnDetectionContextTurn();
+          _reader.readMessage(
+            messageInitializer1,
+            TurnDetectionContextTurn.deserializeBinaryFromReader
+          );
+          (_instance.turns = _instance.turns || []).push(messageInitializer1);
+          break;
+        default:
+          _reader.skipField();
+      }
+    }
+
+    TurnDetectionConversationContext.refineValues(_instance);
+  }
+
+  /**
+   * Serializes a message to binary format using provided binary reader
+   * @param _instance message instance
+   * @param _writer binary writer instance
+   */
+  static serializeBinaryToWriter(
+    _instance: TurnDetectionConversationContext,
+    _writer: BinaryWriter
+  ) {
+    if (_instance.turns && _instance.turns.length) {
+      _writer.writeRepeatedMessage(
+        1,
+        _instance.turns as any,
+        TurnDetectionContextTurn.serializeBinaryToWriter
+      );
+    }
+  }
+
+  private _turns?: TurnDetectionContextTurn[];
+
+  /**
+   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+   * @param _value initial values object or instance of TurnDetectionConversationContext to deeply clone from
+   */
+  constructor(
+    _value?: RecursivePartial<TurnDetectionConversationContext.AsObject>
+  ) {
+    _value = _value || {};
+    this.turns = (_value.turns || []).map(m => new TurnDetectionContextTurn(m));
+    TurnDetectionConversationContext.refineValues(this);
+  }
+  get turns(): TurnDetectionContextTurn[] | undefined {
+    return this._turns;
+  }
+  set turns(value: TurnDetectionContextTurn[] | undefined) {
+    this._turns = value;
+  }
+
+  /**
+   * Serialize message to binary data
+   * @param instance message instance
+   */
+  serializeBinary() {
+    const writer = new BinaryWriter();
+    TurnDetectionConversationContext.serializeBinaryToWriter(this, writer);
+    return writer.getResultBuffer();
+  }
+
+  /**
+   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+   */
+  toObject(): TurnDetectionConversationContext.AsObject {
+    return {
+      turns: (this.turns || []).map(m => m.toObject())
+    };
+  }
+
+  /**
+   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+   */
+  toJSON() {
+    return this.toObject();
+  }
+
+  /**
+   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+   */
+  toProtobufJSON(
+    // @ts-ignore
+    options?: ToProtobufJSONOptions
+  ): TurnDetectionConversationContext.AsProtobufJSON {
+    return {
+      turns: (this.turns || []).map(m => m.toProtobufJSON(options))
+    };
+  }
+}
+export module TurnDetectionConversationContext {
+  /**
+   * Standard JavaScript object representation for TurnDetectionConversationContext
+   */
+  export interface AsObject {
+    turns?: TurnDetectionContextTurn.AsObject[];
+  }
+
+  /**
+   * Protobuf JSON representation for TurnDetectionConversationContext
+   */
+  export interface AsProtobufJSON {
+    turns: TurnDetectionContextTurn.AsProtobufJSON[] | null;
+  }
+}
+
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionContextTurn
+ */
+export class TurnDetectionContextTurn implements GrpcMessage {
+  static id = 'ondewo.s2t.TurnDetectionContextTurn';
+
+  /**
+   * Deserialize binary data to message
+   * @param instance message instance
+   */
+  static deserializeBinary(bytes: ByteSource) {
+    const instance = new TurnDetectionContextTurn();
+    TurnDetectionContextTurn.deserializeBinaryFromReader(
+      instance,
+      new BinaryReader(bytes)
+    );
+    return instance;
+  }
+
+  /**
+   * Check all the properties and set default protobuf values if necessary
+   * @param _instance message instance
+   */
+  static refineValues(_instance: TurnDetectionContextTurn) {
+    _instance.role = _instance.role || 0;
+    _instance.text = _instance.text || '';
+  }
+
+  /**
+   * Deserializes / reads binary message into message instance using provided binary reader
+   * @param _instance message instance
+   * @param _reader binary reader instance
+   */
+  static deserializeBinaryFromReader(
+    _instance: TurnDetectionContextTurn,
+    _reader: BinaryReader
+  ) {
+    while (_reader.nextField()) {
+      if (_reader.isEndGroup()) break;
+
+      switch (_reader.getFieldNumber()) {
+        case 1:
+          _instance.role = _reader.readEnum();
+          break;
+        case 2:
+          _instance.text = _reader.readString();
+          break;
+        default:
+          _reader.skipField();
+      }
+    }
+
+    TurnDetectionContextTurn.refineValues(_instance);
+  }
+
+  /**
+   * Serializes a message to binary format using provided binary reader
+   * @param _instance message instance
+   * @param _writer binary writer instance
+   */
+  static serializeBinaryToWriter(
+    _instance: TurnDetectionContextTurn,
+    _writer: BinaryWriter
+  ) {
+    if (_instance.role) {
+      _writer.writeEnum(1, _instance.role);
+    }
+    if (_instance.text) {
+      _writer.writeString(2, _instance.text);
+    }
+  }
+
+  private _role: TurnDetectionContextTurn.Role;
+  private _text: string;
+
+  /**
+   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+   * @param _value initial values object or instance of TurnDetectionContextTurn to deeply clone from
+   */
+  constructor(_value?: RecursivePartial<TurnDetectionContextTurn.AsObject>) {
+    _value = _value || {};
+    this.role = _value.role;
+    this.text = _value.text;
+    TurnDetectionContextTurn.refineValues(this);
+  }
+  get role(): TurnDetectionContextTurn.Role {
+    return this._role;
+  }
+  set role(value: TurnDetectionContextTurn.Role) {
+    this._role = value;
+  }
+  get text(): string {
+    return this._text;
+  }
+  set text(value: string) {
+    this._text = value;
+  }
+
+  /**
+   * Serialize message to binary data
+   * @param instance message instance
+   */
+  serializeBinary() {
+    const writer = new BinaryWriter();
+    TurnDetectionContextTurn.serializeBinaryToWriter(this, writer);
+    return writer.getResultBuffer();
+  }
+
+  /**
+   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+   */
+  toObject(): TurnDetectionContextTurn.AsObject {
+    return {
+      role: this.role,
+      text: this.text
+    };
+  }
+
+  /**
+   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+   */
+  toJSON() {
+    return this.toObject();
+  }
+
+  /**
+   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+   */
+  toProtobufJSON(
+    // @ts-ignore
+    options?: ToProtobufJSONOptions
+  ): TurnDetectionContextTurn.AsProtobufJSON {
+    return {
+      role:
+        TurnDetectionContextTurn.Role[
+          this.role === null || this.role === undefined ? 0 : this.role
+        ],
+      text: this.text
+    };
+  }
+}
+export module TurnDetectionContextTurn {
+  /**
+   * Standard JavaScript object representation for TurnDetectionContextTurn
+   */
+  export interface AsObject {
+    role: TurnDetectionContextTurn.Role;
+    text: string;
+  }
+
+  /**
+   * Protobuf JSON representation for TurnDetectionContextTurn
+   */
+  export interface AsProtobufJSON {
+    role: string;
+    text: string;
+  }
+  export enum Role {
+    ROLE_UNSPECIFIED = 0,
+    ROLE_USER = 1,
+    ROLE_ASSISTANT = 2
+  }
+}
+
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionHoldBands
+ */
+export class TurnDetectionHoldBands implements GrpcMessage {
+  static id = 'ondewo.s2t.TurnDetectionHoldBands';
+
+  /**
+   * Deserialize binary data to message
+   * @param instance message instance
+   */
+  static deserializeBinary(bytes: ByteSource) {
+    const instance = new TurnDetectionHoldBands();
+    TurnDetectionHoldBands.deserializeBinaryFromReader(
+      instance,
+      new BinaryReader(bytes)
+    );
+    return instance;
+  }
+
+  /**
+   * Check all the properties and set default protobuf values if necessary
+   * @param _instance message instance
+   */
+  static refineValues(_instance: TurnDetectionHoldBands) {
+    _instance.bands = _instance.bands || [];
+  }
+
+  /**
+   * Deserializes / reads binary message into message instance using provided binary reader
+   * @param _instance message instance
+   * @param _reader binary reader instance
+   */
+  static deserializeBinaryFromReader(
+    _instance: TurnDetectionHoldBands,
+    _reader: BinaryReader
+  ) {
+    while (_reader.nextField()) {
+      if (_reader.isEndGroup()) break;
+
+      switch (_reader.getFieldNumber()) {
+        case 1:
+          const messageInitializer1 = new TurnDetectionHoldBand();
+          _reader.readMessage(
+            messageInitializer1,
+            TurnDetectionHoldBand.deserializeBinaryFromReader
+          );
+          (_instance.bands = _instance.bands || []).push(messageInitializer1);
+          break;
+        default:
+          _reader.skipField();
+      }
+    }
+
+    TurnDetectionHoldBands.refineValues(_instance);
+  }
+
+  /**
+   * Serializes a message to binary format using provided binary reader
+   * @param _instance message instance
+   * @param _writer binary writer instance
+   */
+  static serializeBinaryToWriter(
+    _instance: TurnDetectionHoldBands,
+    _writer: BinaryWriter
+  ) {
+    if (_instance.bands && _instance.bands.length) {
+      _writer.writeRepeatedMessage(
+        1,
+        _instance.bands as any,
+        TurnDetectionHoldBand.serializeBinaryToWriter
+      );
+    }
+  }
+
+  private _bands?: TurnDetectionHoldBand[];
+
+  /**
+   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+   * @param _value initial values object or instance of TurnDetectionHoldBands to deeply clone from
+   */
+  constructor(_value?: RecursivePartial<TurnDetectionHoldBands.AsObject>) {
+    _value = _value || {};
+    this.bands = (_value.bands || []).map(m => new TurnDetectionHoldBand(m));
+    TurnDetectionHoldBands.refineValues(this);
+  }
+  get bands(): TurnDetectionHoldBand[] | undefined {
+    return this._bands;
+  }
+  set bands(value: TurnDetectionHoldBand[] | undefined) {
+    this._bands = value;
+  }
+
+  /**
+   * Serialize message to binary data
+   * @param instance message instance
+   */
+  serializeBinary() {
+    const writer = new BinaryWriter();
+    TurnDetectionHoldBands.serializeBinaryToWriter(this, writer);
+    return writer.getResultBuffer();
+  }
+
+  /**
+   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+   */
+  toObject(): TurnDetectionHoldBands.AsObject {
+    return {
+      bands: (this.bands || []).map(m => m.toObject())
+    };
+  }
+
+  /**
+   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+   */
+  toJSON() {
+    return this.toObject();
+  }
+
+  /**
+   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+   */
+  toProtobufJSON(
+    // @ts-ignore
+    options?: ToProtobufJSONOptions
+  ): TurnDetectionHoldBands.AsProtobufJSON {
+    return {
+      bands: (this.bands || []).map(m => m.toProtobufJSON(options))
+    };
+  }
+}
+export module TurnDetectionHoldBands {
+  /**
+   * Standard JavaScript object representation for TurnDetectionHoldBands
+   */
+  export interface AsObject {
+    bands?: TurnDetectionHoldBand.AsObject[];
+  }
+
+  /**
+   * Protobuf JSON representation for TurnDetectionHoldBands
+   */
+  export interface AsProtobufJSON {
+    bands: TurnDetectionHoldBand.AsProtobufJSON[] | null;
+  }
+}
+
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionHoldBand
+ */
+export class TurnDetectionHoldBand implements GrpcMessage {
+  static id = 'ondewo.s2t.TurnDetectionHoldBand';
+
+  /**
+   * Deserialize binary data to message
+   * @param instance message instance
+   */
+  static deserializeBinary(bytes: ByteSource) {
+    const instance = new TurnDetectionHoldBand();
+    TurnDetectionHoldBand.deserializeBinaryFromReader(
+      instance,
+      new BinaryReader(bytes)
+    );
+    return instance;
+  }
+
+  /**
+   * Check all the properties and set default protobuf values if necessary
+   * @param _instance message instance
+   */
+  static refineValues(_instance: TurnDetectionHoldBand) {
+    _instance.upperProbability = _instance.upperProbability || 0;
+    _instance.maxSilenceSeconds = _instance.maxSilenceSeconds || 0;
+  }
+
+  /**
+   * Deserializes / reads binary message into message instance using provided binary reader
+   * @param _instance message instance
+   * @param _reader binary reader instance
+   */
+  static deserializeBinaryFromReader(
+    _instance: TurnDetectionHoldBand,
+    _reader: BinaryReader
+  ) {
+    while (_reader.nextField()) {
+      if (_reader.isEndGroup()) break;
+
+      switch (_reader.getFieldNumber()) {
+        case 1:
+          _instance.upperProbability = _reader.readFloat();
+          break;
+        case 2:
+          _instance.maxSilenceSeconds = _reader.readFloat();
+          break;
+        default:
+          _reader.skipField();
+      }
+    }
+
+    TurnDetectionHoldBand.refineValues(_instance);
+  }
+
+  /**
+   * Serializes a message to binary format using provided binary reader
+   * @param _instance message instance
+   * @param _writer binary writer instance
+   */
+  static serializeBinaryToWriter(
+    _instance: TurnDetectionHoldBand,
+    _writer: BinaryWriter
+  ) {
+    if (_instance.upperProbability) {
+      _writer.writeFloat(1, _instance.upperProbability);
+    }
+    if (_instance.maxSilenceSeconds) {
+      _writer.writeFloat(2, _instance.maxSilenceSeconds);
+    }
+  }
+
+  private _upperProbability: number;
+  private _maxSilenceSeconds: number;
+
+  /**
+   * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+   * @param _value initial values object or instance of TurnDetectionHoldBand to deeply clone from
+   */
+  constructor(_value?: RecursivePartial<TurnDetectionHoldBand.AsObject>) {
+    _value = _value || {};
+    this.upperProbability = _value.upperProbability;
+    this.maxSilenceSeconds = _value.maxSilenceSeconds;
+    TurnDetectionHoldBand.refineValues(this);
+  }
+  get upperProbability(): number {
+    return this._upperProbability;
+  }
+  set upperProbability(value: number) {
+    this._upperProbability = value;
+  }
+  get maxSilenceSeconds(): number {
+    return this._maxSilenceSeconds;
+  }
+  set maxSilenceSeconds(value: number) {
+    this._maxSilenceSeconds = value;
+  }
+
+  /**
+   * Serialize message to binary data
+   * @param instance message instance
+   */
+  serializeBinary() {
+    const writer = new BinaryWriter();
+    TurnDetectionHoldBand.serializeBinaryToWriter(this, writer);
+    return writer.getResultBuffer();
+  }
+
+  /**
+   * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+   */
+  toObject(): TurnDetectionHoldBand.AsObject {
+    return {
+      upperProbability: this.upperProbability,
+      maxSilenceSeconds: this.maxSilenceSeconds
+    };
+  }
+
+  /**
+   * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+   */
+  toJSON() {
+    return this.toObject();
+  }
+
+  /**
+   * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+   * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+   * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+   */
+  toProtobufJSON(
+    // @ts-ignore
+    options?: ToProtobufJSONOptions
+  ): TurnDetectionHoldBand.AsProtobufJSON {
+    return {
+      upperProbability: this.upperProbability,
+      maxSilenceSeconds: this.maxSilenceSeconds
+    };
+  }
+}
+export module TurnDetectionHoldBand {
+  /**
+   * Standard JavaScript object representation for TurnDetectionHoldBand
+   */
+  export interface AsObject {
+    upperProbability: number;
+    maxSilenceSeconds: number;
+  }
+
+  /**
+   * Protobuf JSON representation for TurnDetectionHoldBand
+   */
+  export interface AsProtobufJSON {
+    upperProbability: number;
+    maxSilenceSeconds: number;
   }
 }
 

@@ -658,6 +658,7 @@ declare class TranscriptionReturnOptions implements GrpcMessage {
     private _returnAlternativeWords;
     private _returnAlternativeWordsNr;
     private _returnWordTiming;
+    private _returnEndOfSpeechCandidate;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
      * @param _value initial values object or instance of TranscriptionReturnOptions to deeply clone from
@@ -679,6 +680,8 @@ declare class TranscriptionReturnOptions implements GrpcMessage {
     set returnAlternativeWordsNr(value: number);
     get returnWordTiming(): boolean;
     set returnWordTiming(value: boolean);
+    get returnEndOfSpeechCandidate(): boolean;
+    set returnEndOfSpeechCandidate(value: boolean);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -712,6 +715,7 @@ declare namespace TranscriptionReturnOptions {
         returnAlternativeWords: boolean;
         returnAlternativeWordsNr: number;
         returnWordTiming: boolean;
+        returnEndOfSpeechCandidate: boolean;
     }
     /**
      * Protobuf JSON representation for TranscriptionReturnOptions
@@ -725,6 +729,7 @@ declare namespace TranscriptionReturnOptions {
         returnAlternativeWords: boolean;
         returnAlternativeWordsNr: number;
         returnWordTiming: boolean;
+        returnEndOfSpeechCandidate: boolean;
     }
 }
 /**
@@ -757,6 +762,8 @@ declare class UtteranceDetectionOptions implements GrpcMessage {
     private _transcribeNotFinal;
     private _nextChunkTimeout;
     private _turnDetection?;
+    private _minAudioChunkSize;
+    private _transcribeNotFinalPeriodSeconds;
     private _oneofTranscribeNotFinal;
     private _oneofTurnDetection;
     /**
@@ -770,6 +777,10 @@ declare class UtteranceDetectionOptions implements GrpcMessage {
     set nextChunkTimeout(value: number);
     get turnDetection(): TurnDetectionOptions | undefined;
     set turnDetection(value: TurnDetectionOptions | undefined);
+    get minAudioChunkSize(): string;
+    set minAudioChunkSize(value: string);
+    get transcribeNotFinalPeriodSeconds(): number;
+    set transcribeNotFinalPeriodSeconds(value: number);
     get oneofTranscribeNotFinal(): UtteranceDetectionOptions.OneofTranscribeNotFinalCase;
     get oneofTurnDetection(): UtteranceDetectionOptions.OneofTurnDetectionCase;
     /**
@@ -800,6 +811,8 @@ declare namespace UtteranceDetectionOptions {
         transcribeNotFinal: boolean;
         nextChunkTimeout: number;
         turnDetection?: TurnDetectionOptions.AsObject;
+        minAudioChunkSize: string;
+        transcribeNotFinalPeriodSeconds: number;
     }
     /**
      * Protobuf JSON representation for UtteranceDetectionOptions
@@ -808,6 +821,8 @@ declare namespace UtteranceDetectionOptions {
         transcribeNotFinal: boolean;
         nextChunkTimeout: number;
         turnDetection: TurnDetectionOptions.AsProtobufJSON | null;
+        minAudioChunkSize: string;
+        transcribeNotFinalPeriodSeconds: number;
     }
     enum OneofTranscribeNotFinalCase {
         none = 0,
@@ -1346,6 +1361,7 @@ declare class TranscribeStreamResponse implements GrpcMessage {
     private _audio;
     private _utteranceStart;
     private _audioUuid;
+    private _endOfSpeechCandidate;
     private _config?;
     private _oneofConfig;
     /**
@@ -1367,6 +1383,8 @@ declare class TranscribeStreamResponse implements GrpcMessage {
     set utteranceStart(value: boolean);
     get audioUuid(): string;
     set audioUuid(value: string);
+    get endOfSpeechCandidate(): boolean;
+    set endOfSpeechCandidate(value: boolean);
     get config(): TranscribeRequestConfig | undefined;
     set config(value: TranscribeRequestConfig | undefined);
     get oneofConfig(): TranscribeStreamResponse.OneofConfigCase;
@@ -1402,6 +1420,7 @@ declare namespace TranscribeStreamResponse {
         audio: Uint8Array;
         utteranceStart: boolean;
         audioUuid: string;
+        endOfSpeechCandidate: boolean;
         config?: TranscribeRequestConfig.AsObject;
     }
     /**
@@ -1415,6 +1434,7 @@ declare namespace TranscribeStreamResponse {
         audio: string;
         utteranceStart: boolean;
         audioUuid: string;
+        endOfSpeechCandidate: boolean;
         config: TranscribeRequestConfig.AsProtobufJSON | null;
     }
     enum OneofConfigCase {
@@ -3698,6 +3718,7 @@ declare class StreamingSpeechRecognition implements GrpcMessage {
     private _minAudioChunkSize;
     private _nextChunkTimeout;
     private _turnDetection?;
+    private _transcribeNotFinalPeriodSeconds;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
      * @param _value initial values object or instance of StreamingSpeechRecognition to deeply clone from
@@ -3715,6 +3736,8 @@ declare class StreamingSpeechRecognition implements GrpcMessage {
     set nextChunkTimeout(value: number);
     get turnDetection(): TurnDetectionOptions | undefined;
     set turnDetection(value: TurnDetectionOptions | undefined);
+    get transcribeNotFinalPeriodSeconds(): number;
+    set transcribeNotFinalPeriodSeconds(value: number);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -3746,6 +3769,7 @@ declare namespace StreamingSpeechRecognition {
         minAudioChunkSize: string;
         nextChunkTimeout: number;
         turnDetection?: TurnDetectionOptions.AsObject;
+        transcribeNotFinalPeriodSeconds: number;
     }
     /**
      * Protobuf JSON representation for StreamingSpeechRecognition
@@ -3757,6 +3781,7 @@ declare namespace StreamingSpeechRecognition {
         minAudioChunkSize: string;
         nextChunkTimeout: number;
         turnDetection: TurnDetectionOptions.AsProtobufJSON | null;
+        transcribeNotFinalPeriodSeconds: number;
     }
 }
 /**
@@ -3791,6 +3816,17 @@ declare class TurnDetectionOptions implements GrpcMessage {
     private _turnDetectionSystemPrompt;
     private _turnDetectionUserPrompt;
     private _turnDetectionLlmOpenaiOptions?;
+    private _conversationContext?;
+    private _endOfTurnProbabilityThreshold;
+    private _holdBands?;
+    private _uncertainMinWords;
+    private _incompleteMaxSilenceSeconds;
+    private _exactProbability;
+    private _pipecatTritonModelName;
+    private _pipecatTritonServerHost;
+    private _pipecatTritonServerPort;
+    private _pipecatMaxAudioSeconds;
+    private _pipecatTimeoutSeconds;
     /**
      * Message constructor. Initializes the properties and applies default Protobuf values if necessary
      * @param _value initial values object or instance of TurnDetectionOptions to deeply clone from
@@ -3806,6 +3842,28 @@ declare class TurnDetectionOptions implements GrpcMessage {
     set turnDetectionUserPrompt(value: string);
     get turnDetectionLlmOpenaiOptions(): OpenaiLlmOptions | undefined;
     set turnDetectionLlmOpenaiOptions(value: OpenaiLlmOptions | undefined);
+    get conversationContext(): TurnDetectionConversationContext | undefined;
+    set conversationContext(value: TurnDetectionConversationContext | undefined);
+    get endOfTurnProbabilityThreshold(): number;
+    set endOfTurnProbabilityThreshold(value: number);
+    get holdBands(): TurnDetectionHoldBands | undefined;
+    set holdBands(value: TurnDetectionHoldBands | undefined);
+    get uncertainMinWords(): number;
+    set uncertainMinWords(value: number);
+    get incompleteMaxSilenceSeconds(): number;
+    set incompleteMaxSilenceSeconds(value: number);
+    get exactProbability(): boolean;
+    set exactProbability(value: boolean);
+    get pipecatTritonModelName(): string;
+    set pipecatTritonModelName(value: string);
+    get pipecatTritonServerHost(): string;
+    set pipecatTritonServerHost(value: string);
+    get pipecatTritonServerPort(): string;
+    set pipecatTritonServerPort(value: string);
+    get pipecatMaxAudioSeconds(): number;
+    set pipecatMaxAudioSeconds(value: number);
+    get pipecatTimeoutSeconds(): number;
+    set pipecatTimeoutSeconds(value: number);
     /**
      * Serialize message to binary data
      * @param instance message instance
@@ -3836,6 +3894,17 @@ declare namespace TurnDetectionOptions {
         turnDetectionSystemPrompt: string;
         turnDetectionUserPrompt: string;
         turnDetectionLlmOpenaiOptions?: OpenaiLlmOptions.AsObject;
+        conversationContext?: TurnDetectionConversationContext.AsObject;
+        endOfTurnProbabilityThreshold: number;
+        holdBands?: TurnDetectionHoldBands.AsObject;
+        uncertainMinWords: number;
+        incompleteMaxSilenceSeconds: number;
+        exactProbability: boolean;
+        pipecatTritonModelName: string;
+        pipecatTritonServerHost: string;
+        pipecatTritonServerPort: string;
+        pipecatMaxAudioSeconds: number;
+        pipecatTimeoutSeconds: number;
     }
     /**
      * Protobuf JSON representation for TurnDetectionOptions
@@ -3846,6 +3915,308 @@ declare namespace TurnDetectionOptions {
         turnDetectionSystemPrompt: string;
         turnDetectionUserPrompt: string;
         turnDetectionLlmOpenaiOptions: OpenaiLlmOptions.AsProtobufJSON | null;
+        conversationContext: TurnDetectionConversationContext.AsProtobufJSON | null;
+        endOfTurnProbabilityThreshold: number;
+        holdBands: TurnDetectionHoldBands.AsProtobufJSON | null;
+        uncertainMinWords: number;
+        incompleteMaxSilenceSeconds: number;
+        exactProbability: boolean;
+        pipecatTritonModelName: string;
+        pipecatTritonServerHost: string;
+        pipecatTritonServerPort: string;
+        pipecatMaxAudioSeconds: number;
+        pipecatTimeoutSeconds: number;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionConversationContext
+ */
+declare class TurnDetectionConversationContext implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): TurnDetectionConversationContext;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: TurnDetectionConversationContext): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: TurnDetectionConversationContext, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: TurnDetectionConversationContext, _writer: BinaryWriter): void;
+    private _turns?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TurnDetectionConversationContext to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<TurnDetectionConversationContext.AsObject>);
+    get turns(): TurnDetectionContextTurn[] | undefined;
+    set turns(value: TurnDetectionContextTurn[] | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): TurnDetectionConversationContext.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): TurnDetectionConversationContext.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): TurnDetectionConversationContext.AsProtobufJSON;
+}
+declare namespace TurnDetectionConversationContext {
+    /**
+     * Standard JavaScript object representation for TurnDetectionConversationContext
+     */
+    interface AsObject {
+        turns?: TurnDetectionContextTurn.AsObject[];
+    }
+    /**
+     * Protobuf JSON representation for TurnDetectionConversationContext
+     */
+    interface AsProtobufJSON {
+        turns: TurnDetectionContextTurn.AsProtobufJSON[] | null;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionContextTurn
+ */
+declare class TurnDetectionContextTurn implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): TurnDetectionContextTurn;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: TurnDetectionContextTurn): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: TurnDetectionContextTurn, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: TurnDetectionContextTurn, _writer: BinaryWriter): void;
+    private _role;
+    private _text;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TurnDetectionContextTurn to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<TurnDetectionContextTurn.AsObject>);
+    get role(): TurnDetectionContextTurn.Role;
+    set role(value: TurnDetectionContextTurn.Role);
+    get text(): string;
+    set text(value: string);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): TurnDetectionContextTurn.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): TurnDetectionContextTurn.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): TurnDetectionContextTurn.AsProtobufJSON;
+}
+declare namespace TurnDetectionContextTurn {
+    /**
+     * Standard JavaScript object representation for TurnDetectionContextTurn
+     */
+    interface AsObject {
+        role: TurnDetectionContextTurn.Role;
+        text: string;
+    }
+    /**
+     * Protobuf JSON representation for TurnDetectionContextTurn
+     */
+    interface AsProtobufJSON {
+        role: string;
+        text: string;
+    }
+    enum Role {
+        ROLE_UNSPECIFIED = 0,
+        ROLE_USER = 1,
+        ROLE_ASSISTANT = 2
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionHoldBands
+ */
+declare class TurnDetectionHoldBands implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): TurnDetectionHoldBands;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: TurnDetectionHoldBands): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: TurnDetectionHoldBands, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: TurnDetectionHoldBands, _writer: BinaryWriter): void;
+    private _bands?;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TurnDetectionHoldBands to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<TurnDetectionHoldBands.AsObject>);
+    get bands(): TurnDetectionHoldBand[] | undefined;
+    set bands(value: TurnDetectionHoldBand[] | undefined);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): TurnDetectionHoldBands.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): TurnDetectionHoldBands.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): TurnDetectionHoldBands.AsProtobufJSON;
+}
+declare namespace TurnDetectionHoldBands {
+    /**
+     * Standard JavaScript object representation for TurnDetectionHoldBands
+     */
+    interface AsObject {
+        bands?: TurnDetectionHoldBand.AsObject[];
+    }
+    /**
+     * Protobuf JSON representation for TurnDetectionHoldBands
+     */
+    interface AsProtobufJSON {
+        bands: TurnDetectionHoldBand.AsProtobufJSON[] | null;
+    }
+}
+/**
+ * Message implementation for ondewo.s2t.TurnDetectionHoldBand
+ */
+declare class TurnDetectionHoldBand implements GrpcMessage {
+    static id: string;
+    /**
+     * Deserialize binary data to message
+     * @param instance message instance
+     */
+    static deserializeBinary(bytes: ByteSource): TurnDetectionHoldBand;
+    /**
+     * Check all the properties and set default protobuf values if necessary
+     * @param _instance message instance
+     */
+    static refineValues(_instance: TurnDetectionHoldBand): void;
+    /**
+     * Deserializes / reads binary message into message instance using provided binary reader
+     * @param _instance message instance
+     * @param _reader binary reader instance
+     */
+    static deserializeBinaryFromReader(_instance: TurnDetectionHoldBand, _reader: BinaryReader): void;
+    /**
+     * Serializes a message to binary format using provided binary reader
+     * @param _instance message instance
+     * @param _writer binary writer instance
+     */
+    static serializeBinaryToWriter(_instance: TurnDetectionHoldBand, _writer: BinaryWriter): void;
+    private _upperProbability;
+    private _maxSilenceSeconds;
+    /**
+     * Message constructor. Initializes the properties and applies default Protobuf values if necessary
+     * @param _value initial values object or instance of TurnDetectionHoldBand to deeply clone from
+     */
+    constructor(_value?: RecursivePartial<TurnDetectionHoldBand.AsObject>);
+    get upperProbability(): number;
+    set upperProbability(value: number);
+    get maxSilenceSeconds(): number;
+    set maxSilenceSeconds(value: number);
+    /**
+     * Serialize message to binary data
+     * @param instance message instance
+     */
+    serializeBinary(): any;
+    /**
+     * Cast message to standard JavaScript object (all non-primitive values are deeply cloned)
+     */
+    toObject(): TurnDetectionHoldBand.AsObject;
+    /**
+     * Convenience method to support JSON.stringify(message), replicates the structure of toObject()
+     */
+    toJSON(): TurnDetectionHoldBand.AsObject;
+    /**
+     * Cast message to JSON using protobuf JSON notation: https://developers.google.com/protocol-buffers/docs/proto3#json
+     * Attention: output differs from toObject() e.g. enums are represented as names and not as numbers, Timestamp is an ISO Date string format etc.
+     * If the message itself or some of descendant messages is google.protobuf.Any, you MUST provide a message pool as options. If not, the messagePool is not required
+     */
+    toProtobufJSON(options?: ToProtobufJSONOptions): TurnDetectionHoldBand.AsProtobufJSON;
+}
+declare namespace TurnDetectionHoldBand {
+    /**
+     * Standard JavaScript object representation for TurnDetectionHoldBand
+     */
+    interface AsObject {
+        upperProbability: number;
+        maxSilenceSeconds: number;
+    }
+    /**
+     * Protobuf JSON representation for TurnDetectionHoldBand
+     */
+    interface AsProtobufJSON {
+        upperProbability: number;
+        maxSilenceSeconds: number;
     }
 }
 /**
@@ -6948,5 +7319,5 @@ declare class AuthGrpcInterceptor implements GrpcInterceptor {
  */
 declare function provideOndewoS2tAuth(tokenProvider: Type<TokenProvider>): EnvironmentProviders;
 
-export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
+export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionContextTurn, TurnDetectionConversationContext, TurnDetectionHoldBand, TurnDetectionHoldBands, TurnDetectionOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
 export type { KeycloakTokenProviderConfig, TokenProvider, TokenResult };
