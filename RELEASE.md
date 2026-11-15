@@ -2,6 +2,42 @@
 
 *****************
 
+## Release ONDEWO S2T Angular Client 7.5.3
+
+### New Features
+
+* Regenerated against the not yet released ondewo-s2t-api 7.6.0 (`src/ondewo-s2t-api` at `9c0e0ad`, branch
+  `feature/OND236-120-barge-in-cancel`; 7.5.2 was generated from tag 7.5.0). New messages and fields in the typings:
+  * Turn-detection conversation context: `TurnDetectionOptions.conversationContext`
+    (`TurnDetectionConversationContext` of `TurnDetectionContextTurn`s, role `ROLE_USER` / `ROLE_ASSISTANT`).
+  * Per-call end-of-turn decision fields on `TurnDetectionOptions`: `endOfTurnProbabilityThreshold`, `holdBands`
+    (`TurnDetectionHoldBands` of `TurnDetectionHoldBand`), `uncertainMinWords`, `incompleteMaxSilenceSeconds` and
+    `exactProbability`.
+  * pipecat Smart Turn Triton fields on `TurnDetectionOptions`: `pipecatTritonModelName`, `pipecatTritonServerHost`,
+    `pipecatTritonServerPort`, `pipecatMaxAudioSeconds` and `pipecatTimeoutSeconds`.
+  * Per-stream processing chunk `UtteranceDetectionOptions.minAudioChunkSize` and per-request partial-transcription
+    period `UtteranceDetectionOptions.transcribeNotFinalPeriodSeconds`; the pipeline-level
+    `StreamingSpeechRecognition.transcribeNotFinalPeriodSeconds`.
+  * `StreamingSpeechRecognition.transcribeNotFinal` is now `optional` (same field number, wire-compatible), so an
+    explicit `false` can be told apart from unset.
+  * Opt-in end-of-speech candidate: `TranscriptionReturnOptions.returnEndOfSpeechCandidate` and the flag
+    `TranscribeStreamResponse.endOfSpeechCandidate`.
+
+### Build
+
+* Generated with ondewo-proto-compiler [5.16.0](https://github.com/ondewo/ondewo-proto-compiler/releases/tag/5.16.0),
+  built with the Angular 22 toolchain (ng-packagr 22). The peer range of `@angular/core` and `@angular/common` is
+  widened to `>=20.0.0 <23.0.0`.
+* The typings moved from `index.d.ts` to `types/ondewo-s2t-client-angular.d.ts`; `typings` and `exports["."].types`
+  of the package manifest point there.
+* Codegen runs on the `ondewo-angular-proto-compiler:5.16.0` image, tagged from the pinned submodule by
+  `build_compiler`, instead of the untagged `:latest`.
+* New make target `test_angular_compat` runs the proto compiler's Angular backward-compatibility harness on `npm/`.
+* `update_package` also stamps the version into the root `package.json` and `package-lock.json`.
+* The utils image uses Node.js 24.22.3.
+
+*****************
+
 ## Release ONDEWO S2T Angular Client 7.5.2
 
 ### Bug Fixes

@@ -14,7 +14,7 @@ export
 # 		Variables
 ########################################################
 
-ONDEWO_S2T_VERSION=7.5.2
+ONDEWO_S2T_VERSION=7.5.3
 S2T_API_GIT_BRANCH=feature/OND236-120-barge-in-cancel
 ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/5.16.0
 ONDEWO_PROTO_COMPILER_DIR=ondewo-proto-compiler
