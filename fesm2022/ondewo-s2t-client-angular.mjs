@@ -5041,6 +5041,9 @@ var TurnDetectionOndewoDeOptions = class TurnDetectionOndewoDeOptions {
 					_instance.openaiLlmOptions = new OpenaiLlmOptions();
 					_reader.readMessage(_instance.openaiLlmOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
 					break;
+				case 2:
+					_instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+					break;
 				default: _reader.skipField();
 			}
 		}
@@ -5048,10 +5051,12 @@ var TurnDetectionOndewoDeOptions = class TurnDetectionOndewoDeOptions {
 	}
 	static serializeBinaryToWriter(_instance, _writer) {
 		if (_instance.openaiLlmOptions) _writer.writeMessage(1, _instance.openaiLlmOptions, OpenaiLlmOptions.serializeBinaryToWriter);
+		if (_instance.endOfTurnProbabilityThreshold !== void 0 && _instance.endOfTurnProbabilityThreshold !== null) _writer.writeFloat(2, _instance.endOfTurnProbabilityThreshold);
 	}
 	constructor(_value) {
 		_value = _value || {};
 		this.openaiLlmOptions = _value.openaiLlmOptions ? new OpenaiLlmOptions(_value.openaiLlmOptions) : void 0;
+		this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
 		TurnDetectionOndewoDeOptions.refineValues(this);
 	}
 	get openaiLlmOptions() {
@@ -5060,19 +5065,31 @@ var TurnDetectionOndewoDeOptions = class TurnDetectionOndewoDeOptions {
 	set openaiLlmOptions(value) {
 		this._openaiLlmOptions = value;
 	}
+	get endOfTurnProbabilityThreshold() {
+		return this._endOfTurnProbabilityThreshold;
+	}
+	set endOfTurnProbabilityThreshold(value) {
+		this._endOfTurnProbabilityThreshold = value;
+	}
 	serializeBinary() {
 		const writer = new BinaryWriter();
 		TurnDetectionOndewoDeOptions.serializeBinaryToWriter(this, writer);
 		return writer.getResultBuffer();
 	}
 	toObject() {
-		return { openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toObject() : void 0 };
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toObject() : void 0,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
+		};
 	}
 	toJSON() {
 		return this.toObject();
 	}
 	toProtobufJSON(options) {
-		return { openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toProtobufJSON(options) : null };
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toProtobufJSON(options) : null,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
+		};
 	}
 };
 var TurnDetectionOndewoDeFusionOptions = class TurnDetectionOndewoDeFusionOptions {
@@ -5175,6 +5192,9 @@ var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOp
 				case 5:
 					_instance.timeoutSeconds = _reader.readFloat();
 					break;
+				case 6:
+					_instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+					break;
 				default: _reader.skipField();
 			}
 		}
@@ -5186,6 +5206,7 @@ var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOp
 		if (_instance.tritonServerPort !== void 0 && _instance.tritonServerPort !== null) _writer.writeInt64String(3, _instance.tritonServerPort);
 		if (_instance.maxAudioSeconds !== void 0 && _instance.maxAudioSeconds !== null) _writer.writeFloat(4, _instance.maxAudioSeconds);
 		if (_instance.timeoutSeconds !== void 0 && _instance.timeoutSeconds !== null) _writer.writeFloat(5, _instance.timeoutSeconds);
+		if (_instance.endOfTurnProbabilityThreshold !== void 0 && _instance.endOfTurnProbabilityThreshold !== null) _writer.writeFloat(6, _instance.endOfTurnProbabilityThreshold);
 	}
 	constructor(_value) {
 		_value = _value || {};
@@ -5194,6 +5215,7 @@ var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOp
 		this.tritonServerPort = _value.tritonServerPort;
 		this.maxAudioSeconds = _value.maxAudioSeconds;
 		this.timeoutSeconds = _value.timeoutSeconds;
+		this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
 		TurnDetectionPipecatSmartTurnOptions.refineValues(this);
 	}
 	get modelName() {
@@ -5226,6 +5248,12 @@ var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOp
 	set timeoutSeconds(value) {
 		this._timeoutSeconds = value;
 	}
+	get endOfTurnProbabilityThreshold() {
+		return this._endOfTurnProbabilityThreshold;
+	}
+	set endOfTurnProbabilityThreshold(value) {
+		this._endOfTurnProbabilityThreshold = value;
+	}
 	serializeBinary() {
 		const writer = new BinaryWriter();
 		TurnDetectionPipecatSmartTurnOptions.serializeBinaryToWriter(this, writer);
@@ -5237,7 +5265,8 @@ var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOp
 			tritonServerHost: this.tritonServerHost,
 			tritonServerPort: this.tritonServerPort,
 			maxAudioSeconds: this.maxAudioSeconds,
-			timeoutSeconds: this.timeoutSeconds
+			timeoutSeconds: this.timeoutSeconds,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
 		};
 	}
 	toJSON() {
@@ -5249,7 +5278,8 @@ var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOp
 			tritonServerHost: this.tritonServerHost,
 			tritonServerPort: this.tritonServerPort,
 			maxAudioSeconds: this.maxAudioSeconds,
-			timeoutSeconds: this.timeoutSeconds
+			timeoutSeconds: this.timeoutSeconds,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
 		};
 	}
 };

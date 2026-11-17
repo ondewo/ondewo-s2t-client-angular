@@ -4113,6 +4113,7 @@ export declare class TurnDetectionOndewoDeOptions implements GrpcMessage {
    */
   static serializeBinaryToWriter(_instance: TurnDetectionOndewoDeOptions, _writer: BinaryWriter): void;
   private _openaiLlmOptions?;
+  private _endOfTurnProbabilityThreshold;
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
    * @param _value initial values object or instance of TurnDetectionOndewoDeOptions to deeply clone from
@@ -4120,6 +4121,8 @@ export declare class TurnDetectionOndewoDeOptions implements GrpcMessage {
   constructor(_value?: RecursivePartial<TurnDetectionOndewoDeOptions.AsObject>);
   get openaiLlmOptions(): OpenaiLlmOptions | undefined;
   set openaiLlmOptions(value: OpenaiLlmOptions | undefined);
+  get endOfTurnProbabilityThreshold(): number;
+  set endOfTurnProbabilityThreshold(value: number);
   /**
    * Serialize message to binary data
    * @param instance message instance
@@ -4146,12 +4149,14 @@ export declare namespace TurnDetectionOndewoDeOptions {
    */
   interface AsObject {
     openaiLlmOptions?: OpenaiLlmOptions.AsObject;
+    endOfTurnProbabilityThreshold: number;
   }
   /**
    * Protobuf JSON representation for TurnDetectionOndewoDeOptions
    */
   interface AsProtobufJSON {
     openaiLlmOptions: OpenaiLlmOptions.AsProtobufJSON | null;
+    endOfTurnProbabilityThreshold: number;
   }
 }
 /**
@@ -4260,6 +4265,7 @@ export declare class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage
   private _tritonServerPort;
   private _maxAudioSeconds;
   private _timeoutSeconds;
+  private _endOfTurnProbabilityThreshold;
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
    * @param _value initial values object or instance of TurnDetectionPipecatSmartTurnOptions to deeply clone from
@@ -4275,6 +4281,8 @@ export declare class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage
   set maxAudioSeconds(value: number);
   get timeoutSeconds(): number;
   set timeoutSeconds(value: number);
+  get endOfTurnProbabilityThreshold(): number;
+  set endOfTurnProbabilityThreshold(value: number);
   /**
    * Serialize message to binary data
    * @param instance message instance
@@ -4305,6 +4313,7 @@ export declare namespace TurnDetectionPipecatSmartTurnOptions {
     tritonServerPort: string;
     maxAudioSeconds: number;
     timeoutSeconds: number;
+    endOfTurnProbabilityThreshold: number;
   }
   /**
    * Protobuf JSON representation for TurnDetectionPipecatSmartTurnOptions
@@ -4315,6 +4324,7 @@ export declare namespace TurnDetectionPipecatSmartTurnOptions {
     tritonServerPort: string;
     maxAudioSeconds: number;
     timeoutSeconds: number;
+    endOfTurnProbabilityThreshold: number;
   }
 }
 /**

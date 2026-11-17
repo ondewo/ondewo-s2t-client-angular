@@ -10459,6 +10459,9 @@ export class TurnDetectionOndewoDeOptions implements GrpcMessage {
             OpenaiLlmOptions.deserializeBinaryFromReader
           );
           break;
+        case 2:
+          _instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+          break;
         default:
           _reader.skipField();
       }
@@ -10483,9 +10486,16 @@ export class TurnDetectionOndewoDeOptions implements GrpcMessage {
         OpenaiLlmOptions.serializeBinaryToWriter
       );
     }
+    if (
+      _instance.endOfTurnProbabilityThreshold !== undefined &&
+      _instance.endOfTurnProbabilityThreshold !== null
+    ) {
+      _writer.writeFloat(2, _instance.endOfTurnProbabilityThreshold);
+    }
   }
 
   private _openaiLlmOptions?: OpenaiLlmOptions;
+  private _endOfTurnProbabilityThreshold: number;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -10498,6 +10508,7 @@ export class TurnDetectionOndewoDeOptions implements GrpcMessage {
     this.openaiLlmOptions = _value.openaiLlmOptions
       ? new OpenaiLlmOptions(_value.openaiLlmOptions)
       : undefined;
+    this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
     TurnDetectionOndewoDeOptions.refineValues(this);
   }
   get openaiLlmOptions(): OpenaiLlmOptions | undefined {
@@ -10505,6 +10516,12 @@ export class TurnDetectionOndewoDeOptions implements GrpcMessage {
   }
   set openaiLlmOptions(value: OpenaiLlmOptions | undefined) {
     this._openaiLlmOptions = value;
+  }
+  get endOfTurnProbabilityThreshold(): number {
+    return this._endOfTurnProbabilityThreshold;
+  }
+  set endOfTurnProbabilityThreshold(value: number) {
+    this._endOfTurnProbabilityThreshold = value;
   }
 
   /**
@@ -10524,7 +10541,8 @@ export class TurnDetectionOndewoDeOptions implements GrpcMessage {
     return {
       openaiLlmOptions: this.openaiLlmOptions
         ? this.openaiLlmOptions.toObject()
-        : undefined
+        : undefined,
+      endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
     };
   }
 
@@ -10547,7 +10565,8 @@ export class TurnDetectionOndewoDeOptions implements GrpcMessage {
     return {
       openaiLlmOptions: this.openaiLlmOptions
         ? this.openaiLlmOptions.toProtobufJSON(options)
-        : null
+        : null,
+      endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
     };
   }
 }
@@ -10557,6 +10576,7 @@ export module TurnDetectionOndewoDeOptions {
    */
   export interface AsObject {
     openaiLlmOptions?: OpenaiLlmOptions.AsObject;
+    endOfTurnProbabilityThreshold: number;
   }
 
   /**
@@ -10564,6 +10584,7 @@ export module TurnDetectionOndewoDeOptions {
    */
   export interface AsProtobufJSON {
     openaiLlmOptions: OpenaiLlmOptions.AsProtobufJSON | null;
+    endOfTurnProbabilityThreshold: number;
   }
 }
 
@@ -10797,6 +10818,9 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
         case 5:
           _instance.timeoutSeconds = _reader.readFloat();
           break;
+        case 6:
+          _instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+          break;
         default:
           _reader.skipField();
       }
@@ -10841,6 +10865,12 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
     ) {
       _writer.writeFloat(5, _instance.timeoutSeconds);
     }
+    if (
+      _instance.endOfTurnProbabilityThreshold !== undefined &&
+      _instance.endOfTurnProbabilityThreshold !== null
+    ) {
+      _writer.writeFloat(6, _instance.endOfTurnProbabilityThreshold);
+    }
   }
 
   private _modelName: string;
@@ -10848,6 +10878,7 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
   private _tritonServerPort: string;
   private _maxAudioSeconds: number;
   private _timeoutSeconds: number;
+  private _endOfTurnProbabilityThreshold: number;
 
   /**
    * Message constructor. Initializes the properties and applies default Protobuf values if necessary
@@ -10862,6 +10893,7 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
     this.tritonServerPort = _value.tritonServerPort;
     this.maxAudioSeconds = _value.maxAudioSeconds;
     this.timeoutSeconds = _value.timeoutSeconds;
+    this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
     TurnDetectionPipecatSmartTurnOptions.refineValues(this);
   }
   get modelName(): string {
@@ -10894,6 +10926,12 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
   set timeoutSeconds(value: number) {
     this._timeoutSeconds = value;
   }
+  get endOfTurnProbabilityThreshold(): number {
+    return this._endOfTurnProbabilityThreshold;
+  }
+  set endOfTurnProbabilityThreshold(value: number) {
+    this._endOfTurnProbabilityThreshold = value;
+  }
 
   /**
    * Serialize message to binary data
@@ -10914,7 +10952,8 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
       tritonServerHost: this.tritonServerHost,
       tritonServerPort: this.tritonServerPort,
       maxAudioSeconds: this.maxAudioSeconds,
-      timeoutSeconds: this.timeoutSeconds
+      timeoutSeconds: this.timeoutSeconds,
+      endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
     };
   }
 
@@ -10939,7 +10978,8 @@ export class TurnDetectionPipecatSmartTurnOptions implements GrpcMessage {
       tritonServerHost: this.tritonServerHost,
       tritonServerPort: this.tritonServerPort,
       maxAudioSeconds: this.maxAudioSeconds,
-      timeoutSeconds: this.timeoutSeconds
+      timeoutSeconds: this.timeoutSeconds,
+      endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
     };
   }
 }
@@ -10953,6 +10993,7 @@ export module TurnDetectionPipecatSmartTurnOptions {
     tritonServerPort: string;
     maxAudioSeconds: number;
     timeoutSeconds: number;
+    endOfTurnProbabilityThreshold: number;
   }
 
   /**
@@ -10964,6 +11005,7 @@ export module TurnDetectionPipecatSmartTurnOptions {
     tritonServerPort: string;
     maxAudioSeconds: number;
     timeoutSeconds: number;
+    endOfTurnProbabilityThreshold: number;
   }
 }
 
