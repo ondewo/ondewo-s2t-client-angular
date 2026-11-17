@@ -4594,8 +4594,7 @@ var TurnDetectionOptions = class TurnDetectionOptions {
 	}
 	static refineValues(_instance) {
 		_instance.turnDetectionLlmOpenaiOptions = _instance.turnDetectionLlmOpenaiOptions || void 0;
-		_instance.conversationContext = _instance.conversationContext || void 0;
-		_instance.holdBands = _instance.holdBands || void 0;
+		_instance.turnDetectionConversationContext = _instance.turnDetectionConversationContext || void 0;
 	}
 	static deserializeBinaryFromReader(_instance, _reader) {
 		while (_reader.nextField()) {
@@ -4618,39 +4617,31 @@ var TurnDetectionOptions = class TurnDetectionOptions {
 					_reader.readMessage(_instance.turnDetectionLlmOpenaiOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
 					break;
 				case 6:
-					_instance.conversationContext = new TurnDetectionConversationContext();
-					_reader.readMessage(_instance.conversationContext, TurnDetectionConversationContext.deserializeBinaryFromReader);
-					break;
-				case 7:
-					_instance.endOfTurnProbabilityThreshold = _reader.readFloat();
-					break;
-				case 8:
-					_instance.holdBands = new TurnDetectionHoldBands();
-					_reader.readMessage(_instance.holdBands, TurnDetectionHoldBands.deserializeBinaryFromReader);
-					break;
-				case 9:
-					_instance.uncertainMinWords = _reader.readUint32();
-					break;
-				case 10:
 					_instance.incompleteMaxSilenceSeconds = _reader.readFloat();
 					break;
+				case 7:
+					_instance.turnDetectionConversationContext = new TurnDetectionConversationContext();
+					_reader.readMessage(_instance.turnDetectionConversationContext, TurnDetectionConversationContext.deserializeBinaryFromReader);
+					break;
+				case 8:
+					_instance.turnDetectionChatLlmOptions = new TurnDetectionChatLlmOptions();
+					_reader.readMessage(_instance.turnDetectionChatLlmOptions, TurnDetectionChatLlmOptions.deserializeBinaryFromReader);
+					break;
+				case 9:
+					_instance.turnDetectionEndOfUtteranceLlmOptions = new TurnDetectionEndOfUtteranceLlmOptions();
+					_reader.readMessage(_instance.turnDetectionEndOfUtteranceLlmOptions, TurnDetectionEndOfUtteranceLlmOptions.deserializeBinaryFromReader);
+					break;
+				case 10:
+					_instance.turnDetectionOndewoDeOptions = new TurnDetectionOndewoDeOptions();
+					_reader.readMessage(_instance.turnDetectionOndewoDeOptions, TurnDetectionOndewoDeOptions.deserializeBinaryFromReader);
+					break;
 				case 11:
-					_instance.exactProbability = _reader.readBool();
+					_instance.turnDetectionOndewoDeFusionOptions = new TurnDetectionOndewoDeFusionOptions();
+					_reader.readMessage(_instance.turnDetectionOndewoDeFusionOptions, TurnDetectionOndewoDeFusionOptions.deserializeBinaryFromReader);
 					break;
 				case 12:
-					_instance.pipecatTritonModelName = _reader.readString();
-					break;
-				case 13:
-					_instance.pipecatTritonServerHost = _reader.readString();
-					break;
-				case 14:
-					_instance.pipecatTritonServerPort = _reader.readInt64String();
-					break;
-				case 15:
-					_instance.pipecatMaxAudioSeconds = _reader.readFloat();
-					break;
-				case 16:
-					_instance.pipecatTimeoutSeconds = _reader.readFloat();
+					_instance.turnDetectionPipecatSmartTurnOptions = new TurnDetectionPipecatSmartTurnOptions();
+					_reader.readMessage(_instance.turnDetectionPipecatSmartTurnOptions, TurnDetectionPipecatSmartTurnOptions.deserializeBinaryFromReader);
 					break;
 				default: _reader.skipField();
 			}
@@ -4663,36 +4654,29 @@ var TurnDetectionOptions = class TurnDetectionOptions {
 		if (_instance.turnDetectionSystemPrompt !== void 0 && _instance.turnDetectionSystemPrompt !== null) _writer.writeString(3, _instance.turnDetectionSystemPrompt);
 		if (_instance.turnDetectionUserPrompt !== void 0 && _instance.turnDetectionUserPrompt !== null) _writer.writeString(4, _instance.turnDetectionUserPrompt);
 		if (_instance.turnDetectionLlmOpenaiOptions) _writer.writeMessage(5, _instance.turnDetectionLlmOpenaiOptions, OpenaiLlmOptions.serializeBinaryToWriter);
-		if (_instance.conversationContext) _writer.writeMessage(6, _instance.conversationContext, TurnDetectionConversationContext.serializeBinaryToWriter);
-		if (_instance.endOfTurnProbabilityThreshold !== void 0 && _instance.endOfTurnProbabilityThreshold !== null) _writer.writeFloat(7, _instance.endOfTurnProbabilityThreshold);
-		if (_instance.holdBands) _writer.writeMessage(8, _instance.holdBands, TurnDetectionHoldBands.serializeBinaryToWriter);
-		if (_instance.uncertainMinWords !== void 0 && _instance.uncertainMinWords !== null) _writer.writeUint32(9, _instance.uncertainMinWords);
-		if (_instance.incompleteMaxSilenceSeconds !== void 0 && _instance.incompleteMaxSilenceSeconds !== null) _writer.writeFloat(10, _instance.incompleteMaxSilenceSeconds);
-		if (_instance.exactProbability !== void 0 && _instance.exactProbability !== null) _writer.writeBool(11, _instance.exactProbability);
-		if (_instance.pipecatTritonModelName !== void 0 && _instance.pipecatTritonModelName !== null) _writer.writeString(12, _instance.pipecatTritonModelName);
-		if (_instance.pipecatTritonServerHost !== void 0 && _instance.pipecatTritonServerHost !== null) _writer.writeString(13, _instance.pipecatTritonServerHost);
-		if (_instance.pipecatTritonServerPort !== void 0 && _instance.pipecatTritonServerPort !== null) _writer.writeInt64String(14, _instance.pipecatTritonServerPort);
-		if (_instance.pipecatMaxAudioSeconds !== void 0 && _instance.pipecatMaxAudioSeconds !== null) _writer.writeFloat(15, _instance.pipecatMaxAudioSeconds);
-		if (_instance.pipecatTimeoutSeconds !== void 0 && _instance.pipecatTimeoutSeconds !== null) _writer.writeFloat(16, _instance.pipecatTimeoutSeconds);
+		if (_instance.incompleteMaxSilenceSeconds !== void 0 && _instance.incompleteMaxSilenceSeconds !== null) _writer.writeFloat(6, _instance.incompleteMaxSilenceSeconds);
+		if (_instance.turnDetectionConversationContext) _writer.writeMessage(7, _instance.turnDetectionConversationContext, TurnDetectionConversationContext.serializeBinaryToWriter);
+		if (_instance.turnDetectionChatLlmOptions) _writer.writeMessage(8, _instance.turnDetectionChatLlmOptions, TurnDetectionChatLlmOptions.serializeBinaryToWriter);
+		if (_instance.turnDetectionEndOfUtteranceLlmOptions) _writer.writeMessage(9, _instance.turnDetectionEndOfUtteranceLlmOptions, TurnDetectionEndOfUtteranceLlmOptions.serializeBinaryToWriter);
+		if (_instance.turnDetectionOndewoDeOptions) _writer.writeMessage(10, _instance.turnDetectionOndewoDeOptions, TurnDetectionOndewoDeOptions.serializeBinaryToWriter);
+		if (_instance.turnDetectionOndewoDeFusionOptions) _writer.writeMessage(11, _instance.turnDetectionOndewoDeFusionOptions, TurnDetectionOndewoDeFusionOptions.serializeBinaryToWriter);
+		if (_instance.turnDetectionPipecatSmartTurnOptions) _writer.writeMessage(12, _instance.turnDetectionPipecatSmartTurnOptions, TurnDetectionPipecatSmartTurnOptions.serializeBinaryToWriter);
 	}
 	constructor(_value) {
+		this._oneofTurnDetector = TurnDetectionOptions.OneofTurnDetectorCase.none;
 		_value = _value || {};
 		this.active = _value.active;
 		this.fullUtteranceDeployment = _value.fullUtteranceDeployment;
 		this.turnDetectionSystemPrompt = _value.turnDetectionSystemPrompt;
 		this.turnDetectionUserPrompt = _value.turnDetectionUserPrompt;
 		this.turnDetectionLlmOpenaiOptions = _value.turnDetectionLlmOpenaiOptions ? new OpenaiLlmOptions(_value.turnDetectionLlmOpenaiOptions) : void 0;
-		this.conversationContext = _value.conversationContext ? new TurnDetectionConversationContext(_value.conversationContext) : void 0;
-		this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
-		this.holdBands = _value.holdBands ? new TurnDetectionHoldBands(_value.holdBands) : void 0;
-		this.uncertainMinWords = _value.uncertainMinWords;
 		this.incompleteMaxSilenceSeconds = _value.incompleteMaxSilenceSeconds;
-		this.exactProbability = _value.exactProbability;
-		this.pipecatTritonModelName = _value.pipecatTritonModelName;
-		this.pipecatTritonServerHost = _value.pipecatTritonServerHost;
-		this.pipecatTritonServerPort = _value.pipecatTritonServerPort;
-		this.pipecatMaxAudioSeconds = _value.pipecatMaxAudioSeconds;
-		this.pipecatTimeoutSeconds = _value.pipecatTimeoutSeconds;
+		this.turnDetectionConversationContext = _value.turnDetectionConversationContext ? new TurnDetectionConversationContext(_value.turnDetectionConversationContext) : void 0;
+		this.turnDetectionChatLlmOptions = _value.turnDetectionChatLlmOptions ? new TurnDetectionChatLlmOptions(_value.turnDetectionChatLlmOptions) : void 0;
+		this.turnDetectionEndOfUtteranceLlmOptions = _value.turnDetectionEndOfUtteranceLlmOptions ? new TurnDetectionEndOfUtteranceLlmOptions(_value.turnDetectionEndOfUtteranceLlmOptions) : void 0;
+		this.turnDetectionOndewoDeOptions = _value.turnDetectionOndewoDeOptions ? new TurnDetectionOndewoDeOptions(_value.turnDetectionOndewoDeOptions) : void 0;
+		this.turnDetectionOndewoDeFusionOptions = _value.turnDetectionOndewoDeFusionOptions ? new TurnDetectionOndewoDeFusionOptions(_value.turnDetectionOndewoDeFusionOptions) : void 0;
+		this.turnDetectionPipecatSmartTurnOptions = _value.turnDetectionPipecatSmartTurnOptions ? new TurnDetectionPipecatSmartTurnOptions(_value.turnDetectionPipecatSmartTurnOptions) : void 0;
 		TurnDetectionOptions.refineValues(this);
 	}
 	get active() {
@@ -4725,71 +4709,70 @@ var TurnDetectionOptions = class TurnDetectionOptions {
 	set turnDetectionLlmOpenaiOptions(value) {
 		this._turnDetectionLlmOpenaiOptions = value;
 	}
-	get conversationContext() {
-		return this._conversationContext;
-	}
-	set conversationContext(value) {
-		this._conversationContext = value;
-	}
-	get endOfTurnProbabilityThreshold() {
-		return this._endOfTurnProbabilityThreshold;
-	}
-	set endOfTurnProbabilityThreshold(value) {
-		this._endOfTurnProbabilityThreshold = value;
-	}
-	get holdBands() {
-		return this._holdBands;
-	}
-	set holdBands(value) {
-		this._holdBands = value;
-	}
-	get uncertainMinWords() {
-		return this._uncertainMinWords;
-	}
-	set uncertainMinWords(value) {
-		this._uncertainMinWords = value;
-	}
 	get incompleteMaxSilenceSeconds() {
 		return this._incompleteMaxSilenceSeconds;
 	}
 	set incompleteMaxSilenceSeconds(value) {
 		this._incompleteMaxSilenceSeconds = value;
 	}
-	get exactProbability() {
-		return this._exactProbability;
+	get turnDetectionConversationContext() {
+		return this._turnDetectionConversationContext;
 	}
-	set exactProbability(value) {
-		this._exactProbability = value;
+	set turnDetectionConversationContext(value) {
+		this._turnDetectionConversationContext = value;
 	}
-	get pipecatTritonModelName() {
-		return this._pipecatTritonModelName;
+	get turnDetectionChatLlmOptions() {
+		return this._turnDetectionChatLlmOptions;
 	}
-	set pipecatTritonModelName(value) {
-		this._pipecatTritonModelName = value;
+	set turnDetectionChatLlmOptions(value) {
+		if (value !== void 0 && value !== null) {
+			this._turnDetectionEndOfUtteranceLlmOptions = this._turnDetectionOndewoDeOptions = this._turnDetectionOndewoDeFusionOptions = this._turnDetectionPipecatSmartTurnOptions = void 0;
+			this._oneofTurnDetector = TurnDetectionOptions.OneofTurnDetectorCase.turnDetectionChatLlmOptions;
+		}
+		this._turnDetectionChatLlmOptions = value;
 	}
-	get pipecatTritonServerHost() {
-		return this._pipecatTritonServerHost;
+	get turnDetectionEndOfUtteranceLlmOptions() {
+		return this._turnDetectionEndOfUtteranceLlmOptions;
 	}
-	set pipecatTritonServerHost(value) {
-		this._pipecatTritonServerHost = value;
+	set turnDetectionEndOfUtteranceLlmOptions(value) {
+		if (value !== void 0 && value !== null) {
+			this._turnDetectionChatLlmOptions = this._turnDetectionOndewoDeOptions = this._turnDetectionOndewoDeFusionOptions = this._turnDetectionPipecatSmartTurnOptions = void 0;
+			this._oneofTurnDetector = TurnDetectionOptions.OneofTurnDetectorCase.turnDetectionEndOfUtteranceLlmOptions;
+		}
+		this._turnDetectionEndOfUtteranceLlmOptions = value;
 	}
-	get pipecatTritonServerPort() {
-		return this._pipecatTritonServerPort;
+	get turnDetectionOndewoDeOptions() {
+		return this._turnDetectionOndewoDeOptions;
 	}
-	set pipecatTritonServerPort(value) {
-		this._pipecatTritonServerPort = value;
+	set turnDetectionOndewoDeOptions(value) {
+		if (value !== void 0 && value !== null) {
+			this._turnDetectionChatLlmOptions = this._turnDetectionEndOfUtteranceLlmOptions = this._turnDetectionOndewoDeFusionOptions = this._turnDetectionPipecatSmartTurnOptions = void 0;
+			this._oneofTurnDetector = TurnDetectionOptions.OneofTurnDetectorCase.turnDetectionOndewoDeOptions;
+		}
+		this._turnDetectionOndewoDeOptions = value;
 	}
-	get pipecatMaxAudioSeconds() {
-		return this._pipecatMaxAudioSeconds;
+	get turnDetectionOndewoDeFusionOptions() {
+		return this._turnDetectionOndewoDeFusionOptions;
 	}
-	set pipecatMaxAudioSeconds(value) {
-		this._pipecatMaxAudioSeconds = value;
+	set turnDetectionOndewoDeFusionOptions(value) {
+		if (value !== void 0 && value !== null) {
+			this._turnDetectionChatLlmOptions = this._turnDetectionEndOfUtteranceLlmOptions = this._turnDetectionOndewoDeOptions = this._turnDetectionPipecatSmartTurnOptions = void 0;
+			this._oneofTurnDetector = TurnDetectionOptions.OneofTurnDetectorCase.turnDetectionOndewoDeFusionOptions;
+		}
+		this._turnDetectionOndewoDeFusionOptions = value;
 	}
-	get pipecatTimeoutSeconds() {
-		return this._pipecatTimeoutSeconds;
+	get turnDetectionPipecatSmartTurnOptions() {
+		return this._turnDetectionPipecatSmartTurnOptions;
 	}
-	set pipecatTimeoutSeconds(value) {
-		this._pipecatTimeoutSeconds = value;
+	set turnDetectionPipecatSmartTurnOptions(value) {
+		if (value !== void 0 && value !== null) {
+			this._turnDetectionChatLlmOptions = this._turnDetectionEndOfUtteranceLlmOptions = this._turnDetectionOndewoDeOptions = this._turnDetectionOndewoDeFusionOptions = void 0;
+			this._oneofTurnDetector = TurnDetectionOptions.OneofTurnDetectorCase.turnDetectionPipecatSmartTurnOptions;
+		}
+		this._turnDetectionPipecatSmartTurnOptions = value;
+	}
+	get oneofTurnDetector() {
+		return this._oneofTurnDetector;
 	}
 	serializeBinary() {
 		const writer = new BinaryWriter();
@@ -4803,17 +4786,13 @@ var TurnDetectionOptions = class TurnDetectionOptions {
 			turnDetectionSystemPrompt: this.turnDetectionSystemPrompt,
 			turnDetectionUserPrompt: this.turnDetectionUserPrompt,
 			turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions ? this.turnDetectionLlmOpenaiOptions.toObject() : void 0,
-			conversationContext: this.conversationContext ? this.conversationContext.toObject() : void 0,
-			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold,
-			holdBands: this.holdBands ? this.holdBands.toObject() : void 0,
-			uncertainMinWords: this.uncertainMinWords,
 			incompleteMaxSilenceSeconds: this.incompleteMaxSilenceSeconds,
-			exactProbability: this.exactProbability,
-			pipecatTritonModelName: this.pipecatTritonModelName,
-			pipecatTritonServerHost: this.pipecatTritonServerHost,
-			pipecatTritonServerPort: this.pipecatTritonServerPort,
-			pipecatMaxAudioSeconds: this.pipecatMaxAudioSeconds,
-			pipecatTimeoutSeconds: this.pipecatTimeoutSeconds
+			turnDetectionConversationContext: this.turnDetectionConversationContext ? this.turnDetectionConversationContext.toObject() : void 0,
+			turnDetectionChatLlmOptions: this.turnDetectionChatLlmOptions ? this.turnDetectionChatLlmOptions.toObject() : void 0,
+			turnDetectionEndOfUtteranceLlmOptions: this.turnDetectionEndOfUtteranceLlmOptions ? this.turnDetectionEndOfUtteranceLlmOptions.toObject() : void 0,
+			turnDetectionOndewoDeOptions: this.turnDetectionOndewoDeOptions ? this.turnDetectionOndewoDeOptions.toObject() : void 0,
+			turnDetectionOndewoDeFusionOptions: this.turnDetectionOndewoDeFusionOptions ? this.turnDetectionOndewoDeFusionOptions.toObject() : void 0,
+			turnDetectionPipecatSmartTurnOptions: this.turnDetectionPipecatSmartTurnOptions ? this.turnDetectionPipecatSmartTurnOptions.toObject() : void 0
 		};
 	}
 	toJSON() {
@@ -4826,17 +4805,451 @@ var TurnDetectionOptions = class TurnDetectionOptions {
 			turnDetectionSystemPrompt: this.turnDetectionSystemPrompt,
 			turnDetectionUserPrompt: this.turnDetectionUserPrompt,
 			turnDetectionLlmOpenaiOptions: this.turnDetectionLlmOpenaiOptions ? this.turnDetectionLlmOpenaiOptions.toProtobufJSON(options) : null,
-			conversationContext: this.conversationContext ? this.conversationContext.toProtobufJSON(options) : null,
-			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold,
-			holdBands: this.holdBands ? this.holdBands.toProtobufJSON(options) : null,
-			uncertainMinWords: this.uncertainMinWords,
 			incompleteMaxSilenceSeconds: this.incompleteMaxSilenceSeconds,
-			exactProbability: this.exactProbability,
-			pipecatTritonModelName: this.pipecatTritonModelName,
-			pipecatTritonServerHost: this.pipecatTritonServerHost,
-			pipecatTritonServerPort: this.pipecatTritonServerPort,
-			pipecatMaxAudioSeconds: this.pipecatMaxAudioSeconds,
-			pipecatTimeoutSeconds: this.pipecatTimeoutSeconds
+			turnDetectionConversationContext: this.turnDetectionConversationContext ? this.turnDetectionConversationContext.toProtobufJSON(options) : null,
+			turnDetectionChatLlmOptions: this.turnDetectionChatLlmOptions ? this.turnDetectionChatLlmOptions.toProtobufJSON(options) : null,
+			turnDetectionEndOfUtteranceLlmOptions: this.turnDetectionEndOfUtteranceLlmOptions ? this.turnDetectionEndOfUtteranceLlmOptions.toProtobufJSON(options) : null,
+			turnDetectionOndewoDeOptions: this.turnDetectionOndewoDeOptions ? this.turnDetectionOndewoDeOptions.toProtobufJSON(options) : null,
+			turnDetectionOndewoDeFusionOptions: this.turnDetectionOndewoDeFusionOptions ? this.turnDetectionOndewoDeFusionOptions.toProtobufJSON(options) : null,
+			turnDetectionPipecatSmartTurnOptions: this.turnDetectionPipecatSmartTurnOptions ? this.turnDetectionPipecatSmartTurnOptions.toProtobufJSON(options) : null
+		};
+	}
+};
+(function(TurnDetectionOptions) {
+	(function(OneofTurnDetectorCase) {
+		OneofTurnDetectorCase[OneofTurnDetectorCase["none"] = 0] = "none";
+		OneofTurnDetectorCase[OneofTurnDetectorCase["turnDetectionChatLlmOptions"] = 1] = "turnDetectionChatLlmOptions";
+		OneofTurnDetectorCase[OneofTurnDetectorCase["turnDetectionEndOfUtteranceLlmOptions"] = 2] = "turnDetectionEndOfUtteranceLlmOptions";
+		OneofTurnDetectorCase[OneofTurnDetectorCase["turnDetectionOndewoDeOptions"] = 3] = "turnDetectionOndewoDeOptions";
+		OneofTurnDetectorCase[OneofTurnDetectorCase["turnDetectionOndewoDeFusionOptions"] = 4] = "turnDetectionOndewoDeFusionOptions";
+		OneofTurnDetectorCase[OneofTurnDetectorCase["turnDetectionPipecatSmartTurnOptions"] = 5] = "turnDetectionPipecatSmartTurnOptions";
+	})(TurnDetectionOptions.OneofTurnDetectorCase || (TurnDetectionOptions.OneofTurnDetectorCase = {}));
+})(TurnDetectionOptions || (TurnDetectionOptions = {}));
+var TurnDetectionChatLlmOptions = class TurnDetectionChatLlmOptions {
+	static {
+		this.id = "ondewo.s2t.TurnDetectionChatLlmOptions";
+	}
+	static deserializeBinary(bytes) {
+		const instance = new TurnDetectionChatLlmOptions();
+		TurnDetectionChatLlmOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	static refineValues(_instance) {
+		_instance.openaiLlmOptions = _instance.openaiLlmOptions || void 0;
+	}
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.openaiLlmOptions = new OpenaiLlmOptions();
+					_reader.readMessage(_instance.openaiLlmOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
+					break;
+				case 2:
+					_instance.systemPrompt = _reader.readString();
+					break;
+				case 3:
+					_instance.userPrompt = _reader.readString();
+					break;
+				default: _reader.skipField();
+			}
+		}
+		TurnDetectionChatLlmOptions.refineValues(_instance);
+	}
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.openaiLlmOptions) _writer.writeMessage(1, _instance.openaiLlmOptions, OpenaiLlmOptions.serializeBinaryToWriter);
+		if (_instance.systemPrompt !== void 0 && _instance.systemPrompt !== null) _writer.writeString(2, _instance.systemPrompt);
+		if (_instance.userPrompt !== void 0 && _instance.userPrompt !== null) _writer.writeString(3, _instance.userPrompt);
+	}
+	constructor(_value) {
+		_value = _value || {};
+		this.openaiLlmOptions = _value.openaiLlmOptions ? new OpenaiLlmOptions(_value.openaiLlmOptions) : void 0;
+		this.systemPrompt = _value.systemPrompt;
+		this.userPrompt = _value.userPrompt;
+		TurnDetectionChatLlmOptions.refineValues(this);
+	}
+	get openaiLlmOptions() {
+		return this._openaiLlmOptions;
+	}
+	set openaiLlmOptions(value) {
+		this._openaiLlmOptions = value;
+	}
+	get systemPrompt() {
+		return this._systemPrompt;
+	}
+	set systemPrompt(value) {
+		this._systemPrompt = value;
+	}
+	get userPrompt() {
+		return this._userPrompt;
+	}
+	set userPrompt(value) {
+		this._userPrompt = value;
+	}
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		TurnDetectionChatLlmOptions.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	toObject() {
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toObject() : void 0,
+			systemPrompt: this.systemPrompt,
+			userPrompt: this.userPrompt
+		};
+	}
+	toJSON() {
+		return this.toObject();
+	}
+	toProtobufJSON(options) {
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toProtobufJSON(options) : null,
+			systemPrompt: this.systemPrompt,
+			userPrompt: this.userPrompt
+		};
+	}
+};
+var TurnDetectionEndOfUtteranceLlmOptions = class TurnDetectionEndOfUtteranceLlmOptions {
+	static {
+		this.id = "ondewo.s2t.TurnDetectionEndOfUtteranceLlmOptions";
+	}
+	static deserializeBinary(bytes) {
+		const instance = new TurnDetectionEndOfUtteranceLlmOptions();
+		TurnDetectionEndOfUtteranceLlmOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	static refineValues(_instance) {
+		_instance.openaiLlmOptions = _instance.openaiLlmOptions || void 0;
+		_instance.turnDetectionHoldBands = _instance.turnDetectionHoldBands || void 0;
+	}
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.openaiLlmOptions = new OpenaiLlmOptions();
+					_reader.readMessage(_instance.openaiLlmOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
+					break;
+				case 2:
+					_instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+					break;
+				case 3:
+					_instance.turnDetectionHoldBands = new TurnDetectionHoldBands();
+					_reader.readMessage(_instance.turnDetectionHoldBands, TurnDetectionHoldBands.deserializeBinaryFromReader);
+					break;
+				case 4:
+					_instance.uncertainMinWords = _reader.readUint32();
+					break;
+				case 5:
+					_instance.exactProbability = _reader.readBool();
+					break;
+				default: _reader.skipField();
+			}
+		}
+		TurnDetectionEndOfUtteranceLlmOptions.refineValues(_instance);
+	}
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.openaiLlmOptions) _writer.writeMessage(1, _instance.openaiLlmOptions, OpenaiLlmOptions.serializeBinaryToWriter);
+		if (_instance.endOfTurnProbabilityThreshold !== void 0 && _instance.endOfTurnProbabilityThreshold !== null) _writer.writeFloat(2, _instance.endOfTurnProbabilityThreshold);
+		if (_instance.turnDetectionHoldBands) _writer.writeMessage(3, _instance.turnDetectionHoldBands, TurnDetectionHoldBands.serializeBinaryToWriter);
+		if (_instance.uncertainMinWords !== void 0 && _instance.uncertainMinWords !== null) _writer.writeUint32(4, _instance.uncertainMinWords);
+		if (_instance.exactProbability !== void 0 && _instance.exactProbability !== null) _writer.writeBool(5, _instance.exactProbability);
+	}
+	constructor(_value) {
+		_value = _value || {};
+		this.openaiLlmOptions = _value.openaiLlmOptions ? new OpenaiLlmOptions(_value.openaiLlmOptions) : void 0;
+		this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
+		this.turnDetectionHoldBands = _value.turnDetectionHoldBands ? new TurnDetectionHoldBands(_value.turnDetectionHoldBands) : void 0;
+		this.uncertainMinWords = _value.uncertainMinWords;
+		this.exactProbability = _value.exactProbability;
+		TurnDetectionEndOfUtteranceLlmOptions.refineValues(this);
+	}
+	get openaiLlmOptions() {
+		return this._openaiLlmOptions;
+	}
+	set openaiLlmOptions(value) {
+		this._openaiLlmOptions = value;
+	}
+	get endOfTurnProbabilityThreshold() {
+		return this._endOfTurnProbabilityThreshold;
+	}
+	set endOfTurnProbabilityThreshold(value) {
+		this._endOfTurnProbabilityThreshold = value;
+	}
+	get turnDetectionHoldBands() {
+		return this._turnDetectionHoldBands;
+	}
+	set turnDetectionHoldBands(value) {
+		this._turnDetectionHoldBands = value;
+	}
+	get uncertainMinWords() {
+		return this._uncertainMinWords;
+	}
+	set uncertainMinWords(value) {
+		this._uncertainMinWords = value;
+	}
+	get exactProbability() {
+		return this._exactProbability;
+	}
+	set exactProbability(value) {
+		this._exactProbability = value;
+	}
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		TurnDetectionEndOfUtteranceLlmOptions.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	toObject() {
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toObject() : void 0,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold,
+			turnDetectionHoldBands: this.turnDetectionHoldBands ? this.turnDetectionHoldBands.toObject() : void 0,
+			uncertainMinWords: this.uncertainMinWords,
+			exactProbability: this.exactProbability
+		};
+	}
+	toJSON() {
+		return this.toObject();
+	}
+	toProtobufJSON(options) {
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toProtobufJSON(options) : null,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold,
+			turnDetectionHoldBands: this.turnDetectionHoldBands ? this.turnDetectionHoldBands.toProtobufJSON(options) : null,
+			uncertainMinWords: this.uncertainMinWords,
+			exactProbability: this.exactProbability
+		};
+	}
+};
+var TurnDetectionOndewoDeOptions = class TurnDetectionOndewoDeOptions {
+	static {
+		this.id = "ondewo.s2t.TurnDetectionOndewoDeOptions";
+	}
+	static deserializeBinary(bytes) {
+		const instance = new TurnDetectionOndewoDeOptions();
+		TurnDetectionOndewoDeOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	static refineValues(_instance) {
+		_instance.openaiLlmOptions = _instance.openaiLlmOptions || void 0;
+	}
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.openaiLlmOptions = new OpenaiLlmOptions();
+					_reader.readMessage(_instance.openaiLlmOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
+					break;
+				default: _reader.skipField();
+			}
+		}
+		TurnDetectionOndewoDeOptions.refineValues(_instance);
+	}
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.openaiLlmOptions) _writer.writeMessage(1, _instance.openaiLlmOptions, OpenaiLlmOptions.serializeBinaryToWriter);
+	}
+	constructor(_value) {
+		_value = _value || {};
+		this.openaiLlmOptions = _value.openaiLlmOptions ? new OpenaiLlmOptions(_value.openaiLlmOptions) : void 0;
+		TurnDetectionOndewoDeOptions.refineValues(this);
+	}
+	get openaiLlmOptions() {
+		return this._openaiLlmOptions;
+	}
+	set openaiLlmOptions(value) {
+		this._openaiLlmOptions = value;
+	}
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		TurnDetectionOndewoDeOptions.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	toObject() {
+		return { openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toObject() : void 0 };
+	}
+	toJSON() {
+		return this.toObject();
+	}
+	toProtobufJSON(options) {
+		return { openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toProtobufJSON(options) : null };
+	}
+};
+var TurnDetectionOndewoDeFusionOptions = class TurnDetectionOndewoDeFusionOptions {
+	static {
+		this.id = "ondewo.s2t.TurnDetectionOndewoDeFusionOptions";
+	}
+	static deserializeBinary(bytes) {
+		const instance = new TurnDetectionOndewoDeFusionOptions();
+		TurnDetectionOndewoDeFusionOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	static refineValues(_instance) {
+		_instance.openaiLlmOptions = _instance.openaiLlmOptions || void 0;
+	}
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.openaiLlmOptions = new OpenaiLlmOptions();
+					_reader.readMessage(_instance.openaiLlmOptions, OpenaiLlmOptions.deserializeBinaryFromReader);
+					break;
+				case 2:
+					_instance.endOfTurnProbabilityThreshold = _reader.readFloat();
+					break;
+				default: _reader.skipField();
+			}
+		}
+		TurnDetectionOndewoDeFusionOptions.refineValues(_instance);
+	}
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.openaiLlmOptions) _writer.writeMessage(1, _instance.openaiLlmOptions, OpenaiLlmOptions.serializeBinaryToWriter);
+		if (_instance.endOfTurnProbabilityThreshold !== void 0 && _instance.endOfTurnProbabilityThreshold !== null) _writer.writeFloat(2, _instance.endOfTurnProbabilityThreshold);
+	}
+	constructor(_value) {
+		_value = _value || {};
+		this.openaiLlmOptions = _value.openaiLlmOptions ? new OpenaiLlmOptions(_value.openaiLlmOptions) : void 0;
+		this.endOfTurnProbabilityThreshold = _value.endOfTurnProbabilityThreshold;
+		TurnDetectionOndewoDeFusionOptions.refineValues(this);
+	}
+	get openaiLlmOptions() {
+		return this._openaiLlmOptions;
+	}
+	set openaiLlmOptions(value) {
+		this._openaiLlmOptions = value;
+	}
+	get endOfTurnProbabilityThreshold() {
+		return this._endOfTurnProbabilityThreshold;
+	}
+	set endOfTurnProbabilityThreshold(value) {
+		this._endOfTurnProbabilityThreshold = value;
+	}
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		TurnDetectionOndewoDeFusionOptions.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	toObject() {
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toObject() : void 0,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
+		};
+	}
+	toJSON() {
+		return this.toObject();
+	}
+	toProtobufJSON(options) {
+		return {
+			openaiLlmOptions: this.openaiLlmOptions ? this.openaiLlmOptions.toProtobufJSON(options) : null,
+			endOfTurnProbabilityThreshold: this.endOfTurnProbabilityThreshold
+		};
+	}
+};
+var TurnDetectionPipecatSmartTurnOptions = class TurnDetectionPipecatSmartTurnOptions {
+	static {
+		this.id = "ondewo.s2t.TurnDetectionPipecatSmartTurnOptions";
+	}
+	static deserializeBinary(bytes) {
+		const instance = new TurnDetectionPipecatSmartTurnOptions();
+		TurnDetectionPipecatSmartTurnOptions.deserializeBinaryFromReader(instance, new BinaryReader(bytes));
+		return instance;
+	}
+	static refineValues(_instance) {}
+	static deserializeBinaryFromReader(_instance, _reader) {
+		while (_reader.nextField()) {
+			if (_reader.isEndGroup()) break;
+			switch (_reader.getFieldNumber()) {
+				case 1:
+					_instance.modelName = _reader.readString();
+					break;
+				case 2:
+					_instance.tritonServerHost = _reader.readString();
+					break;
+				case 3:
+					_instance.tritonServerPort = _reader.readInt64String();
+					break;
+				case 4:
+					_instance.maxAudioSeconds = _reader.readFloat();
+					break;
+				case 5:
+					_instance.timeoutSeconds = _reader.readFloat();
+					break;
+				default: _reader.skipField();
+			}
+		}
+		TurnDetectionPipecatSmartTurnOptions.refineValues(_instance);
+	}
+	static serializeBinaryToWriter(_instance, _writer) {
+		if (_instance.modelName !== void 0 && _instance.modelName !== null) _writer.writeString(1, _instance.modelName);
+		if (_instance.tritonServerHost !== void 0 && _instance.tritonServerHost !== null) _writer.writeString(2, _instance.tritonServerHost);
+		if (_instance.tritonServerPort !== void 0 && _instance.tritonServerPort !== null) _writer.writeInt64String(3, _instance.tritonServerPort);
+		if (_instance.maxAudioSeconds !== void 0 && _instance.maxAudioSeconds !== null) _writer.writeFloat(4, _instance.maxAudioSeconds);
+		if (_instance.timeoutSeconds !== void 0 && _instance.timeoutSeconds !== null) _writer.writeFloat(5, _instance.timeoutSeconds);
+	}
+	constructor(_value) {
+		_value = _value || {};
+		this.modelName = _value.modelName;
+		this.tritonServerHost = _value.tritonServerHost;
+		this.tritonServerPort = _value.tritonServerPort;
+		this.maxAudioSeconds = _value.maxAudioSeconds;
+		this.timeoutSeconds = _value.timeoutSeconds;
+		TurnDetectionPipecatSmartTurnOptions.refineValues(this);
+	}
+	get modelName() {
+		return this._modelName;
+	}
+	set modelName(value) {
+		this._modelName = value;
+	}
+	get tritonServerHost() {
+		return this._tritonServerHost;
+	}
+	set tritonServerHost(value) {
+		this._tritonServerHost = value;
+	}
+	get tritonServerPort() {
+		return this._tritonServerPort;
+	}
+	set tritonServerPort(value) {
+		this._tritonServerPort = value;
+	}
+	get maxAudioSeconds() {
+		return this._maxAudioSeconds;
+	}
+	set maxAudioSeconds(value) {
+		this._maxAudioSeconds = value;
+	}
+	get timeoutSeconds() {
+		return this._timeoutSeconds;
+	}
+	set timeoutSeconds(value) {
+		this._timeoutSeconds = value;
+	}
+	serializeBinary() {
+		const writer = new BinaryWriter();
+		TurnDetectionPipecatSmartTurnOptions.serializeBinaryToWriter(this, writer);
+		return writer.getResultBuffer();
+	}
+	toObject() {
+		return {
+			modelName: this.modelName,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort,
+			maxAudioSeconds: this.maxAudioSeconds,
+			timeoutSeconds: this.timeoutSeconds
+		};
+	}
+	toJSON() {
+		return this.toObject();
+	}
+	toProtobufJSON(options) {
+		return {
+			modelName: this.modelName,
+			tritonServerHost: this.tritonServerHost,
+			tritonServerPort: this.tritonServerPort,
+			maxAudioSeconds: this.maxAudioSeconds,
+			timeoutSeconds: this.timeoutSeconds
 		};
 	}
 };
@@ -4850,7 +5263,7 @@ var TurnDetectionConversationContext = class TurnDetectionConversationContext {
 		return instance;
 	}
 	static refineValues(_instance) {
-		_instance.turns = _instance.turns || [];
+		_instance.turnDetectionContextTurns = _instance.turnDetectionContextTurns || [];
 	}
 	static deserializeBinaryFromReader(_instance, _reader) {
 		while (_reader.nextField()) {
@@ -4859,7 +5272,7 @@ var TurnDetectionConversationContext = class TurnDetectionConversationContext {
 				case 1:
 					const messageInitializer1 = new TurnDetectionContextTurn();
 					_reader.readMessage(messageInitializer1, TurnDetectionContextTurn.deserializeBinaryFromReader);
-					(_instance.turns = _instance.turns || []).push(messageInitializer1);
+					(_instance.turnDetectionContextTurns = _instance.turnDetectionContextTurns || []).push(messageInitializer1);
 					break;
 				default: _reader.skipField();
 			}
@@ -4867,18 +5280,18 @@ var TurnDetectionConversationContext = class TurnDetectionConversationContext {
 		TurnDetectionConversationContext.refineValues(_instance);
 	}
 	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.turns && _instance.turns.length) _writer.writeRepeatedMessage(1, _instance.turns, TurnDetectionContextTurn.serializeBinaryToWriter);
+		if (_instance.turnDetectionContextTurns && _instance.turnDetectionContextTurns.length) _writer.writeRepeatedMessage(1, _instance.turnDetectionContextTurns, TurnDetectionContextTurn.serializeBinaryToWriter);
 	}
 	constructor(_value) {
 		_value = _value || {};
-		this.turns = (_value.turns || []).map((m) => new TurnDetectionContextTurn(m));
+		this.turnDetectionContextTurns = (_value.turnDetectionContextTurns || []).map((m) => new TurnDetectionContextTurn(m));
 		TurnDetectionConversationContext.refineValues(this);
 	}
-	get turns() {
-		return this._turns;
+	get turnDetectionContextTurns() {
+		return this._turnDetectionContextTurns;
 	}
-	set turns(value) {
-		this._turns = value;
+	set turnDetectionContextTurns(value) {
+		this._turnDetectionContextTurns = value;
 	}
 	serializeBinary() {
 		const writer = new BinaryWriter();
@@ -4886,13 +5299,13 @@ var TurnDetectionConversationContext = class TurnDetectionConversationContext {
 		return writer.getResultBuffer();
 	}
 	toObject() {
-		return { turns: (this.turns || []).map((m) => m.toObject()) };
+		return { turnDetectionContextTurns: (this.turnDetectionContextTurns || []).map((m) => m.toObject()) };
 	}
 	toJSON() {
 		return this.toObject();
 	}
 	toProtobufJSON(options) {
-		return { turns: (this.turns || []).map((m) => m.toProtobufJSON(options)) };
+		return { turnDetectionContextTurns: (this.turnDetectionContextTurns || []).map((m) => m.toProtobufJSON(options)) };
 	}
 };
 var TurnDetectionContextTurn = class TurnDetectionContextTurn {
@@ -4983,7 +5396,7 @@ var TurnDetectionHoldBands = class TurnDetectionHoldBands {
 		return instance;
 	}
 	static refineValues(_instance) {
-		_instance.bands = _instance.bands || [];
+		_instance.turnDetectionHoldBands = _instance.turnDetectionHoldBands || [];
 	}
 	static deserializeBinaryFromReader(_instance, _reader) {
 		while (_reader.nextField()) {
@@ -4992,7 +5405,7 @@ var TurnDetectionHoldBands = class TurnDetectionHoldBands {
 				case 1:
 					const messageInitializer1 = new TurnDetectionHoldBand();
 					_reader.readMessage(messageInitializer1, TurnDetectionHoldBand.deserializeBinaryFromReader);
-					(_instance.bands = _instance.bands || []).push(messageInitializer1);
+					(_instance.turnDetectionHoldBands = _instance.turnDetectionHoldBands || []).push(messageInitializer1);
 					break;
 				default: _reader.skipField();
 			}
@@ -5000,18 +5413,18 @@ var TurnDetectionHoldBands = class TurnDetectionHoldBands {
 		TurnDetectionHoldBands.refineValues(_instance);
 	}
 	static serializeBinaryToWriter(_instance, _writer) {
-		if (_instance.bands && _instance.bands.length) _writer.writeRepeatedMessage(1, _instance.bands, TurnDetectionHoldBand.serializeBinaryToWriter);
+		if (_instance.turnDetectionHoldBands && _instance.turnDetectionHoldBands.length) _writer.writeRepeatedMessage(1, _instance.turnDetectionHoldBands, TurnDetectionHoldBand.serializeBinaryToWriter);
 	}
 	constructor(_value) {
 		_value = _value || {};
-		this.bands = (_value.bands || []).map((m) => new TurnDetectionHoldBand(m));
+		this.turnDetectionHoldBands = (_value.turnDetectionHoldBands || []).map((m) => new TurnDetectionHoldBand(m));
 		TurnDetectionHoldBands.refineValues(this);
 	}
-	get bands() {
-		return this._bands;
+	get turnDetectionHoldBands() {
+		return this._turnDetectionHoldBands;
 	}
-	set bands(value) {
-		this._bands = value;
+	set turnDetectionHoldBands(value) {
+		this._turnDetectionHoldBands = value;
 	}
 	serializeBinary() {
 		const writer = new BinaryWriter();
@@ -5019,13 +5432,13 @@ var TurnDetectionHoldBands = class TurnDetectionHoldBands {
 		return writer.getResultBuffer();
 	}
 	toObject() {
-		return { bands: (this.bands || []).map((m) => m.toObject()) };
+		return { turnDetectionHoldBands: (this.turnDetectionHoldBands || []).map((m) => m.toObject()) };
 	}
 	toJSON() {
 		return this.toObject();
 	}
 	toProtobufJSON(options) {
-		return { bands: (this.bands || []).map((m) => m.toProtobufJSON(options)) };
+		return { turnDetectionHoldBands: (this.turnDetectionHoldBands || []).map((m) => m.toProtobufJSON(options)) };
 	}
 };
 var TurnDetectionHoldBand = class TurnDetectionHoldBand {
@@ -8612,6 +9025,6 @@ function buildGrpcWebHost(config) {
 function warnInsecure(authority) {
 	console.warn(`ONDEWO gRPC-web: insecure http:// endpoint ${authority}; requests and bearer tokens are sent unencrypted. Use useSecureChannel: true (https://) outside local development.`);
 }
-export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, BROWSER_UNSUPPORTED_TLS_FIELDS, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, GrpcWebEndpointError, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionContextTurn, TurnDetectionConversationContext, TurnDetectionHoldBand, TurnDetectionHoldBands, TurnDetectionOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, buildGrpcWebHost, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
+export { AUTHORIZATION_HEADER, AcousticModels, AddDataToUserLanguageModelRequest, AuthGrpcInterceptor, BEARER_PREFIX, BROWSER_UNSUPPORTED_TLS_FIELDS, CkptFile, CreateUserLanguageModelRequest, Decoding, DeleteUserLanguageModelRequest, GRPC_SPEECH2_TEXT_CLIENT_SETTINGS, GrpcWebEndpointError, InferenceBackend, KEYCLOAK_TOKEN_PROVIDER_CONFIG, KeycloakAuthenticationError, KeycloakTokenProvider, LanguageModelPipelineId, LanguageModels, ListS2tDomainsRequest, ListS2tDomainsResponse, ListS2tLanguageModelsRequest, ListS2tLanguageModelsResponse, ListS2tLanguagesRequest, ListS2tLanguagesResponse, ListS2tNormalizationPipelinesRequest, ListS2tNormalizationPipelinesResponse, ListS2tPipelinesRequest, ListS2tPipelinesResponse, Logging, MIN_REFRESH_DELAY_IN_S, OpenaiLlmOptions, Parakeet, PostProcessing, PostProcessingOptions, PostProcessors, PtFiles, Pyannote, REFRESH_SKEW_IN_S, ReasoningEffort, S2tCloudProviderConfig, S2tCloudProviderConfigAmazon, S2tCloudProviderConfigDeepgram, S2tCloudProviderConfigGoogle, S2tCloudProviderConfigMicrosoft, S2tCloudServiceAmazon, S2tCloudServiceDeepgram, S2tCloudServiceGoogle, S2tCloudServiceMicrosoft, S2tDescription, S2tGetServiceInfoResponse, S2tInference, S2tLlmPostProcessing, S2tLlmPostProcessingInverseNormalizationOptions, S2tLlmPostProcessingNormalizationOptions, S2tLlmPostProcessingSubTaskOptions, S2tLlmPostProcessingSummarizationOptions, S2tLlmPostProcessingTranslationOptions, S2tNormalization, S2tPipelineId, ServiceTier, Silero, Speech2TextClient, Speech2TextConfig, StreamingServer, StreamingSpeechRecognition, SymSpell, TOKEN_PROVIDER, TrainUserLanguageModelRequest, TranscribeFileRequest, TranscribeFileResponse, TranscribeRequestConfig, TranscribeStreamRequest, TranscribeStreamResponse, Transcription, TranscriptionAlternative, TranscriptionReturnOptions, TsdMethod, TurnDetectionChatLlmOptions, TurnDetectionContextTurn, TurnDetectionConversationContext, TurnDetectionEndOfUtteranceLlmOptions, TurnDetectionHoldBand, TurnDetectionHoldBands, TurnDetectionOndewoDeFusionOptions, TurnDetectionOndewoDeOptions, TurnDetectionOptions, TurnDetectionPipecatSmartTurnOptions, UtteranceDetectionOptions, VadMethod, Verbosity, VoiceActivityDetection, Wav2Vec, Wav2VecTriton, WespeakerTsd, Whisper, WhisperTriton, WordAlternative, WordDetail, authHttpInterceptor, buildBearerValue, buildGrpcWebHost, provideOndewoS2tAuth, resolveBearerValue, resolveToken };
 
 //# sourceMappingURL=ondewo-s2t-client-angular.mjs.map
