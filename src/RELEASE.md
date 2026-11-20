@@ -35,6 +35,8 @@
 * New make target `test_angular_compat` runs the proto compiler's Angular backward-compatibility harness on `npm/`.
 * `update_package` also stamps the version into the root `package.json` and `package-lock.json`.
 * The utils image uses Node.js 24.22.3.
+* eslint ignores the `npm/` build output: ng-packagr 22 writes its typings to `npm/types/`, which `**/index.d.ts`
+  no longer covered, so `make eslint` failed on the generated declarations.
 
 ### Improvements
 
@@ -42,9 +44,10 @@
 * [[OND236-120]](https://ondewo.atlassian.net/browse/OND236-120) New runtime floors from ondewo-proto-compiler 5.17.0:
   grpc-web 2.1.1. An app using this client needs `"grpc-web": "2.1.1"` as an exact direct dependency plus
   `"overrides": { "grpc-web": "$grpc-web" }` (`@ngx-grpc/grpc-web-client` still declares the peer `grpc-web ^1.2.1`)
-  and `google-protobuf ~3.21.4`, as this repository's own `package.json` does; it builds against `@ngx-grpc/*`
-  `~3.1.2`. The `@ngx-grpc/common` / `@ngx-grpc/core` peer range stays `>=3.1.2`, which the compiler's Angular
-  compatibility harness (Angular 20.0.0, 20, 21, 22 with `@ngx-grpc` 5.x) requires.
+  and `google-protobuf ~3.21.4`, as this repository's own `package.json` does. The `@ngx-grpc/*` peer range is
+  `>=3.1.2` with no upper bound, and `@ngx-grpc/well-known-types` (imported by the generated code) is now declared
+  as a peer too; the compiler's Angular compatibility harness passes on Angular 20.0.0, 20, 21 and 22 with
+  `@ngx-grpc` 5.x.
 
 *****************
 
