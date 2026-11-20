@@ -2,7 +2,7 @@
 
 *****************
 
-## Release ONDEWO S2T Angular Client 7.5.3
+## Release ONDEWO S2T Angular Client 7.6.0
 
 ### New Features
 
@@ -25,16 +25,26 @@
 
 ### Build
 
-* Generated with ondewo-proto-compiler [5.16.0](https://github.com/ondewo/ondewo-proto-compiler/releases/tag/5.16.0),
+* Generated with ondewo-proto-compiler [5.17.0](https://github.com/ondewo/ondewo-proto-compiler/releases/tag/5.17.0),
   built with the Angular 22 toolchain (ng-packagr 22). The peer range of `@angular/core` and `@angular/common` is
   widened to `>=20.0.0 <23.0.0`.
 * The typings moved from `index.d.ts` to `types/ondewo-s2t-client-angular.d.ts`; `typings` and `exports["."].types`
   of the package manifest point there.
-* Codegen runs on the `ondewo-angular-proto-compiler:5.16.0` image, tagged from the pinned submodule by
+* Codegen runs on the `ondewo-angular-proto-compiler:5.17.0` image, tagged from the pinned submodule by
   `build_compiler`, instead of the untagged `:latest`.
 * New make target `test_angular_compat` runs the proto compiler's Angular backward-compatibility harness on `npm/`.
 * `update_package` also stamps the version into the root `package.json` and `package-lock.json`.
 * The utils image uses Node.js 24.22.3.
+
+### Improvements
+
+* Tracking API Version [7.6.0](https://github.com/ondewo/ondewo-s2t-api/releases/tag/7.6.0) ( [Documentation](https://ondewo.github.io/ondewo-s2t-api/) )
+* [[OND236-120]](https://ondewo.atlassian.net/browse/OND236-120) New runtime floors from ondewo-proto-compiler 5.17.0:
+  grpc-web 2.1.1. An app using this client needs `"grpc-web": "2.1.1"` as an exact direct dependency plus
+  `"overrides": { "grpc-web": "$grpc-web" }` (`@ngx-grpc/grpc-web-client` still declares the peer `grpc-web ^1.2.1`)
+  and `google-protobuf ~3.21.4`, as this repository's own `package.json` does; it builds against `@ngx-grpc/*`
+  `~3.1.2`. The `@ngx-grpc/common` / `@ngx-grpc/core` peer range stays `>=3.1.2`, which the compiler's Angular
+  compatibility harness (Angular 20.0.0, 20, 21, 22 with `@ngx-grpc` 5.x) requires.
 
 *****************
 

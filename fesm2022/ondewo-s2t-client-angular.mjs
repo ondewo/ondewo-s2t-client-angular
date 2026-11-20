@@ -8683,7 +8683,7 @@ var Speech2TextClient = class Speech2TextClient {
 	static {
 		this.ɵfac = i0.ɵɵngDeclareFactory({
 			minVersion: "12.0.0",
-			version: "22.2.6",
+			version: "22.3.0",
 			ngImport: i0,
 			type: Speech2TextClient,
 			deps: [
@@ -8700,7 +8700,7 @@ var Speech2TextClient = class Speech2TextClient {
 	static {
 		this.ɵprov = i0.ɵɵngDeclareInjectable({
 			minVersion: "12.0.0",
-			version: "22.2.6",
+			version: "22.3.0",
 			ngImport: i0,
 			type: Speech2TextClient,
 			providedIn: "any"
@@ -8709,7 +8709,7 @@ var Speech2TextClient = class Speech2TextClient {
 };
 i0.ɵɵngDeclareClassMetadata({
 	minVersion: "12.0.0",
-	version: "22.2.6",
+	version: "22.3.0",
 	ngImport: i0,
 	type: Speech2TextClient,
 	decorators: [{
@@ -8861,7 +8861,7 @@ var KeycloakTokenProvider = class KeycloakTokenProvider {
 	static {
 		this.ɵfac = i0.ɵɵngDeclareFactory({
 			minVersion: "12.0.0",
-			version: "22.2.6",
+			version: "22.3.0",
 			ngImport: i0,
 			type: KeycloakTokenProvider,
 			deps: [{ token: i1.HttpClient }, {
@@ -8874,7 +8874,7 @@ var KeycloakTokenProvider = class KeycloakTokenProvider {
 	static {
 		this.ɵprov = i0.ɵɵngDeclareInjectable({
 			minVersion: "12.0.0",
-			version: "22.2.6",
+			version: "22.3.0",
 			ngImport: i0,
 			type: KeycloakTokenProvider,
 			providedIn: "root"
@@ -8883,7 +8883,7 @@ var KeycloakTokenProvider = class KeycloakTokenProvider {
 };
 i0.ɵɵngDeclareClassMetadata({
 	minVersion: "12.0.0",
-	version: "22.2.6",
+	version: "22.3.0",
 	ngImport: i0,
 	type: KeycloakTokenProvider,
 	decorators: [{
@@ -8953,7 +8953,7 @@ var AuthGrpcInterceptor = class AuthGrpcInterceptor {
 	static {
 		this.ɵfac = i0.ɵɵngDeclareFactory({
 			minVersion: "12.0.0",
-			version: "22.2.6",
+			version: "22.3.0",
 			ngImport: i0,
 			type: AuthGrpcInterceptor,
 			deps: [{ token: TOKEN_PROVIDER }],
@@ -8963,7 +8963,7 @@ var AuthGrpcInterceptor = class AuthGrpcInterceptor {
 	static {
 		this.ɵprov = i0.ɵɵngDeclareInjectable({
 			minVersion: "12.0.0",
-			version: "22.2.6",
+			version: "22.3.0",
 			ngImport: i0,
 			type: AuthGrpcInterceptor
 		});
@@ -8971,7 +8971,7 @@ var AuthGrpcInterceptor = class AuthGrpcInterceptor {
 };
 i0.ɵɵngDeclareClassMetadata({
 	minVersion: "12.0.0",
-	version: "22.2.6",
+	version: "22.3.0",
 	ngImport: i0,
 	type: AuthGrpcInterceptor,
 	decorators: [{ type: Injectable }],
